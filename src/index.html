@@ -7,8 +7,37 @@
     <title>Gamify Todo</title>
   </head>
   <body>
-    <div id="app">
-      <p>App</p>
+    <div id="root">
+      <header class="header">
+        <section class="header--top">
+          <h1 id="logo">Gamify Todo</h1>
+          <div class="profile">
+            <div class="profile__img">
+              <img
+                src="https://m.media-amazon.com/images/M/MV5BMjEzMjA0ODk1OF5BMl5BanBnXkFtZTcwMTA4ODM3OQ@@._V1_.jpg"
+                alt="profile image"
+              />
+            </div>
+            <div class="profile__name"><span>Qualiaz</span></div>
+            <div class="profile__energy"><span> 3,123</span></div>
+          </div>
+        </section>
+        <div class="header--bottom">
+          <nav id="nav">
+            <ul>
+              <li><a href="/" id="dashboard">Dashboard</a></li>
+              <li><a href="/#/projects" id="projects">Projects</a></li>
+              <li><a href="/#/tasks" id="tasks">Tasks</a></li>
+              <li><a href="/#/habits" id="habits">Habits</a></li>
+              <li><a href="/#/calendar" id="calendar">Calendar</a></li>
+              <li>
+                <a href="/#/yearinpixels" id="yearInPixels">Year in Pixels</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </header>
     </div>
+    <main id="main"></main>
   </body>
 </html>

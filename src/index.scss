@@ -1,1 +1,8 @@
+@import "./style/abstract/variables";
+@import "./style/base/fonts";
 @import "./style/base/reset";
+
+@import "./style/layout/header";
+@import "./style/layout/main";
+
+@import "./style//pages//home";

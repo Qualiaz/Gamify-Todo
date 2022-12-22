@@ -1,12 +1,10 @@
 .header {
   background-color: $primary;
-  min-width: 100vw;
   padding: 2rem;
   padding-bottom: 0.5rem;
 
   &--top {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     margin-bottom: 1rem;
   }
@@ -70,6 +68,7 @@
     list-style-type: none;
     white-space: nowrap;
 
+    // for mobile
     overflow-x: auto;
     -ms-overflow-style: none;
     &::-webkit-scrollbar {

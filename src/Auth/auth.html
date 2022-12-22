@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth</title>
+  </head>
+  <body>
+    <div class="auth__page">
+      <!-- LOGIN -->
+      <section class="auth__login__container" id="loginContainer">
+        <h1 class="auth__logo">Gamify Todo</h1>
+        <h2 class="auth__login__title">Login</h2>
+        <!-- FORM -->
+        <form action="POST" id="formLogin">
+          <div class="auth__login__email">
+            <label for="loginEmailInput">Email</label>
+            <input type="email" id="loginEmail" />
+          </div>
+          <div class="auth__login__password">
+            <label for="password">Password</label>
+            <input type="password" id="loginPassword" />
+          </div>
+          <button class="auth__login-btn" id="loginBtn">Login</button>
+        </form>
+        <!-- ASK SIGNUP -->
+        <div class="auth__ask-signup">
+          <p>Don't have an account yet?</p>
+          <button class="auth__ask-signup__btn" id="askSignupBtn">
+            Sign up
+          </button>
+        </div>
+        <div class="auth__login__linebreak__container">
+          <span class="auth__login__linebreak--left"></span>
+          <span class="auth__login__linebreak--text">Or</span>
+          <span class="auth__login__linebreak--right"></span>
+          <br />
+        </div>
+        <!-- GOOGLE SIGN IN -->
+        <div id="gSignInBtn">
+          <div>
+            <img src="./google-icon.png" alt="google icon" />
+          </div>
+          <span>Sign in with Google</span>
+        </div>
+      </section>
+      <!-- SIGN UP -->
+      <div class="auth__signup__container hidden" id="signupContainer">
+        <h1 class="auth__logo">Gamify Todo</h1>
+        <h2 class="auth__signup__title">Sign Up</h2>
+        <!-- FORM -->
+        <form action="POST" id="formSignup">
+          <div class="auth__signup__email">
+            <label for="email">Email</label>
+            <input type="email" id="signupEmail" />
+          </div>
+          <div class="auth__signup__password">
+            <label for="password">Password</label>
+            <input type="password" id="signupPassword" />
+          </div>
+          <div class="auth__signup__password">
+            <label for="signupRepeatPassword">Repeat Password</label>
+            <input type="password" id="signupRepeatPassword" />
+          </div>
+          <div class="auth__signup__display-name">
+            <label for="signupDisplayName">Display name</label>
+            <input type="text" id="signupDisplayName" />
+          </div>
+          <button class="auth__signup-btn" id="signupBtn">Sign Up</button>
+        </form>
+
+        <!-- ASK LOGIN -->
+        <div class="auth__ask-login">
+          <p>Have an account already?</p>
+          <button class="auth__ask-login__btn" id="askLoginBtn">Login</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

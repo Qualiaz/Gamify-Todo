@@ -34,7 +34,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "title",
       filename: "index.html",
-      template: path.resolve(__dirname, "./src/index.html"), //create temp file
+      template: path.resolve(__dirname, "./src/index.html"),
+    }),
+    new HtmlWebpackPlugin({
+      title: "auth",
+      filename: "auth.html",
+      template: path.resolve(__dirname, "./src/Auth/auth.html"),
     }),
   ],
 };

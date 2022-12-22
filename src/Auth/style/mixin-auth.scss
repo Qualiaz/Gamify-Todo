@@ -1,0 +1,66 @@
+@mixin auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  padding: 1rem;
+  width: 30rem;
+}
+
+@mixin auth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+@mixin auth-input {
+  padding: 1rem;
+  margin-top: 0.3rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: $secondary;
+}
+
+@mixin auth-btn {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  color: #fff;
+  background-color: $primary;
+  border-radius: 0.5rem;
+  border: 2px solid $secondary;
+  padding: 0.5rem;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+@mixin auth-ask {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.6rem;
+
+  @include auth-ask-btn;
+}
+
+@mixin auth-ask-btn {
+  &__btn {
+    border: none;
+    text-decoration: underline;
+    background: none;
+    font-size: 1.6rem;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+@mixin auth-linebreak {
+  height: 0.2rem;
+  width: 100%;
+  background-color: white;
+  border-radius: 1rem;
+}

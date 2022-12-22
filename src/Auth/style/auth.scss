@@ -1,0 +1,138 @@
+@import "./mixin-auth.scss";
+
+.auth__page {
+  background-color: $primary;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+// LOGO
+.auth__logo {
+  position: absolute;
+  top: -6rem;
+  text-decoration: underline;
+  font-size: 3.6rem;
+}
+
+// LOGIN
+#formLogin {
+  @include auth-form;
+}
+
+.auth {
+  &__login {
+    &__container {
+      @include auth-container;
+    }
+
+    &__title {
+      margin-bottom: 3rem;
+    }
+
+    &__email,
+    &__password {
+      display: flex;
+      flex-direction: column;
+      input {
+        @include auth-input;
+      }
+    }
+
+    &-btn {
+      @include auth-btn;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.auth__ask-signup {
+  @include auth-ask;
+}
+
+// LINE BREAK
+.auth__login__linebreak {
+  &__container {
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    align-self: stretch;
+    margin: 1.5rem 0;
+  }
+
+  &--left,
+  &--right {
+    height: 0.2rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 1rem;
+  }
+
+  &--text {
+    margin: 0 1rem;
+  }
+}
+
+// GOOGLE SIGN IN
+#gSignInBtn {
+  border-radius: 0.5rem;
+  border: 0.3rem solid #ececec;
+  align-self: stretch;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem;
+
+  img {
+    width: 3rem;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+// SIGN UP
+#formSignup {
+  @include auth-form;
+}
+
+.auth {
+  &__signup {
+    &__container {
+      @include auth-container;
+    }
+    &__title {
+      margin-bottom: 3rem;
+    }
+    &__username,
+    &__password,
+    &__email,
+    &__display-name {
+      display: flex;
+      flex-direction: column;
+      input {
+        @include auth-input;
+      }
+    }
+
+    &-btn {
+      @include auth-btn;
+    }
+  }
+}
+
+.auth__ask-login {
+  @include auth-ask;
+}
+
+// To toggle login / signup
+.hidden {
+  display: none !important;
+}

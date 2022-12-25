@@ -16,5 +16,12 @@ import "./Router/router";
 import "./firebase/config";
 import "./Auth/script/auth";
 
+//user
+import "./Model/user";
+
 //controllers
 import "./Controller/nav";
+
+//main
+////tasks
+import "./View/main/tasks";

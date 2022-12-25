@@ -32,7 +32,7 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      title: "title",
+      title: "index",
       filename: "index.html",
       template: path.resolve(__dirname, "./src/index.html"),
     }),
@@ -40,6 +40,11 @@ module.exports = {
       title: "auth",
       filename: "auth.html",
       template: path.resolve(__dirname, "./src/Auth/auth.html"),
+    }),
+    new HtmlWebpackPlugin({
+      title: "static home",
+      filename: "home.html",
+      template: path.resolve(__dirname, "./src/static/home.html"),
     }),
   ],
 };

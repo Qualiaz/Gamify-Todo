@@ -9,11 +9,16 @@ import {
   signupContainer,
   formSignup,
   signupPassword,
+  signupEmailLabel,
   signupEmail,
   signupDisplayName,
   askSignupBtn,
   askLoginBtn,
+  loginEmailLabel,
+  loginPasswordLabel,
 } from "./authDOM";
+
+import signupCheck, { renderInvalidCheck } from "./signupCheck";
 
 import {
   createUserWithEmailAndPassword,
@@ -29,6 +34,9 @@ export default function initAuthPageScript() {
   // SIGN UP //
   formSignup.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    if (!signupCheck().ok) return;
+
     createUserWithEmailAndPassword(
       auth,
       signupEmail.value,
@@ -40,30 +48,52 @@ export default function initAuthPageScript() {
           displayName: signupDisplayName.value,
         });
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+      .catch((err) => {
+        if (err.code === "auth/email-already-in-use") {
+          renderInvalidCheck(
+            "emailUsed",
+            signupEmailLabel,
+            " (Email already in use) "
+          );
+        }
+        return;
       });
   });
 
   // LOGIN EMAIL //
   formLogin.addEventListener("submit", (e) => {
     e.preventDefault();
-
     signInWithEmailAndPassword(auth, loginEmail.value, loginPassword.value)
-      .then((cred) => {})
-      .catch((err) => console.log(err));
+      .then((cred) => {
+        console.log("sign in success");
+      })
+      .catch((err) => {
+        if (err.code === "auth/user-not-found") {
+          renderInvalidCheck(
+            "emailNotFound",
+            loginEmailLabel,
+            " (Email not found) "
+          );
+        }
+        if (err.code === "auth/wrong-password") {
+          renderInvalidCheck(
+            "wrongPassword",
+            loginPasswordLabel,
+            " (Wrong password) "
+          );
+        }
+      });
   });
 
   // LOGIN GOOGLE //
   loginGoogleBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    signInWithPopup(auth, new GoogleAuthProvider()).then((res) => {
-      const credential = GoogleAuthProvider.credentialFromResult(res);
-      const user = res.user;
-      console.log(credential);
-    });
+    signInWithPopup(auth, new GoogleAuthProvider())
+      .then((res) => {
+        const credential = GoogleAuthProvider.credentialFromResult(res);
+        const user = res.user;
+      })
+      .catch((err) => {});
   });
 
   // CHECK AUTH STATE //
@@ -75,13 +105,12 @@ export default function initAuthPageScript() {
     }
   });
 
-  askSignupBtn.addEventListener("click", (e) => {
+  askSignupBtn.addEventListener("click", () => {
     loginContainer.classList.add("hidden");
     signupContainer.classList.remove("hidden");
-    console.log("clicked");
   });
 
-  askLoginBtn.addEventListener("click", (e) => {
+  askLoginBtn.addEventListener("click", () => {
     signupContainer.classList.add("hidden");
     loginContainer.classList.remove("hidden");
   });

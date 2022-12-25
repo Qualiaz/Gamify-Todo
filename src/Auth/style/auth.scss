@@ -117,6 +117,7 @@
     &__display-name {
       display: flex;
       flex-direction: column;
+      // outline: 1px solid blue;
       input {
         @include auth-input;
       }
@@ -135,4 +136,10 @@
 // To toggle login / signup
 .hidden {
   display: none !important;
+}
+
+// For invalid inputs
+.auth__invalid-check {
+  color: red;
+  font-size: 1.4rem;
 }

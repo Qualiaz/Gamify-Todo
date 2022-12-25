@@ -4,8 +4,7 @@ import { markup as tasksMarkup } from "../View/main/tasks";
 import { markup as habitsMarkup } from "../View/main/habits";
 import { markup as calendarMarkup } from "../View/main/calendar";
 import { markup as yearInPixelsMarkup } from "../View/main/yearInPixels";
-import { auth, db } from "../firebase/config";
-import { setDoc, doc } from "firebase/firestore";
+import { auth } from "../firebase/config";
 import { signOut } from "firebase/auth";
 
 export default function initNav() {
@@ -44,8 +43,8 @@ export default function initNav() {
       }
     });
   });
-  const signoutBtn = document.getElementById("signoutBtn");
 
+  const signoutBtn = document.getElementById("signoutBtn");
   signoutBtn.addEventListener("click", (e) => {
     signOut(auth).then((_) => {
       window.location.pathname = "/auth.html";

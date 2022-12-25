@@ -3,6 +3,9 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
+// TODO ADDITIONAL SECURITY RULES API BECAUSE OF AUTH PASSWORD
+// https://firebase.google.com/docs/projects/api-keys
+
 const firebaseConfig = {
   apiKey: "AIzaSyCExSp9EYcwI6Y-lZY3_Z0LUUSE1ZXeW_g",
   authDomain: "gamify-todo-e8896.firebaseapp.com",

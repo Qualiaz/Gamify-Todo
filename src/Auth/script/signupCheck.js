@@ -21,7 +21,7 @@ export function renderInvalidCheck(elementId, parentEl, textContent) {
 
 export default function signupCheck() {
   let ok = true;
-
+  console.log("sign up check");
   let check = {
     passwordLength: true,
     passwordsMatch: true,

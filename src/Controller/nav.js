@@ -1,11 +1,12 @@
 import { markup as dashboardMarkup } from "../View/main/dashboard";
 import { markup as projectsMarkup } from "../View/main/projects";
-import { markup as tasksMarkup } from "../View/main/tasks";
+import initTasks from "../View/main/tasks/tasks";
 import { markup as habitsMarkup } from "../View/main/habits";
 import { markup as calendarMarkup } from "../View/main/calendar";
 import { markup as yearInPixelsMarkup } from "../View/main/yearInPixels";
 import { auth } from "../firebase/config";
 import { signOut } from "firebase/auth";
+import initUser from "./initUserController";
 
 export default function initNav() {
   const main = document.getElementById("main");
@@ -22,7 +23,7 @@ export default function initNav() {
           break;
         case "tasks":
           main.innerHTML = "";
-          main.innerHTML = tasksMarkup;
+          initTasks();
           break;
         case "projects":
           main.innerHTML = "";
@@ -50,4 +51,5 @@ export default function initNav() {
       window.location.pathname = "/auth.html";
     });
   });
+  // initUser();
 }

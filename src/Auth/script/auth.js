@@ -1,4 +1,4 @@
-import { auth, db } from "../../firebase/config";
+import { auth } from "../../firebase/config";
 
 import {
   loginContainer,
@@ -34,7 +34,7 @@ export default function initAuthPageScript() {
   // SIGN UP //
   formSignup.addEventListener("submit", (e) => {
     e.preventDefault();
-
+    console.log("auth script signup");
     if (!signupCheck().ok) return;
 
     createUserWithEmailAndPassword(

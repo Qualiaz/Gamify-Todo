@@ -18,13 +18,7 @@ import "./Router/router";
 import "./firebase/config";
 import "./Auth/script/auth";
 
-//user
-// import "./Model/user";
-
-//controllers
-import "./Controller/nav";
-
 // App
-// import App from "./App";
+import App from "./App";
 
 // App.init();

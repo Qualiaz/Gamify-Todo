@@ -1,14 +1,12 @@
-import initNav from "./Controller/nav";
-import initTasks from "./View/main/tasks/tasks";
-import initTaskSettings from "./View/main/tasks/taskSettings";
-import initUser from "./Controller/initUserController";
+import Controller from "./Controller/Controller";
 
 class App {
   constructor() {}
 
   init() {
-    initNav();
-    initUser();
+    // init controller
+    Controller();
+    // init view
   }
 }
 

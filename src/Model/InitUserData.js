@@ -3,8 +3,8 @@ export default class InitUserData {
   constructor(email, displayName) {
     this.profile.email = email;
     this.profile.displayName = displayName;
-    // this.profile.photoURL = photoURL;
   }
+
   stats = {
     energyPoints: 0,
     finishedTasks: 0,
@@ -20,10 +20,4 @@ export default class InitUserData {
       awful: 0,
     },
   };
-
-  tasks = {};
-
-  projects = {};
-
-  habits = {};
 }

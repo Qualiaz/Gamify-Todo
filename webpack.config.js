@@ -1,5 +1,5 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin"); // npm i -D html-webpack-plugin
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -17,15 +17,15 @@ module.exports = {
   devServer: {
     static: path.resolve(__dirname, "dist"),
     watchFiles: ["./src/index.html"],
-    port: 5001, // default 8080
+    port: 5001,
     open: true,
     hot: true,
     compress: true,
   },
-  // loaders
+
   module: {
     rules: [
-      { test: /\.scss$/, use: ["style-loader", "css-loader", "sass-loader"] }, // npm i -D sass style-loader css-loader sass-loader
+      { test: /\.scss$/, use: ["style-loader", "css-loader", "sass-loader"] },
       { test: /\.(svg|ico|png|webp|jpg|jpeg|gif)$/i, type: "asset/resource" },
     ],
   },

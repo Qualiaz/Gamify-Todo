@@ -1,8 +1,6 @@
-// import { onAuthStateChanged } from "firebase/auth";
 import initAuthPageScript from "../Auth/script/auth";
-// import initNav from "../Controller/nav";
-// import { auth } from "../firebase/config";
 import App from "../App";
+import Controller from "../Controller/Controller";
 
 window.addEventListener("DOMContentLoaded", () => {
   switch (window.location.pathname) {

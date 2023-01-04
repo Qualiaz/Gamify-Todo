@@ -1,0 +1,198 @@
+.task-card {
+  &__container {
+    display: flex;
+    justify-content: stretch;
+    width: 30rem;
+    border: none;
+    overflow: hidden;
+    border-radius: 1rem;
+    margin: 1rem;
+  }
+
+  &__checkbox {
+    &__container {
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      width: 5rem;
+      background-color: $primary;
+      position: relative;
+    }
+
+    &--unfinished {
+      width: 2rem;
+      height: 2rem;
+      background-color: $secondary;
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      border-radius: 0.4rem;
+    }
+
+    &--finished {
+      width: 2rem;
+      height: 2rem;
+      background-color: $secondary;
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+      border-radius: 0.4rem;
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 86%;
+        height: 86%;
+        background-color: $primary;
+        transform: translate(0.13rem, 0.13rem);
+        border-radius: 0.3rem;
+      }
+    }
+
+    &-input {
+      visibility: hidden;
+      width: 2rem;
+      height: 2rem;
+      position: absolute;
+    }
+  }
+
+  &__main {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1rem 1rem;
+      flex: 1;
+      background-color: #272727;
+    }
+  }
+
+  &__top {
+    &__container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    &__btns {
+      display: flex;
+      // width: 1rem;
+      justify-content: center;
+      align-items: center;
+
+      & > :first-child {
+        margin-right: 1rem;
+      }
+    }
+  }
+
+  &__timer {
+    &__container {
+      border: 0.2rem solid #fff;
+      border-radius: 1rem;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 1rem;
+      // margin-bottom: 1rem;
+    }
+
+    &__pause-icon {
+      width: 1.4rem;
+    }
+  }
+
+  &__notes {
+    &__container {
+      // margin-bottom: 1rem;
+    }
+  }
+
+  &__checkpoints {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      padding: 0 2rem;
+      // margin-bottom: 2rem;
+    }
+  }
+
+  &__checkpoint {
+    &__container {
+      margin: 0.3rem;
+      position: relative;
+    }
+
+    &-input {
+      width: 1.6rem;
+      height: 1.6rem;
+      visibility: hidden;
+    }
+
+    &--unfinished {
+      width: 1.6rem;
+      height: 1.6rem;
+      background-color: $secondary;
+      border: 2px solid $primary;
+      position: absolute;
+      top: 0.3rem;
+      border-radius: 0.4rem;
+    }
+
+    &--finished {
+      width: 1.6rem;
+      height: 1.6rem;
+      background-color: $secondary;
+      border: 2px solid $primary;
+      position: absolute;
+      margin: 0 auto;
+      top: 0.3rem;
+      border-radius: 0.4rem;
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 80%;
+        height: 80%;
+        background-color: $primary;
+        transform: translate(0.1rem, -0.6rem);
+        border-radius: 0.2rem;
+      }
+    }
+  }
+
+  &__additional-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__energy {
+    &__container {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__difficulty {
+    &__icon {
+      width: 2.2rem;
+      height: 2.2rem;
+    }
+  }
+
+  &__line-break {
+    width: 100%;
+    height: 0.2rem;
+    background-color: $primary;
+    border-radius: 1rem;
+    margin: 0.8rem 0;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.reverse-icon {
+  transform: rotateZ(180deg);
+}

@@ -1,11 +1,15 @@
-export default function dashboardView() {
-  const main = document.getElementById("main");
-  console.log(main);
-  const markup = `
+class DashboardView {
+  _generateMarkup() {
+    return `
     <div>
         <button>Add Task</button>
     </div>
 `;
-  main.innerHTML = markup;
-  // create markup
+  }
+
+  render(parentEl) {
+    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup());
+  }
 }
+
+export const dashboardView = new DashboardView();

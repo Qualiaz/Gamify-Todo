@@ -7,6 +7,7 @@
     top: 0;
     width: 100%;
     height: 100%;
+    z-index: 100;
     background-color: rgba(255, 255, 255, 0.25);
   }
   &__container {
@@ -31,6 +32,10 @@
     border-radius: 0.5rem;
     color: $primary;
     padding: 0.4rem;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   button {
@@ -44,21 +49,33 @@
     }
   }
 
+  #taskSettingsRepeatDaily {
+    input {
+      margin-top: 1rem;
+      width: 100%;
+    }
+  }
+
   #taskSettingsRepeatWeek {
     display: flex;
     justify-content: stretch;
     gap: 0.13rem;
-    * {
+    margin-top: 1rem;
+    .repeat__week__el {
       padding: 0.5rem 0.8rem;
+      opacity: 0.4;
 
       &:hover {
         cursor: pointer;
       }
     }
+    .day__selected {
+      opacity: 1;
+    }
   }
 
+  // CHECKPOINTS
   .checkpoints__container {
-    outline: 1px solid red;
     display: flex;
     flex-direction: column;
   }
@@ -72,25 +89,51 @@
     margin-bottom: 0.9rem;
   }
 
-  .checkpoint__icon-drag {
-    position: relative;
-    margin-right: 0.2rem;
-    // outline: 1px solid green;
-    padding: 0 0.5rem;
-    padding-right: 1rem;
+  .checkpoint__input {
+    width: 90%;
+  }
 
-    cursor: grab;
+  .cps__icons__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    .icon {
+  .cp__icon--delete {
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    &__wrapper {
+      position: relative;
+      margin-right: 0.2rem;
+      cursor: pointer;
+    }
+  }
+
+  .cp__icon--drag {
+    width: 1rem;
+    display: flex;
+    align-items: center;
+
+    &__wrapper {
+      position: relative;
+      margin: 0 0.8rem;
+
+      cursor: grab;
+
       &::before {
         content: "";
         position: absolute;
-        top: 0.2rem;
-        left: -0.1rem;
+        top: 0.1rem;
+        left: -0.8rem;
         height: 90%;
         min-width: 0.1rem;
         background-color: rgb(255, 255, 255);
       }
     }
   }
+}
+
+.hidden {
+  display: hidden;
 }

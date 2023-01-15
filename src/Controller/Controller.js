@@ -1,9 +1,8 @@
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { tasksMenuView } from "../View/main/tasks/tasksMenuView";
 import { auth } from "../firebase/config";
 import initUser from "./initUserController";
-import dashboardView from "../View/main/DashboardView";
-import { taskCardController } from "./TaskController";
+import dashboardMenuControllerInit from "./dashboardController";
+import tasksMenuControllerInit from "./TasksMenuController";
 
 export default function Controller() {
   // getCur User
@@ -18,11 +17,12 @@ export default function Controller() {
       main.innerHTML = "";
       switch (btn.id) {
         case "dashboard":
-          dashboardView();
+          console.log("dashboard render");
+          dashboardMenuControllerInit();
           break;
         case "tasks":
-          tasksMenuView.render();
-          taskCardController.eventListeners();
+          console.log("controller render");
+          tasksMenuControllerInit();
           break;
         case "projects":
           main.innerHTML = projectsMarkup;
@@ -42,16 +42,10 @@ export default function Controller() {
 
   //
   // SIGN OUT
-  //
-
   const signoutBtn = document.getElementById("signoutBtn");
   signoutBtn.addEventListener("click", (e) => {
     signOut(auth).then((_) => {
       window.location.pathname = "/auth.html";
     });
   });
-
-  // view connect
-  //   dashboardMenuBtn.addEventListener("click", dashboardMenuHandler);
-  //   tasksMenuBtn.addEventListener("click", tasksMenuHandler);
 }

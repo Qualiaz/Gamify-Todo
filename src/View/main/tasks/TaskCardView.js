@@ -5,16 +5,10 @@ import energyIcon from "./assets/energy-icon.svg";
 import pauseTimerIcon from "./assets/pauseTimer-icon.svg";
 import playTimerIcon from "./assets/playTimer-icon.svg";
 
-export default class TaskCard {
-  timeTracked;
-
-  constructor(name) {
-    this.name = name;
-  }
-
-  _generateMarkup() {
+export default class TaskCardView {
+  _generateMarkup({ name, difficulty, repeat, date, energy, id }) {
     return `
-  <div id="taskCard">
+  <div id="taskCard-${id}">
     <div class="task-card__container">
 
       <div class="task-card__checkbox__container">
@@ -25,7 +19,7 @@ export default class TaskCard {
 
       <div class="task-card__main__container">
         <div class="task-card__top__container">
-          <span class="task-card__name">${this.name}</span>
+          <span class="task-card__name">${name}</span>
           <div class="task-card__top__btns">
             <div class="task-card__timer-icon">
               <img id="cardTimerIcon" class="task-card__timer-icon" src=${timerIcon} />
@@ -37,7 +31,7 @@ export default class TaskCard {
         </div>
 
         <div class="task-card__timer__container">
-          <span class="task-card__timer">${this.timeTracked}</span>
+          <span id="timer-${id}" class="task-card__timer">${id}</span>
           <img class="task-card__timer__pause-icon hidden" src=${pauseTimerIcon} id="pauseTimer" class="hidden"/>
           <img class="task-card__timer__play-icon" src=${playTimerIcon} id="playTimer" />
         </div>
@@ -53,20 +47,8 @@ export default class TaskCard {
         
         <div class="task-card__line-break"></div>
         
-        <div class="task-card__checkpoints__container">
-          <div class="task-card__checkpoint__container">           
-          <span class="task-card__checkpoint--unfinished"></span>
-          <span class="task-card__checkpoint--finished hidden"></span>
-            <input type="checkbox" class="task-card__checkpoint-input" />
-            <span>20 minutes</span>
-          </div>
-       
-          <div class="task-card__checkpoint__container">           
-          <span class="task-card__checkpoint--unfinished"></span>
-          <span class="task-card__checkpoint--finished hidden"></span>
-            <input type="checkbox" class="task-card__checkpoint-input" />
-            <span>20 minutes</span>
-          </div>
+        <div id="cardCheckpoints-${id}" class="task-card__checkpoints__container">
+        
         </div>
 
         <div class="task-card__line-break"></div>
@@ -74,24 +56,39 @@ export default class TaskCard {
           <div class="task-card__additional-info">
             <div class="task-card__energy__container">
               <img class="task-card__energy__icon" src=${energyIcon} />
-              <span class="task-card__energy__points">9.209</span>
+              <span class="task-card__energy__points">${energy}</span>
             </div>
 
             <div class="task-card__difficulty">
               <img class="task-card__difficulty__icon"src=${difficultyIcon} />
             </div>
-          </div>
+          
       </div>
     </div>
   </div>
 `;
   }
 
-  render(parentEl) {
-    parentEl.innerHTML = this._generateMarkup();
+  _generateCheckpoint(cpName, id) {
+    return `
+    <div id="cardCheckpoint-${id}" class="task-card__checkpoint__container">           
+      <span class="task-card__checkpoint--unfinished"></span>
+      <span class="task-card__checkpoint--finished hidden"></span>
+        <input type="checkbox" class="task-card__checkpoint-input" />
+      <span>${cpName}</span>
+    </div>
+    `;
   }
 
-  setTime(time) {
-    this.timeTracked = time;
+  renderCps(cpName, id) {
+    const cardCheckpoints = document.getElementById(`cardCheckpoints-${id}`);
+    cardCheckpoints.insertAdjacentHTML(
+      "beforeend",
+      this._generateCheckpoint(cpName, id)
+    );
+  }
+
+  render(parentEl, cardData) {
+    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(cardData));
   }
 }

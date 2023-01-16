@@ -17,6 +17,7 @@
     border-radius: 1rem;
     padding: 2rem;
     opacity: 100%;
+    position: relative;
   }
 }
 
@@ -35,17 +36,6 @@
 
     &:focus {
       outline: none;
-    }
-  }
-
-  button {
-    background-color: $secondary;
-    border: none;
-    border-radius: 0.5rem;
-
-    & :first-child {
-      margin-top: 2rem;
-      margin-bottom: 0.5rem;
     }
   }
 
@@ -128,12 +118,63 @@
         left: -0.8rem;
         height: 90%;
         min-width: 0.1rem;
-        background-color: rgb(255, 255, 255);
+        background-color: #fff;
       }
     }
   }
 }
 
+.task__settings__buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+
+  #taskSettingsDoneBtn {
+    background: $secondary;
+    border: none;
+    border-radius: 0.2rem;
+    padding: 0.5rem 0.7rem;
+    flex: 7;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  #taskSettingsCloseBtn {
+    background: $error;
+    border-radius: 0.2rem;
+    padding: 0.5rem 0.7rem;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+    flex: 1;
+  }
+}
+
+#taskSettingsNameCheckFail {
+  font-size: 1.4rem;
+  color: $error;
+}
+
+#taskSettingsRepeatDailyFail {
+  font-size: 1.4rem;
+  color: $error;
+}
+
+#taskSettingsEnergyIcon {
+  transform: translateY(0.4rem);
+  width: 1.8rem;
+}
+
+#taskSettingsIconDifficulty {
+  width: 1.8rem;
+}
+
 .hidden {
   display: hidden;
+}
+
+.gu-transit {
+  opacity: 0.6;
 }

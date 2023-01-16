@@ -1,5 +1,7 @@
 import iconDelete from "./assets/delete-icon.svg";
 import iconDrag from "./assets/icon-drag.svg";
+import iconEnergy from "./assets/energy-icon.svg";
+import iconDifficultyTrivial from "./assets/icon-difficulty-trivial.svg";
 
 class AddTaskView {
   _generateMarkup() {
@@ -8,7 +10,7 @@ class AddTaskView {
     <div class="task__settings__container">
      <form action="POST">
         <div class="task__settings__el task__settings__name">
-           <label for="taskSettingsName">Name</label>
+           <label for="taskSettingsName">Name <span id="taskSettingsNameCheckFail" class="hidden">At least one character</span> </label>
            <input type="text" id="taskSettingsName" />
         </div>
         <div class="task__settings__el task__settings__start-date">
@@ -16,11 +18,11 @@ class AddTaskView {
            <input type="date" name="date" id="taskSettingsStartDate" />
         </div>
         <div id="repeatContainer" class="task__settings__el task__settings__repeat">
-           <label for="taskSettingsRepeat">Repeat</label>
+           <label for="taskSettingsRepeat">Repeat <span id="taskSettingsRepeatDailyFail" class="hidden">Only numbers allowed</span></label>
 
            <select name="repetition" id="taskSettingsRepeat">
               <option id="repeatNoRepeat" value="no-repeat">No Repeat</option>
-              <option id="repeatEveryDay" value="daily">Every Other Day</option>
+              <option id="repeatEveryOtherDay" value="daily">Every Other Day</option>
               <option id="repeatEveryWeek"value="weekly">Every Week</option>
            </select>
 
@@ -77,17 +79,17 @@ class AddTaskView {
 
         </div>
         <div class="task__settings__el task__settings__difficulty">
-           <label for="taskSettingsDifficulty">Difficulty</label>
+           <label for="taskSettingsDifficulty">Difficulty <img id="taskSettingsIconDifficulty" src=${iconDifficultyTrivial}/></label>
            <select name="difficulty" id="taskSettingsDifficulty">
-              <option value="trivial">Trivial</option>
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-              <option value="challenge">Challenge</option>
+              <option id="taskSettingsDifficultyTrivial" value="trivial">Trivial</option>
+              <option id="taskSettingsDifficultyEasy" value="easy">Easy</option>
+              <option id="taskSettingsDifficultyMedium" value="medium">Medium</option>
+              <option id="taskSettingsDifficultyHard" value="hard">Hard</option>
+              <option id="taskSettingsDifficultyChallenge" value="challenge">Challenge</option>
            </select>
         </div>
         <div class="task__settings__el task__settings__energy">
-           <label for="taskSettingsEnergy">Energy gain <span id="energyValueDisplay">1</span></label>
+           <label for="taskSettingsEnergy">Energy gain <img id="taskSettingsEnergyIcon" src=${iconEnergy} /> <span id="energyValueDisplay">1</span></label>
            <input type="range" value="1" min="1" max="100" id="taskSettingsEnergy" />
         </div>
         <div class="task__settings__el task__settings__checkpoints">
@@ -95,13 +97,13 @@ class AddTaskView {
            
          <div id="checkpointsContainer" class="checkpoints__container">
               
-              <div id="checkpointContainer-1" class="checkpoint__container" draggable="false">
+              <div id="checkpointContainer-1" class="checkpoint__container">
                  <input type="text" id="checkpointInput-1" class="checkpoint__input" />
                  <div class="cps__icons__container hidden">
                      <div class="cp__icon--delete__wrapper">
                          <img class="cp__icon--delete" src=${iconDelete} />
                      </div>
-
+            
                      <div class="cp__icon--drag__wrapper">
                         <img class="cp__icon--drag" src=${iconDrag} />
                      </div>
@@ -110,8 +112,9 @@ class AddTaskView {
            </div>
         </div>
 
-        <div class="task__settings__el task__settings__doneBtn">
+        <div class="task__settings__el task__settings__buttons">
            <button type="button" id="taskSettingsDoneBtn">Done</button>
+           <button type="button" id="taskSettingsCloseBtn">Close</button>
         </div>        
      </form>
   </div>

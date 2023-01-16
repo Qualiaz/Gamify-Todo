@@ -1,8 +1,14 @@
-import { add } from "date-fns";
 import { addDoc, collection, doc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
+import dragSwitchPlaces, { swapElems } from "../../helpers/drag";
 import TaskModel from "../../Model/main/TaskModel";
 import { addTaskView } from "../../View/main/tasks/AddTaskView";
+
+import iconDifficultyTrivial from "../../View/main/tasks/assets/icon-difficulty-trivial.svg";
+import iconDifficultyEasy from "../../View/main/tasks/assets/icon-difficulty-easy.svg";
+import iconDifficultyMedium from "../../View/main/tasks/assets/icon-difficulty-medium.svg";
+import iconDifficultyHard from "../../View/main/tasks/assets/icon-difficulty-hard.svg";
+import iconDifficultyChallenge from "../../View/main/tasks/assets/icon-difficulty-challenge.svg";
 
 const root = document.getElementById("root");
 
@@ -20,8 +26,6 @@ function addCp(idNumber) {
 
   return newCpInput;
 }
-
-function deleteCp() {}
 
 function hoverDisplayCpIcons(cpContainer) {
   Array.from(cpContainer).forEach((cpContainer) => {
@@ -49,6 +53,44 @@ function render(parentEl) {
   addTaskView.render(parentEl);
 }
 
+function validFormCheck(name, repeatDaily) {
+  const nameCheckFail = document.getElementById("taskSettingsNameCheckFail");
+  const repeatDailyFail = document.getElementById(
+    "taskSettingsRepeatDailyFail"
+  );
+  const taskSettingsRepeat = document.getElementById("taskSettingsRepeat");
+
+  let ok = true;
+  let check = {
+    name: true,
+    repeatDaily: true,
+  };
+
+  if (name) {
+    check.name = true;
+    nameCheckFail.classList.add("hidden");
+  } else {
+    check.name = false;
+    nameCheckFail.classList.remove("hidden");
+  }
+
+  if (taskSettingsRepeat.value === "daily") {
+    if (repeatDaily.match(/^[0-9]+$/)) {
+      check.repeatDaily = true;
+      repeatDailyFail.classList.add("hidden");
+    } else {
+      check.repeatDaily = false;
+      repeatDailyFail.classList.remove("hidden");
+    }
+  }
+
+  Object.values(check).forEach((value) => {
+    if (!value) ok = false;
+  });
+
+  return { ok };
+}
+
 function addTask(name, date, repeat, difficulty, energy, cps, repeatValue) {
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTaskRef = collection(docUserRef, "tasks");
@@ -68,11 +110,16 @@ function eventListeners() {
   const taskSettings = document.getElementById("taskSettings");
   const repeatWeek = document.getElementById("taskSettingsRepeatWeek");
   const repeatEveryDay = document.getElementById("taskSettingsRepeatDaily");
+  const repeatDailyFail = document.getElementById(
+    "taskSettingsRepeatDailyFail"
+  );
+  const repeatDailyInput = document.getElementById("repeatDailyInput");
   const taskSettingsEnergy = document.getElementById("taskSettingsEnergy");
   const energyValueDisplay = document.getElementById("energyValueDisplay");
   const checkpointContainer = document.getElementsByClassName(
     "checkpoint__container"
   );
+  const iconDifficulty = document.getElementById("taskSettingsIconDifficulty");
 
   // CLICK EVENTS
   taskSettings.addEventListener("click", (e) => {
@@ -91,10 +138,12 @@ function eventListeners() {
         cps,
         repeat,
         daysOfWeek,
-        repeatsDaily,
+        repeatDaily,
       } = newTaskData;
+      if (!validFormCheck(name, repeatDaily).ok) return;
+
       if (repeat === "daily") {
-        addTask(name, startDate, repeat, difficulty, energy, cps, repeatsDaily);
+        addTask(name, startDate, repeat, difficulty, energy, cps, repeatDaily);
       }
       if (repeat === "weekly") {
         addTask(name, startDate, repeat, difficulty, energy, cps, daysOfWeek);
@@ -107,21 +156,25 @@ function eventListeners() {
       root.removeChild(root.children[0]);
     }
 
-    // DAILY
+    // REPEAT
     if (clickedId === "repeatNoRepeat") {
       repeatWeek.classList.add("hidden");
       repeatEveryDay.classList.add("hidden");
+      repeatDailyFail.classList.add("hidden");
+      repeatDailyInput.value = "";
     }
-    if (clickedId === "repeatEveryDay") {
+    if (clickedId === "repeatEveryOtherDay") {
       repeatEveryDay.classList.remove("hidden");
       repeatWeek.classList.add("hidden");
     }
 
-    // WEEKLY
     if (clickedId === "repeatEveryWeek") {
       repeatWeek.classList.remove("hidden");
       repeatEveryDay.classList.add("hidden");
+      repeatDailyFail.classList.add("hidden");
+      repeatDailyInput.value = "";
     }
+
     if (clickedId === "taskSettingsRepeatWeekMon") {
       e.target.classList.toggle("day__selected");
     }
@@ -144,9 +197,39 @@ function eventListeners() {
       e.target.classList.toggle("day__selected");
     }
 
+    // DIFFICULTY
+    if (clickedId === "taskSettingsDifficultyTrivial") {
+      iconDifficulty.src = iconDifficultyTrivial;
+    }
+    if (clickedId === "taskSettingsDifficultyEasy") {
+      iconDifficulty.src = iconDifficultyEasy;
+    }
+    if (clickedId === "taskSettingsDifficultyMedium") {
+      iconDifficulty.src = iconDifficultyMedium;
+    }
+    if (clickedId === "taskSettingsDifficultyHard") {
+      iconDifficulty.src = iconDifficultyHard;
+    }
+    if (clickedId === "taskSettingsDifficultyChallenge") {
+      iconDifficulty.src = iconDifficultyChallenge;
+    }
+
     // DELETE CP
     if (e.target.classList.contains("cp__icon--delete")) {
       e.target.closest(".checkpoint__container").remove();
+    }
+
+    // CLOSE
+    if (clickedId === "taskSettingsCloseBtn") {
+      cpCurIdNum = 2;
+      root.removeChild(root.children[0]);
+    }
+  });
+
+  taskSettings.addEventListener("mousedown", (e) => {
+    if (e.target.classList.contains("cp__icon--drag")) {
+      const container = e.target.closest(".checkpoints__container");
+      swapElems(container, "cp__icon--drag");
     }
   });
 
@@ -184,7 +267,7 @@ function getValues() {
   const weekly = document.getElementsByClassName(
     "repeat__week__el day__selected"
   );
-  const repeatsDaily = document.getElementById("repeatDailyInput").value;
+  const repeatDaily = document.getElementById("repeatDailyInput").value;
 
   const daysOfWeek = [];
   Array.from(weekly).forEach((day) => {
@@ -204,7 +287,7 @@ function getValues() {
     cps,
     repeat,
     daysOfWeek,
-    repeatsDaily,
+    repeatDaily,
   };
 }
 

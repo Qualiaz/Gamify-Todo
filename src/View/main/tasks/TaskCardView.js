@@ -1,6 +1,6 @@
 import timerIcon from "./assets/timer-icon.svg";
 import toggleIcon from "./assets/toggle-icon.svg";
-import difficultyIcon from "./assets/difficulty-icon.svg";
+import difficultyIcon from "./assets/icon-difficulty-trivial.svg";
 import energyIcon from "./assets/energy-icon.svg";
 import pauseTimerIcon from "./assets/pauseTimer-icon.svg";
 import playTimerIcon from "./assets/playTimer-icon.svg";

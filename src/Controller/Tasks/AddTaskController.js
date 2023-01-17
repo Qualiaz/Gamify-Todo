@@ -1,6 +1,6 @@
 import { addDoc, collection, doc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
-import dragSwitchPlaces, { swapElems } from "../../helpers/drag";
+import { swapElems } from "../../helpers/drag";
 import TaskModel from "../../Model/main/TaskModel";
 import { addTaskView } from "../../View/main/tasks/AddTaskView";
 

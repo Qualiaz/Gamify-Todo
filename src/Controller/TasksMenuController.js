@@ -17,13 +17,13 @@ function eventListeners() {
   });
 }
 
-function renderTasksMenu() {
+export function renderTasksMenu() {
   TasksMenuView.render(main);
   const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
   renderCards(tomorrowTasksCards);
 }
 
-function renderCards(parentEl) {
+export function renderCards(parentEl) {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       const docUserRef = doc(db, "users", user.uid);
@@ -34,26 +34,24 @@ function renderCards(parentEl) {
         snapshot.docs.forEach((doc) => {
           const id = doc.id;
           const name = doc.data().name;
+          const checked = doc.data().checked;
           const startDate = doc.data().startDate;
           const repeat = doc.data().repeat;
           const difficulty = doc.data().difficulty;
           const energy = doc.data().energy;
           const checkpoints = doc.data().checkpoints;
-          const cpsMap = checkpoints.map(({ name }) => {
-            return name;
-          });
-
           const taskCard = new TaskCardController(
             name,
+            checked,
             startDate,
             repeat,
             difficulty,
             energy,
+            checkpoints,
             id
           );
-
-          taskCard.addCps(cpsMap);
           taskCard.render(parentEl);
+          taskCard.eventListeners();
         });
       });
     }

@@ -50,6 +50,9 @@ export function renderCards(parentEl) {
             checkpoints,
             id
           );
+          taskCard.isInfoToggled = doc.data().isInfoToggled;
+          taskCard.isTimerToggled = doc.data().isTimerToggled;
+
           taskCard.render(parentEl);
           taskCard.eventListeners();
         });
@@ -62,3 +65,38 @@ export default function tasksMenuControllerInit() {
   renderTasksMenu();
   eventListeners();
 }
+
+// export function renderCards(parentEl) {
+//   onAuthStateChanged(auth, (user) => {
+//     if (user) {
+//       const docUserRef = doc(db, "users", user.uid);
+//       const colTaskRef = collection(docUserRef, "tasks");
+
+//       onSnapshot(colTaskRef, (snapshot) => {
+//         parentEl.innerHTML = "";
+//         snapshot.docs.forEach((doc) => {
+//           const id = doc.id;
+//           const name = doc.data().name;
+//           const checked = doc.data().checked;
+//           const startDate = doc.data().startDate;
+//           const repeat = doc.data().repeat;
+//           const difficulty = doc.data().difficulty;
+//           const energy = doc.data().energy;
+//           const checkpoints = doc.data().checkpoints;
+//           const taskCard = new TaskCardController(
+//             name,
+//             checked,
+//             startDate,
+//             repeat,
+//             difficulty,
+//             energy,
+//             checkpoints,
+//             id
+//           );
+//           taskCard.render(parentEl);
+//           taskCard.eventListeners();
+//         });
+//       });
+//     }
+//   });
+// }

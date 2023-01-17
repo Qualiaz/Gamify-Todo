@@ -100,6 +100,7 @@ function addTask(name, date, repeat, difficulty, energy, cps, repeatValue) {
     if (!cp) return;
     taskInst.addCp(cp);
   });
+  console.log(taskInst);
   const taskData = Object.assign({}, taskInst);
   addDoc(colTaskRef, taskData);
 }

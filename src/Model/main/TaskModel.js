@@ -2,6 +2,8 @@ export default class TaskModel {
   checked = false;
   timeTracked = "time tracked";
   checkpoints = [];
+  isInfoToggled = false;
+  isTimerToggled = false;
 
   constructor(name, startDate, repeat, difficulty, energy) {
     this.name = name;

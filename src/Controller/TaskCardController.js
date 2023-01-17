@@ -32,30 +32,29 @@ export default class TaskCardController {
   eventListeners() {
     document.addEventListener("click", (e) => {
       const clickedId = e.target.id;
-      const playTimer = document.getElementById(`playTimer-${this.id}`);
-      const pauseTimer = document.getElementById(`pauseTimer-${this.id}`);
-      const cardToggle = document.getElementById(`cardToggleIcon-${this.id}`);
+
+      console.log(clickedId);
+      if (clickedId === `cardToggleIcon-${this.id}`) {
+        toggleInfo(this.id);
+      }
+      if (clickedId === `cardTimerIcon-${this.id}`) {
+        toggleTimerContainer(this.id);
+      }
 
       if (clickedId === `pauseTimer-${this.id}`) {
-        pauseTimer.classList.add("hidden");
-        playTimer.classList.remove("hidden");
+        this.taskCardView.renderPauseTimer(this.id);
       }
 
       if (clickedId === `playTimer-${this.id}`) {
-        playTimer.classList.add("hidden");
-        pauseTimer.classList.remove("hidden");
+        this.taskCardView.renderPlayTimer(this.id);
       }
 
-      if (clickedId === `cardToggleIcon-${this.id}`) {
-        cardToggle.classList.toggle("reverse-icon");
-      }
-
+      // WHEN USER CHECKS TASK
       if (clickedId === `taskCheckboxUnfinished-${this.id}`) {
         this.checked = true;
-        console.log(this.checked);
         checkTask(this.id, this.checked);
       }
-
+      // WHEN USER UNCHECKS TASK
       if (clickedId === `taskCheckboxFinished-${this.id}`) {
         this.checked = false;
         checkTask(this.id, this.checked);
@@ -90,7 +89,8 @@ export default class TaskCardController {
     this.taskCardView = taskCardView;
   }
 }
-
+/////////////////////////
+/////////////////////////
 function checkCheckpoint(clickedId, id, checked) {
   const cpNumId = clickedId.split("-")[1];
   const docUserRef = doc(db, "users", auth.currentUser.uid);
@@ -111,8 +111,31 @@ function checkCheckpoint(clickedId, id, checked) {
 }
 
 function checkTask(id, checked) {
+  const docTaskRef = getTask(id);
+  updateDoc(docTaskRef, { checked: checked });
+}
+
+function toggleInfo(id) {
+  const docTaskRef = getTask(id);
+  (async () => {
+    const taskSnap = await getDoc(docTaskRef);
+    const isInfoToggled = taskSnap.data().isInfoToggled;
+    updateDoc(docTaskRef, { isInfoToggled: !isInfoToggled });
+  })();
+}
+
+function toggleTimerContainer(id) {
+  const docTaskRef = getTask(id);
+  (async () => {
+    const taskSnap = await getDoc(docTaskRef);
+    const isTimerToggled = taskSnap.data().isTimerToggled;
+    updateDoc(docTaskRef, { isTimerToggled: !isTimerToggled });
+  })();
+}
+
+function getTask(id) {
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTasksRef = collection(docUserRef, "tasks");
   const docTaskRef = doc(colTasksRef, id);
-  updateDoc(docTaskRef, { checked: checked });
+  return docTaskRef;
 }

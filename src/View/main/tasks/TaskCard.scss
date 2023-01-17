@@ -72,7 +72,7 @@
     &__container {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 1rem;
+      // margin-bottom: 1rem;
       flex: 1;
     }
     &__btns {
@@ -94,7 +94,7 @@
       display: flex;
       justify-content: space-between;
       padding: 0 1rem;
-      // margin-bottom: 1rem;
+      margin-top: 1rem;
     }
 
     &__pause-icon {

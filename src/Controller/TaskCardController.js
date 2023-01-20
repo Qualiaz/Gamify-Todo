@@ -1,139 +1,143 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
-import TaskModel from "../Model/main/TaskModel";
+import TaskModel, { curTasks } from "../Model/main/TaskModel";
 import TaskCardView from "../View/main/tasks/TaskCardView";
 import TasksMenuController from "../View/main/tasks/tasksMenuView";
 import { renderCards, renderTasksMenu } from "./TasksMenuController";
+import Timer from "easytimer.js";
 
 export default class TaskCardController {
   taskCardView;
+  taskCardModel;
+
   numId = 0;
-  constructor(
-    name,
-    checked,
-    date,
-    repeat,
-    difficulty,
-    energy,
-    checkpoints,
-    id
-  ) {
-    this.name = name;
-    this.date = date;
-    this.repeat = repeat;
-    this.difficulty = difficulty;
-    this.energy = energy;
-    this.checkpoints = checkpoints;
-    this.id = id;
-    this.checked = checked;
+  stopwatch = new Timer();
+
+  playTime() {
+    this.stopwatch.start({
+      precision: "seconds",
+      startValues: {
+        seconds: this.taskCardModel.timeTracked.tracked.split(":")[2],
+        minutes: this.taskCardModel.timeTracked.tracked.split(":")[1],
+        hours: this.taskCardModel.timeTracked.tracked.split(":")[0],
+      },
+      callback: (stopwatch) => {
+        const timeValuesStr = stopwatch.getTimeValues().toString();
+        const timeValues = stopwatch.getTimeValues();
+
+        localStorage.setItem(
+          `timeElapsed-${this.taskCardModel.id}`,
+          timeValues
+        );
+        this.taskCardModel.timeTracked.tracked = timeValuesStr;
+        this.taskCardView.renderPlayTimer(this.taskCardModel.id);
+      },
+    });
+  }
+
+  pauseTime() {
+    this.stopwatch.pause();
+    this.taskCardView.renderPauseTimer(this.taskCardModel.id);
   }
 
   eventListeners() {
-    document.addEventListener("click", (e) => {
+    const taskCardContainer = document.getElementById(
+      `taskCard-${this.taskCardModel.id}`
+    );
+    taskCardContainer.addEventListener("click", (e) => {
+      const id = this.taskCardModel.id;
       const clickedId = e.target.id;
-
-      console.log(clickedId);
-      if (clickedId === `cardToggleIcon-${this.id}`) {
-        toggleInfo(this.id);
+      if (clickedId === `taskCheckboxUnfinished-${id}`) {
+        this.checkTask(true);
       }
-      if (clickedId === `cardTimerIcon-${this.id}`) {
-        toggleTimerContainer(this.id);
+      if (clickedId === `taskCheckboxFinished-${id}`) {
+        this.checkTask(false);
       }
-
-      if (clickedId === `pauseTimer-${this.id}`) {
-        this.taskCardView.renderPauseTimer(this.id);
+      if (clickedId === `cardToggleIcon-${id}`) {
+        this.toggleInfo();
       }
-
-      if (clickedId === `playTimer-${this.id}`) {
-        this.taskCardView.renderPlayTimer(this.id);
+      if (clickedId === `cardTimerIcon-${id}`) {
+        this.toggleTimer();
       }
-
-      // WHEN USER CHECKS TASK
-      if (clickedId === `taskCheckboxUnfinished-${this.id}`) {
-        this.checked = true;
-        checkTask(this.id, this.checked);
+      if (clickedId === `playTimer-${id}`) {
+        this.playTime();
       }
-      // WHEN USER UNCHECKS TASK
-      if (clickedId === `taskCheckboxFinished-${this.id}`) {
-        this.checked = false;
-        checkTask(this.id, this.checked);
+      if (clickedId === `pauseTimer-${id}`) {
+        this.pauseTime();
       }
-
-      // WHEN USER CHECKS CHECKPOINT
       if (
         clickedId.startsWith("cardCheckpointUnfinished") &&
-        clickedId.endsWith(this.id)
+        clickedId.endsWith(id)
       ) {
-        checkCheckpoint(clickedId, this.id, true);
+        this.checkCheckpoint(clickedId, true);
       }
-      // WHEN USER UNCHECKS CHECKPOINT
       if (
         clickedId.startsWith("cardCheckpointFinished") &&
-        clickedId.endsWith(this.id)
+        clickedId.endsWith(id)
       ) {
-        checkCheckpoint(clickedId, this.id, false);
+        this.checkCheckpoint(clickedId, false);
       }
     });
   }
 
-  render(parentEl, cardData = this) {
+  toggleInfo(id = this.taskCardModel.id) {
+    const isToggled = this.taskCardView.renderToggleInfo(id);
+    isToggled
+      ? (this.taskCardModel.isInfoToggled = true)
+      : (this.taskCardModel.isInfoToggled = false);
+  }
+
+  toggleTimer(id = this.taskCardModel.id) {
+    const isToggled = this.taskCardView.renderToggleTimer(id);
+    isToggled
+      ? (this.taskCardModel.isTimerToggled = true)
+      : (this.taskCardModel.isTimerToggled = false);
+  }
+
+  checkCheckpoint(clickedId, isChecked) {
+    if (isChecked) {
+      this.taskCardModel.checkpoints.forEach((cp) => {
+        if (cp.id === clickedId.replace("Unfinished", "")) {
+          cp.checked = true;
+        }
+      });
+    } else {
+      this.taskCardModel.checkpoints.forEach((cp) => {
+        if (cp.id === clickedId.replace("Finished", "")) {
+          cp.checked = false;
+        }
+      });
+    }
+
+    this.taskCardView.renderToggleCheckCp(clickedId);
+    this.taskCardModel.checkpoints;
+  }
+
+  checkTask(isChecked, id = this.taskCardModel.id) {
+    this.taskCardModel.checked = isChecked;
+    this.taskCardView.renderToggleCheckTask(id);
+  }
+
+  render(parentEl, cardData = this.taskCardModel) {
     const taskCardView = new TaskCardView();
     taskCardView.render(parentEl, cardData);
-    this.checkpoints.forEach((cp) => {
-      taskCardView.renderCps(cp["name"], cp["checked"], this.numId, this.id);
-      cp.id = `cardCheckpoint-${this.numId}-${this.id}`;
+    cardData.checkpoints.forEach((cp) => {
+      taskCardView.renderCps(
+        cp["name"],
+        cp["checked"],
+        this.numId,
+        cardData.id
+      );
+      cp.id = `cardCheckpoint-${this.numId}-${cardData.id}`;
       this.numId++;
     });
     this.numId = 0;
     this.taskCardView = taskCardView;
   }
 }
-/////////////////////////
-/////////////////////////
-function checkCheckpoint(clickedId, id, checked) {
-  const cpNumId = clickedId.split("-")[1];
-  const docUserRef = doc(db, "users", auth.currentUser.uid);
-  const colTasksRef = collection(docUserRef, "tasks");
-  const docTaskRef = doc(colTasksRef, id);
 
-  (async () => {
-    try {
-      const docSnap = await getDoc(docTaskRef);
-      const checkpoints = docSnap.data().checkpoints;
-      const { name } = checkpoints[cpNumId];
-      checkpoints[cpNumId] = { checked: checked, name: name };
-      updateDoc(docTaskRef, { checkpoints });
-    } catch (err) {
-      console.log(err);
-    }
-  })();
-}
-
-function checkTask(id, checked) {
-  const docTaskRef = getTask(id);
-  updateDoc(docTaskRef, { checked: checked });
-}
-
-function toggleInfo(id) {
-  const docTaskRef = getTask(id);
-  (async () => {
-    const taskSnap = await getDoc(docTaskRef);
-    const isInfoToggled = taskSnap.data().isInfoToggled;
-    updateDoc(docTaskRef, { isInfoToggled: !isInfoToggled });
-  })();
-}
-
-function toggleTimerContainer(id) {
-  const docTaskRef = getTask(id);
-  (async () => {
-    const taskSnap = await getDoc(docTaskRef);
-    const isTimerToggled = taskSnap.data().isTimerToggled;
-    updateDoc(docTaskRef, { isTimerToggled: !isTimerToggled });
-  })();
-}
-
-function getTask(id) {
+export function getTask(id) {
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTasksRef = collection(docUserRef, "tasks");
   const docTaskRef = doc(colTasksRef, id);

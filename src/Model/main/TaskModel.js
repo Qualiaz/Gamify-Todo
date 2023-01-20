@@ -1,8 +1,10 @@
+export const curTasks = [];
+
 export default class TaskModel {
   checked = false;
-  timeTracked = "time tracked";
+  timeTracked = { isPlaying: false, tracked: "00:00:00" };
   checkpoints = [];
-  isInfoToggled = false;
+  isInfoToggled = true;
   isTimerToggled = false;
 
   constructor(name, startDate, repeat, difficulty, energy) {

@@ -1,7 +1,7 @@
 import { addDoc, collection, doc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { swapElems } from "../../helpers/drag";
-import TaskModel from "../../Model/main/TaskModel";
+import TaskModel, { curTasks } from "../../Model/main/TaskModel";
 import { addTaskView } from "../../View/main/tasks/AddTaskView";
 
 import iconDifficultyTrivial from "../../View/main/tasks/assets/icon-difficulty-trivial.svg";
@@ -9,6 +9,8 @@ import iconDifficultyEasy from "../../View/main/tasks/assets/icon-difficulty-eas
 import iconDifficultyMedium from "../../View/main/tasks/assets/icon-difficulty-medium.svg";
 import iconDifficultyHard from "../../View/main/tasks/assets/icon-difficulty-hard.svg";
 import iconDifficultyChallenge from "../../View/main/tasks/assets/icon-difficulty-challenge.svg";
+import { createTasksFromDb, renderCards } from "../TasksMenuController";
+import TaskCardController from "../TaskCardController";
 
 const root = document.getElementById("root");
 
@@ -90,8 +92,8 @@ function validFormCheck(name, repeatDaily) {
 
   return { ok };
 }
-
 function addTask(name, date, repeat, difficulty, energy, cps, repeatValue) {
+  const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTaskRef = collection(docUserRef, "tasks");
   const taskInst = new TaskModel(name, date, repeat, difficulty, energy);
@@ -100,11 +102,19 @@ function addTask(name, date, repeat, difficulty, energy, cps, repeatValue) {
     if (!cp) return;
     taskInst.addCp(cp);
   });
-  console.log(taskInst);
   const taskData = Object.assign({}, taskInst);
-  addDoc(colTaskRef, taskData);
-}
 
+  addDoc(colTaskRef, taskData).then((doc) => {
+    const taskCardController = new TaskCardController();
+    taskCardController.taskCardModel = taskData;
+    taskCardController.taskCardModel.id = doc.id;
+
+    // return early if onSnapshot created the task already
+    if (document.getElementById(`taskCard-${doc.id}`)) return;
+    curTasks.push(taskCardController);
+    renderCards(tomorrowTasksCards);
+  });
+}
 function eventListeners() {
   let cpCurIdNum = 2;
 

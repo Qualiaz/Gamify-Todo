@@ -5,14 +5,19 @@ import TaskCardController from "./TaskCardController";
 import { onAuthStateChanged } from "firebase/auth";
 import addTaskControllerInit from "./Tasks/AddTaskController";
 import TaskCardView from "../View/main/tasks/TaskCardView";
+import { curTasks } from "../Model/main/TaskModel";
 
+export let userId;
 const main = document.getElementById("main");
+let unsubTasksDb;
 
 function eventListeners() {
   document.addEventListener("click", (e) => {
     const clickedId = e.target.id;
     if (clickedId === "addTaskBtn") {
       addTaskControllerInit();
+    }
+    if (clickedId === "filterBtn") {
     }
   });
 }
@@ -24,79 +29,36 @@ export function renderTasksMenu() {
 }
 
 export function renderCards(parentEl) {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const docUserRef = doc(db, "users", user.uid);
-      const colTaskRef = collection(docUserRef, "tasks");
-
-      onSnapshot(colTaskRef, (snapshot) => {
-        parentEl.innerHTML = "";
-        snapshot.docs.forEach((doc) => {
-          const id = doc.id;
-          const name = doc.data().name;
-          const checked = doc.data().checked;
-          const startDate = doc.data().startDate;
-          const repeat = doc.data().repeat;
-          const difficulty = doc.data().difficulty;
-          const energy = doc.data().energy;
-          const checkpoints = doc.data().checkpoints;
-          const taskCard = new TaskCardController(
-            name,
-            checked,
-            startDate,
-            repeat,
-            difficulty,
-            energy,
-            checkpoints,
-            id
-          );
-          taskCard.isInfoToggled = doc.data().isInfoToggled;
-          taskCard.isTimerToggled = doc.data().isTimerToggled;
-
-          taskCard.render(parentEl);
-          taskCard.eventListeners();
-        });
+  const interval = setInterval(() => {
+    if (curTasks.length > 0) {
+      console.log(curTasks);
+      parentEl.innerHTML = "";
+      curTasks.forEach((task) => {
+        task.render(parentEl);
+        task.eventListeners();
+        unsubTasksDb();
+        clearInterval(interval);
       });
     }
-  });
+  }, 100);
 }
 
 export default function tasksMenuControllerInit() {
+  createTasksFromDb();
   renderTasksMenu();
   eventListeners();
 }
 
-// export function renderCards(parentEl) {
-//   onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//       const docUserRef = doc(db, "users", user.uid);
-//       const colTaskRef = collection(docUserRef, "tasks");
+export function createTasksFromDb() {
+  const docUserRef = doc(db, "users", localStorage.getItem("user"));
+  const colTaskRef = collection(docUserRef, "tasks");
 
-//       onSnapshot(colTaskRef, (snapshot) => {
-//         parentEl.innerHTML = "";
-//         snapshot.docs.forEach((doc) => {
-//           const id = doc.id;
-//           const name = doc.data().name;
-//           const checked = doc.data().checked;
-//           const startDate = doc.data().startDate;
-//           const repeat = doc.data().repeat;
-//           const difficulty = doc.data().difficulty;
-//           const energy = doc.data().energy;
-//           const checkpoints = doc.data().checkpoints;
-//           const taskCard = new TaskCardController(
-//             name,
-//             checked,
-//             startDate,
-//             repeat,
-//             difficulty,
-//             energy,
-//             checkpoints,
-//             id
-//           );
-//           taskCard.render(parentEl);
-//           taskCard.eventListeners();
-//         });
-//       });
-//     }
-//   });
-// }
+  unsubTasksDb = onSnapshot(colTaskRef, (snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      const taskCard = new TaskCardController();
+      taskCard.taskCardModel = doc.data();
+      taskCard.taskCardModel.id = doc.id;
+      curTasks.push(taskCard);
+    });
+  });
+}

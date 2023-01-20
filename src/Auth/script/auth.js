@@ -28,6 +28,7 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
+import { userId } from "../../Controller/TasksMenuController";
 /////////////////
 
 export default function initAuthPageScript() {
@@ -99,6 +100,9 @@ export default function initAuthPageScript() {
   // CHECK AUTH STATE //
   onAuthStateChanged(auth, (user) => {
     if (user) {
+      // new UserModel(user);
+      // userId = user.uid;
+      console.log(localStorage.setItem("user", user.uid));
       window.location.pathname = "/";
     } else {
       console.log("AuthState signed out");

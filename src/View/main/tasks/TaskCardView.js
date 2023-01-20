@@ -16,6 +16,8 @@ export default class TaskCardView {
     id,
     isInfoToggled,
     isTimerToggled,
+    timeTracked,
+    isTimeTracking,
   }) {
     return `
   <div id="taskCard-${id}">
@@ -49,18 +51,22 @@ export default class TaskCardView {
         <div id="taskCardTimerContainer-${id}" class="task-card__timer__container ${
       isTimerToggled ? "hidden" : null
     }">
-          <span id="timer-${id}" class="task-card__timer">${id}</span>
-          <img class="task-card__timer__pause-icon hidden" src=${pauseTimerIcon} id="pauseTimer-${id}" class="hidden"/>
-          <img class="task-card__timer__play-icon" src=${playTimerIcon} id="playTimer-${id}" />
+          <span id="timer-${id}" class="task-card__timer">${
+      timeTracked.tracked
+    }</span>
+       
+          <img class="task-card__timer__pause-icon ${
+            isTimeTracking ? null : "hidden"
+          }" src=${pauseTimerIcon} id="pauseTimer-${id}"/>
+          <img class="task-card__timer__play-icon ${
+            isTimeTracking ? "hidden" : null
+          }" src=${playTimerIcon} id="playTimer-${id}" />
         </div>
 
-        <div id="taskCardLineBreak-1-${id}" class="task-card__line-break ${
-      isInfoToggled ? "hidden" : null
-    }"></div>
+      <div id="taskInfo-${id}" class="${isInfoToggled ? null : "hidden"}">
+        <div id="taskCardLineBreak-1-${id}" class="task-card__line-break"></div>
 
-        <div id="taskCardNotes-${id}" class="task-card__notes__container ${
-      isInfoToggled ? "hidden" : null
-    }">
+        <div id="taskCardNotes-${id}" class="task-card__notes__container">
           <p>
             Hello there, Those are the notes tasks I hope you have a
             wonderful meditation day! - pupic
@@ -69,23 +75,15 @@ export default class TaskCardView {
           <p>ds</p>
         </div>
         
-        <div id="taskCardLineBreak-2-${id}" class="task-card__line-break ${
-      isInfoToggled ? "hidden" : null
-    }"></div>
+        <div id="taskCardLineBreak-2-${id}" class="task-card__line-break"></div>
         
-        <div id="cardCheckpoints-${id}" class="task-card__checkpoints__container ${
-      isInfoToggled ? "hidden" : null
-    }">
+        <div id="cardCheckpoints-${id}" class="task-card__checkpoints__container">
         
         </div>
 
-        <div id="taskCardLineBreak-3-${id}" class="task-card__line-break ${
-      isInfoToggled ? "hidden" : null
-    }"></div>
+        <div id="taskCardLineBreak-3-${id}" class="task-card__line-break"></div>
 
-          <div id="taskCardAdditionalInfo-${id}" class="task-card__additional-info ${
-      isInfoToggled ? "hidden" : null
-    }">
+          <div id="taskCardAdditionalInfo-${id}" class="task-card__additional-info">
             <div class="task-card__energy__container">
               <img class="task-card__energy__icon" src=${energyIcon} />
               <span class="task-card__energy__points">${energy}</span>
@@ -93,7 +91,8 @@ export default class TaskCardView {
 
             <div class="task-card__difficulty">
               <img class="task-card__difficulty__icon" src="./icon-difficulty-${difficulty}.svg" />
-            </div>          
+            </div>
+        </div>          
       </div>
     </div>
   </div>
@@ -124,11 +123,14 @@ export default class TaskCardView {
   }
 
   renderPlayTimer(id) {
+    const timerEl = document.getElementById(`timer-${id}`);
     const playTimer = document.getElementById(`playTimer-${id}`);
     const pauseTimer = document.getElementById(`pauseTimer-${id}`);
 
     playTimer.classList.add("hidden");
     pauseTimer.classList.remove("hidden");
+
+    timerEl.innerHTML = localStorage.getItem(`timeElapsed-${id}`);
   }
 
   renderPauseTimer(id) {
@@ -140,7 +142,55 @@ export default class TaskCardView {
   }
 
   render(parentEl, cardData) {
-    console.log(cardData.isInfoToggled);
     parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(cardData));
+  }
+
+  renderToggleInfo(id) {
+    const taskInfo = document.getElementById(`taskInfo-${id}`);
+    const cardToggleIcon = document.getElementById(`cardToggleIcon-${id}`);
+
+    const isToggled = !taskInfo.classList.contains("hidden");
+
+    taskInfo.classList.toggle("hidden");
+    !cardToggleIcon.classList.toggle("reverse-icon");
+
+    // returns like this so it can sync in controller with the model state
+    return isToggled;
+  }
+
+  renderToggleTimer(id) {
+    const timerContainer = document.getElementById(
+      `taskCardTimerContainer-${id}`
+    );
+    timerContainer.classList.toggle("hidden");
+
+    // returns like this so it can sync in controller with the model state
+    return !timerContainer.classList.contains("hidden");
+  }
+
+  renderToggleCheckTask(id) {
+    const checkboxTaskUnfinished = document.getElementById(
+      `taskCheckboxUnfinished-${id}`
+    );
+    const checkboxTaskFinished = document.getElementById(
+      `taskCheckboxFinished-${id}`
+    );
+    // console.log()
+    checkboxTaskUnfinished.classList.toggle("hidden");
+    checkboxTaskFinished.classList.toggle("hidden");
+  }
+
+  renderToggleCheckCp(clickedId) {
+    const cpNumber = clickedId.split("-")[1];
+    const id = clickedId.split("-")[2];
+    const unfinishedCp = document.getElementById(
+      `cardCheckpointUnfinished-${cpNumber}-${id}`
+    );
+    const finishedCp = document.getElementById(
+      `cardCheckpointFinished-${cpNumber}-${id}`
+    );
+
+    unfinishedCp.classList.toggle("hidden");
+    finishedCp.classList.toggle("hidden");
   }
 }

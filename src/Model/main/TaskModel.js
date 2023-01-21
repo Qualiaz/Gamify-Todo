@@ -2,7 +2,7 @@ export const curTasks = [];
 
 export default class TaskModel {
   checked = false;
-  timeTracked = { isPlaying: false, tracked: "00:00:00" };
+  timeTracked = "00:00:00";
   checkpoints = [];
   isInfoToggled = true;
   isTimerToggled = false;

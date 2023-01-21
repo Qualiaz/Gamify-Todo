@@ -22,7 +22,9 @@ export default function Controller() {
           break;
         case "tasks":
           console.log("controller render");
+
           tasksMenuControllerInit();
+
           break;
         case "projects":
           main.innerHTML = projectsMarkup;

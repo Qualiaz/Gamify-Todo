@@ -58,6 +58,10 @@ export function createTasksFromDb() {
       const taskCard = new TaskCardController();
       taskCard.taskCardModel = doc.data();
       taskCard.taskCardModel.id = doc.id;
+      const localTimeTracked = localStorage.getItem(`timeElapsed-${doc.id}`);
+      if (localTimeTracked) {
+        taskCard.taskCardModel.timeTracked = localTimeTracked;
+      }
       curTasks.push(taskCard);
     });
   });

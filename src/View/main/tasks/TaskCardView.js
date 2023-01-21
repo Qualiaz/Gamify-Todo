@@ -17,7 +17,6 @@ export default class TaskCardView {
     isInfoToggled,
     isTimerToggled,
     timeTracked,
-    isTimeTracking,
   }) {
     return `
   <div id="taskCard-${id}">
@@ -42,25 +41,19 @@ export default class TaskCardView {
             </div>
             <div class="task-card__toggle-icon">
               <img id="cardToggleIcon-${id}" draggable="false" class="${
-      isInfoToggled ? "reverse-icon" : null
+      isInfoToggled ? null : "reverse-icon"
     } task-card__toggle-icon" src=${toggleIcon} />
             </div>
           </div>
         </div>
 
         <div id="taskCardTimerContainer-${id}" class="task-card__timer__container ${
-      isTimerToggled ? "hidden" : null
+      isTimerToggled ? null : "hidden"
     }">
-          <span id="timer-${id}" class="task-card__timer">${
-      timeTracked.tracked
-    }</span>
+          <span id="timer-${id}" class="task-card__timer">${timeTracked}</span>
        
-          <img class="task-card__timer__pause-icon ${
-            isTimeTracking ? null : "hidden"
-          }" src=${pauseTimerIcon} id="pauseTimer-${id}"/>
-          <img class="task-card__timer__play-icon ${
-            isTimeTracking ? "hidden" : null
-          }" src=${playTimerIcon} id="playTimer-${id}" />
+          <img class="task-card__timer__pause-icon hidden" src=${pauseTimerIcon} id="pauseTimer-${id}"/>
+          <img class="task-card__timer__play-icon" src=${playTimerIcon} id="playTimer-${id}" />
         </div>
 
       <div id="taskInfo-${id}" class="${isInfoToggled ? null : "hidden"}">
@@ -102,9 +95,9 @@ export default class TaskCardView {
   _generateCheckpoint(cpName, checked, num, id) {
     return `
     <div id="cardCheckpoint-${num}-${id}" class="task-card__checkpoint__container">           
-      <span id="cardCheckpointUnfinished-${num}-${id}" class="task-card__checkpoint--unfinished" ${
+      <span id="cardCheckpointUnfinished-${num}-${id}" class="task-card__checkpoint--unfinished ${
       checked ? "hidden" : null
-    }></span>
+    }" ></span>
       <span id="cardCheckpointFinished-${num}-${id}" class="task-card__checkpoint--finished ${
       checked ? null : "hidden"
     }"></span>
@@ -141,15 +134,11 @@ export default class TaskCardView {
     playTimer.classList.remove("hidden");
   }
 
-  render(parentEl, cardData) {
-    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(cardData));
-  }
-
   renderToggleInfo(id) {
     const taskInfo = document.getElementById(`taskInfo-${id}`);
     const cardToggleIcon = document.getElementById(`cardToggleIcon-${id}`);
 
-    const isToggled = !taskInfo.classList.contains("hidden");
+    const isToggled = taskInfo.classList.contains("hidden");
 
     taskInfo.classList.toggle("hidden");
     !cardToggleIcon.classList.toggle("reverse-icon");
@@ -183,6 +172,7 @@ export default class TaskCardView {
   renderToggleCheckCp(clickedId) {
     const cpNumber = clickedId.split("-")[1];
     const id = clickedId.split("-")[2];
+
     const unfinishedCp = document.getElementById(
       `cardCheckpointUnfinished-${cpNumber}-${id}`
     );
@@ -192,5 +182,9 @@ export default class TaskCardView {
 
     unfinishedCp.classList.toggle("hidden");
     finishedCp.classList.toggle("hidden");
+  }
+
+  render(parentEl, cardData) {
+    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(cardData));
   }
 }

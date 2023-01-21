@@ -13,6 +13,10 @@ class AddTaskView {
            <label for="taskSettingsName">Name <span id="taskSettingsNameCheckFail" class="hidden">At least one character</span> </label>
            <input type="text" id="taskSettingsName" />
         </div>
+        <div class="task__settings__el task__settings__notes">
+           <label>Notes</label>
+           <textarea data-provide="markdown" id="markedInput"></textarea>
+        </div>
         <div class="task__settings__el task__settings__start-date">
            <label for="taskSettingsStartDate">Start Date</label>
            <input type="date" name="date" id="taskSettingsStartDate" />

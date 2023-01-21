@@ -18,7 +18,6 @@ export default class TaskCardController {
     const taskCardContainer = document.getElementById(
       `taskCard-${this.taskCardModel.id}`
     );
-    const root = document.getElementById("root");
     taskCardContainer.addEventListener("click", (e) => {
       const id = this.taskCardModel.id;
       const clickedId = e.target.id;

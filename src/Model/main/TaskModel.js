@@ -7,12 +7,13 @@ export default class TaskModel {
   isInfoToggled = true;
   isTimerToggled = false;
 
-  constructor(name, startDate, repeat, difficulty, energy) {
+  constructor(name, notes, startDate, repeat, difficulty, energy) {
     this.name = name;
     this.startDate = startDate;
     this.repeat = repeat;
     this.difficulty = difficulty;
     this.energy = energy;
+    this.notes = notes;
   }
 
   addCp(name) {

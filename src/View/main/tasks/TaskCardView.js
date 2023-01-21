@@ -4,6 +4,7 @@ import difficultyIcon from "./assets/icon-difficulty-trivial.svg";
 import energyIcon from "./assets/energy-icon.svg";
 import pauseTimerIcon from "./assets/pauseTimer-icon.svg";
 import playTimerIcon from "./assets/playTimer-icon.svg";
+import { marked } from "marked";
 
 export default class TaskCardView {
   _generateMarkup({
@@ -17,6 +18,7 @@ export default class TaskCardView {
     isInfoToggled,
     isTimerToggled,
     timeTracked,
+    notes,
   }) {
     return `
   <div id="taskCard-${id}">
@@ -60,10 +62,7 @@ export default class TaskCardView {
         <div id="taskCardLineBreak-1-${id}" class="task-card__line-break"></div>
 
         <div id="taskCardNotes-${id}" class="task-card__notes__container">
-          <p>
-            Hello there, Those are the notes tasks I hope you have a
-            wonderful meditation day! - pupic
-          </p>
+          ${marked.parse(notes)}
           <br />
           <p>ds</p>
         </div>

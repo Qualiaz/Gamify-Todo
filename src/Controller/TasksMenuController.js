@@ -9,6 +9,7 @@ import { curTasks } from "../Model/main/TaskModel";
 
 export let userId;
 const main = document.getElementById("main");
+
 let unsubTasksDb;
 
 function eventListeners() {

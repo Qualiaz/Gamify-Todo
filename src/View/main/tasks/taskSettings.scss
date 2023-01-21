@@ -178,3 +178,13 @@
 .gu-transit {
   opacity: 0.6;
 }
+
+#markedInput {
+  color: black;
+  resize: vertical;
+  max-height: 20rem;
+  background-color: $secondary;
+  border: none;
+  border-radius: 0.5rem;
+  color: #fff;
+}

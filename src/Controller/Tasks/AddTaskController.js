@@ -92,11 +92,20 @@ function validFormCheck(name, repeatDaily) {
 
   return { ok };
 }
-function addTask(name, date, repeat, difficulty, energy, cps, repeatValue) {
+function addTask(
+  name,
+  notes,
+  date,
+  repeat,
+  difficulty,
+  energy,
+  cps,
+  repeatValue
+) {
   const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTaskRef = collection(docUserRef, "tasks");
-  const taskInst = new TaskModel(name, date, repeat, difficulty, energy);
+  const taskInst = new TaskModel(name, notes, date, repeat, difficulty, energy);
   taskInst.addRepeat(repeatValue);
   cps.forEach((cp) => {
     if (!cp) return;
@@ -150,17 +159,45 @@ function eventListeners() {
         repeat,
         daysOfWeek,
         repeatDaily,
+        notes,
       } = newTaskData;
       if (!validFormCheck(name, repeatDaily).ok) return;
 
       if (repeat === "daily") {
-        addTask(name, startDate, repeat, difficulty, energy, cps, repeatDaily);
+        addTask(
+          name,
+          notes,
+          startDate,
+          repeat,
+          difficulty,
+          energy,
+          cps,
+          repeatDaily
+        );
       }
       if (repeat === "weekly") {
-        addTask(name, startDate, repeat, difficulty, energy, cps, daysOfWeek);
+        addTask(
+          name,
+          notes,
+          startDate,
+          repeat,
+          difficulty,
+          energy,
+          cps,
+          daysOfWeek
+        );
       }
       if (repeat === "no-repeat") {
-        addTask(name, startDate, repeat, difficulty, energy, cps, repeat);
+        addTask(
+          name,
+          notes,
+          startDate,
+          repeat,
+          difficulty,
+          energy,
+          cps,
+          repeat
+        );
       }
 
       cpCurIdNum = 2;
@@ -279,6 +316,7 @@ function getValues() {
     "repeat__week__el day__selected"
   );
   const repeatDaily = document.getElementById("repeatDailyInput").value;
+  const notes = document.getElementById("markedInput").value;
 
   const daysOfWeek = [];
   Array.from(weekly).forEach((day) => {
@@ -299,6 +337,7 @@ function getValues() {
     repeat,
     daysOfWeek,
     repeatDaily,
+    notes,
   };
 }
 

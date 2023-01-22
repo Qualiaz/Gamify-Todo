@@ -19,7 +19,9 @@ class AddTaskView {
         </div>
         <div class="task__settings__el task__settings__start-date">
            <label for="taskSettingsStartDate">Start Date</label>
-           <input type="date" name="date" id="taskSettingsStartDate" />
+           <input type="date" name="date" min=${
+             new Date().toISOString().split("T")[0]
+           } id="taskSettingsStartDate" />
         </div>
         <div id="repeatContainer" class="task__settings__el task__settings__repeat">
            <label for="taskSettingsRepeat">Repeat <span id="taskSettingsRepeatDailyFail" class="hidden">Only numbers allowed</span></label>

@@ -7,25 +7,31 @@
     overflow: hidden;
     border-radius: 1rem;
     margin: 1rem;
+
+    * {
+      // color: rgb(10, 10, 10);
+      color: #edecee;
+    }
   }
 
   &__checkbox {
     &__container {
       padding: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: start;
+      // display: flex;
+      // justify-content: center;
+      // align-items: center;
+      // margin-top: 0.2rem;
       width: 5rem;
-      background-color: $primary;
+      background-color: var(--difficultyColor, $primary);
       position: relative;
     }
 
     &--unfinished {
       width: 2rem;
       height: 2rem;
-      background-color: $secondary;
+      background-color: #edecee;
       position: absolute;
-      top: 1rem;
+      top: 1.2rem;
       left: 1.5rem;
       border-radius: 0.4rem;
     }
@@ -33,9 +39,8 @@
     &--finished {
       width: 2rem;
       height: 2rem;
-      background-color: $secondary;
       position: absolute;
-      top: 1rem;
+      top: 1.2rem;
       left: 1.5rem;
       border-radius: 0.4rem;
       &::before {
@@ -43,7 +48,9 @@
         display: inline-block;
         width: 86%;
         height: 86%;
-        background-color: $primary;
+        outline-style: inset;
+        outline: 1px solid #edecee;
+        background-color: var(--difficultyColor, $primary);
         transform: translate(0.13rem, 0.13rem);
         border-radius: 0.3rem;
       }
@@ -65,6 +72,7 @@
       padding: 1rem 1rem;
       flex: 1;
       background-color: #272727;
+      // background-color: #fff;
     }
   }
 
@@ -105,6 +113,7 @@
       ul {
         list-style: inside;
         padding-left: 1rem;
+        color: white;
       }
     }
   }
@@ -133,8 +142,9 @@
     &--unfinished {
       width: 1.6rem;
       height: 1.6rem;
-      background-color: $secondary;
-      border: 2px solid $primary;
+      // background-color: $secondary;
+
+      border: 2px solid var(--difficultyColor, $primary);
       position: absolute;
       top: 0.3rem;
       border-radius: 0.4rem;
@@ -143,18 +153,20 @@
     &--finished {
       width: 1.6rem;
       height: 1.6rem;
-      background-color: $secondary;
-      border: 2px solid $primary;
+      // background-color: $secondary;
+      border: 2px solid var(--difficultyColor, $primary);
       position: absolute;
       margin: 0 auto;
       top: 0.3rem;
       border-radius: 0.4rem;
+
       &::before {
         content: "";
         display: inline-block;
         width: 80%;
         height: 80%;
-        background-color: $primary;
+        background-color: var(--difficultyColor, $primary);
+        // background-color: red;
         transform: translate(0.1rem, -0.6rem);
         border-radius: 0.2rem;
       }
@@ -180,14 +192,6 @@
       height: 2.2rem;
     }
   }
-
-  &__line-break {
-    width: 100%;
-    height: 0.2rem;
-    background-color: $primary;
-    border-radius: 1rem;
-    margin: 0.8rem 0;
-  }
 }
 
 .hidden {
@@ -196,4 +200,12 @@
 
 .reverse-icon {
   transform: rotateZ(180deg);
+}
+
+.task-card__line-break {
+  height: 0.2rem;
+  background-color: var(--difficultyColor, $primary);
+  border: none;
+  border-radius: 1rem;
+  margin: 0.3rem 0;
 }

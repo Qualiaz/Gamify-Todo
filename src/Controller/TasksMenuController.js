@@ -32,10 +32,9 @@ export function renderTasksMenu() {
 export function renderCards(parentEl) {
   const interval = setInterval(() => {
     if (curTasks.length > 0) {
-      console.log(curTasks);
       parentEl.innerHTML = "";
       curTasks.forEach((task) => {
-        task.render(parentEl);
+        task.taskCardView.render(parentEl, task.taskCardModel);
         task.eventListeners();
         unsubTasksDb();
         clearInterval(interval);

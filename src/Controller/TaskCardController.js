@@ -8,21 +8,24 @@ import { renderCards, renderTasksMenu } from "./TasksMenuController";
 import Timer from "easytimer.js";
 
 export default class TaskCardController {
-  taskCardView;
-  taskCardModel;
-
-  numId = 0;
   #stopwatch = new Timer();
+  constructor() {
+    this.taskCardView = new TaskCardView();
+    this.taskCardModel;
+  }
 
   eventListeners() {
-    const taskCardContainer = document.getElementById(
-      `taskCard-${this.taskCardModel.id}`
-    );
+    const id = this.taskCardModel.id;
+    const taskCardContainer = document.getElementById(`taskCard-${id}`);
     taskCardContainer.addEventListener("click", (e) => {
-      const id = this.taskCardModel.id;
       const clickedId = e.target.id;
+      if (clickedId === `taskCard-${id}`) {
+        console.log("hi");
+      }
+
       if (clickedId === `taskCheckboxUnfinished-${id}`) {
         this.checkTask(true);
+        console.log(this.taskCardModel);
         this.#sendToDb.updateChecked(true, id);
       }
       if (clickedId === `taskCheckboxFinished-${id}`) {
@@ -90,10 +93,10 @@ export default class TaskCardController {
     const isToggled = this.taskCardView.renderToggleInfo(id);
     if (isToggled) {
       this.taskCardModel.isInfoToggled = true;
-      this.#sendToDb.updateIsInfoToggled(true, this.taskCardModel.id);
+      this.#sendToDb.updateIsInfoToggled(true, id);
     } else {
       this.taskCardModel.isInfoToggled = false;
-      this.#sendToDb.updateIsInfoToggled(false, this.taskCardModel.id);
+      this.#sendToDb.updateIsInfoToggled(false, id);
     }
   }
 
@@ -101,10 +104,10 @@ export default class TaskCardController {
     const isToggled = this.taskCardView.renderToggleTimer(id);
     if (isToggled) {
       this.taskCardModel.isTimerToggled = true;
-      this.#sendToDb.updateIsTimerToggled(true, this.taskCardModel.id);
+      this.#sendToDb.updateIsTimerToggled(true, id);
     } else {
       this.taskCardModel.isTimerToggled = false;
-      this.#sendToDb.updateIsTimerToggled(false, this.taskCardModel.id);
+      this.#sendToDb.updateIsTimerToggled(false, id);
     }
   }
 
@@ -143,31 +146,13 @@ export default class TaskCardController {
     this.taskCardView.renderToggleCheckTask(id);
   }
 
-  render(parentEl, cardData = this.taskCardModel) {
-    const taskCardView = new TaskCardView();
-    taskCardView.render(parentEl, cardData);
-    cardData.checkpoints.forEach((cp) => {
-      taskCardView.renderCps(
-        cp["name"],
-        cp["checked"],
-        this.numId,
-        cardData.id
-      );
-      cp.id = `cardCheckpoint-${this.numId}-${cardData.id}`;
-      this.numId++;
+  _generateCpId() {
+    let numId = 0;
+    this.taskCardModel.checkpoints.forEach((cp) => {
+      cp.id = `cardCheckpoint-${numId}-${this.taskCardModel.id}`;
+      numId++;
     });
-    this.numId = 0;
-    this.taskCardView = taskCardView;
   }
-
-  #sendToLocalStorage = {
-    toggleInfo(isToggled, id) {
-      localStorage.setItem(`taskCardInfoToggled-${id}`, isToggled);
-    },
-    toggleTimer(isToggled, id) {
-      localStorage.setItem(`taskCardTimerToggled-${id}`, isToggled);
-    },
-  };
 
   #sendToDb = {
     updateChecked(isChecked, id) {

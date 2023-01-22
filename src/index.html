@@ -9,55 +9,38 @@
   <body>
     <div id="root">
       <header class="header">
-        <section class="header--top">
-          <h1 id="logo">Gamify Todo</h1>
-          <div class="profile">
-            <div class="profile__img">
-              <img id="profileImg" src="./mylove.png" alt="profile image" />
-            </div>
-            <div class="profile__name">
-              <span id="profileNameNav"></span>
-            </div>
-            <div class="profile__energy">
-              <span id="energyNav"></span>
-            </div>
+        <h1 id="logo">Gamify Todo</h1>
+        <nav id="nav">
+          <ul>
+            <li><a href="/#/" id="dashboard">Dashboard</a></li>
+            <li><a href="/#/projects" id="projects">Projects</a></li>
+            <li id="navTasksBtn"><a href="/#/tasks" id="tasks">Tasks</a></li>
+            <li><a href="/#/habits" id="habits">Habits</a></li>
+            <li><a href="/#/calendar" id="calendar">Calendar</a></li>
+            <li>
+              <a href="/#/yearinpixels" id="yearInPixels">Year in Pixels</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="profile">
+          <div class="profile__img">
+            <img id="profileImg" src="./mylove.png" alt="profile image" />
           </div>
-        </section>
-        <div class="header--bottom">
-          <nav id="nav">
-            <ul>
-              <li><a href="/#/" id="dashboard">Dashboard</a></li>
-              <li><a href="/#/projects" id="projects">Projects</a></li>
-              <li><a href="/#/tasks" id="tasks">Tasks</a></li>
-              <li><a href="/#/habits" id="habits">Habits</a></li>
-              <li><a href="/#/calendar" id="calendar">Calendar</a></li>
-              <li>
-                <a href="/#/yearinpixels" id="yearInPixels">Year in Pixels</a>
-              </li>
-            </ul>
-          </nav>
+          <div class="profile__name">
+            <span id="profileNameNav">Qualiaz</span>
+          </div>
+          <div class="profile__energy">
+            <span id="energyNav">
+              <img src="./energy-icon.svg" alt="e" />23,132</span
+            >
+          </div>
         </div>
       </header>
       <main id="main">
         <div id="tasksMenu">
-          <div class="TM__component">
-            <div class="TM__component__header">
-              <div class="TM__component__header__title-wrapper">
-                <h3>Tomorrow Tasks</h3>
-              </div>
-              <div class="TM__component__header__addTaskBtn-wrapper">
-                <button id="addTaskBtn">X</button>
-              </div>
-              <div class="TM__component__header__filterBtn-wrapper">
-                <button id="filterBtn">III</button>
-              </div>
-            </div>
-            <div class="TM__component__task"></div>
-          </div>
+          <a href="./auth.html">auth</a>
+          <button id="signoutBtn">sign out</button>
         </div>
-
-        <a href="./auth.html">auth</a>
-        <button id="signoutBtn">sign out</button>
       </main>
     </div>
   </body>

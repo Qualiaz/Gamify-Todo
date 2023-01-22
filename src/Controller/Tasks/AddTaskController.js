@@ -92,16 +92,8 @@ function validFormCheck(name, repeatDaily) {
 
   return { ok };
 }
-function addTask(
-  name,
-  notes,
-  date,
-  repeat,
-  difficulty,
-  energy,
-  cps,
-  repeatValue
-) {
+//prettier-ignore
+function addTask(name,notes,date,repeat,difficulty,energy,cps,repeatValue) {
   const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTaskRef = collection(docUserRef, "tasks");
@@ -124,6 +116,9 @@ function addTask(
     renderCards(tomorrowTasksCards);
   });
 }
+
+function changeTask() {}
+
 function eventListeners() {
   let cpCurIdNum = 2;
 
@@ -150,54 +145,21 @@ function eventListeners() {
     if (clickedId === "taskSettingsDoneBtn") {
       e.preventDefault();
       const newTaskData = getValues();
-      const {
-        name,
-        startDate,
-        difficulty,
-        energy,
-        cps,
-        repeat,
-        daysOfWeek,
-        repeatDaily,
-        notes,
-      } = newTaskData;
+      //prettier-ignore
+      const {name,startDate,difficulty,energy,cps,repeat,daysOfWeek,repeatDaily,notes,} = newTaskData;
       if (!validFormCheck(name, repeatDaily).ok) return;
 
       if (repeat === "daily") {
-        addTask(
-          name,
-          notes,
-          startDate,
-          repeat,
-          difficulty,
-          energy,
-          cps,
-          repeatDaily
-        );
+        //prettier-ignore
+        addTask(name,notes,startDate,repeat,difficulty,energy,cps,repeatDaily);
       }
       if (repeat === "weekly") {
-        addTask(
-          name,
-          notes,
-          startDate,
-          repeat,
-          difficulty,
-          energy,
-          cps,
-          daysOfWeek
-        );
+        //prettier-ignore
+        addTask(name,notes,startDate,repeat,difficulty,energy,cps,daysOfWeek);
       }
       if (repeat === "no-repeat") {
-        addTask(
-          name,
-          notes,
-          startDate,
-          repeat,
-          difficulty,
-          energy,
-          cps,
-          repeat
-        );
+        //prettier-ignore
+        addTask(name,notes,startDate,repeat,difficulty,energy,cps,repeat);
       }
 
       cpCurIdNum = 2;
@@ -328,17 +290,8 @@ function getValues() {
     cps.push(checkpointsContainer.children[i].children[0].value);
   }
 
-  return {
-    name,
-    startDate,
-    difficulty,
-    energy,
-    cps,
-    repeat,
-    daysOfWeek,
-    repeatDaily,
-    notes,
-  };
+  //prettier-ignore
+  return {name,startDate,difficulty,energy,cps,repeat,daysOfWeek,repeatDaily,notes};
 }
 
 export default function addTaskControllerInit() {

@@ -1,6 +1,8 @@
 body {
   position: relative;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
 }

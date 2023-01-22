@@ -10,6 +10,7 @@ export default function Controller() {
   const main = document.getElementById("main");
   const nav = document.getElementById("nav");
   const menuBtns = nav.querySelectorAll("a");
+  const menuTasksBtn = document.getElementById("navTasksBtn");
 
   menuBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -23,6 +24,8 @@ export default function Controller() {
         case "tasks":
           console.log("controller render");
           tasksMenuControllerInit();
+          menuTasksBtn.style.backgroundColor = "#9797e2;";
+          console.log(menuTasksBtn);
           break;
         case "projects":
           main.innerHTML = projectsMarkup;

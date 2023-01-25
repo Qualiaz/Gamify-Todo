@@ -28,7 +28,7 @@ import {
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
-import { userId } from "../../Controller/TasksMenuController";
+import { userId } from "../../Controller/TasksComponentController";
 /////////////////
 
 export default function initAuthPageScript() {

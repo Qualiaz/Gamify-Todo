@@ -1,4 +1,13 @@
+import { collection, doc, getDocs } from "firebase/firestore";
+import TaskCardController from "../../Controller/TaskCardController";
+import { auth, db } from "../../firebase/config";
+
 export const curTasks = [];
+export const curTasksToday = [];
+export const curTasksTomorrow = [];
+export const curTasksThisWeek = [];
+// export const curTasksFriday = [];
+export const curTasksWhenever = [];
 
 export default class TaskModel {
   checked = false;

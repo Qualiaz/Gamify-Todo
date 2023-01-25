@@ -2,11 +2,16 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
 import initUser from "./initUserController";
 import dashboardMenuControllerInit from "./dashboardController";
-import tasksMenuControllerInit from "./TasksMenuController";
+import TasksComponentController from "./TasksComponentController";
+import { tasksMenuController } from "./tasksMenuController";
+import { curTasks } from "../Model/main/TaskModel";
+import { createTasksFromDb } from "../Controller/TasksComponentController";
 
-export default function Controller() {
+export default async function Controller() {
   // getCur User
   initUser();
+  await createTasksFromDb();
+
   const main = document.getElementById("main");
   const nav = document.getElementById("nav");
   const menuBtns = nav.querySelectorAll("a");
@@ -15,17 +20,21 @@ export default function Controller() {
   menuBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      main.innerHTML = "";
+      // main.innerHTML = "";
       switch (btn.id) {
         case "dashboard":
           console.log("dashboard render");
           dashboardMenuControllerInit();
           break;
         case "tasks":
-          console.log("controller render");
-          tasksMenuControllerInit();
-          menuTasksBtn.style.backgroundColor = "#9797e2;";
-          console.log(menuTasksBtn);
+          tasksMenuController.tasksMenuView.render();
+          //
+          const tasksMenu = document.getElementById("tasksMenu");
+
+          const tasksComponentController = new TasksComponentController(
+            curTasks
+          );
+          tasksComponentController.init(tasksMenu);
           break;
         case "projects":
           main.innerHTML = projectsMarkup;

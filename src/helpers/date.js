@@ -1,20 +1,11 @@
-import intervalToDuration from "date-fns/intervalToDuration";
-
-export function getCurDate() {
-  const date = new Date();
-  const curDate = `${date.getDate()} ${
-    date.getMonth() + 1
-  } ${date.getFullYear()}`;
-  console.log(curDate);
+export function formatStartDate(startDate) {
+  const date = startDate.split("/");
+  const y = Number(date[0]);
+  let m = (() => {
+    if (date[1].charAt(0) === "0") {
+      return Number(date[1].slice(1));
+    } else return Number(date[1]);
+  })();
+  const d = Number(date[2]);
+  return [y, m - 1, d];
 }
-
-export function getUserCreationDate(userCreationTime) {
-  userCreationTime.split(" ");
-}
-intervalToDuration();
-console.log(
-  intervalToDuration({
-    start: new Date(),
-    end: new Date(creationTime),
-  })
-);

@@ -85,7 +85,7 @@ class AddTaskView {
 
         </div>
         <div class="task__settings__el task__settings__difficulty">
-           <label for="taskSettingsDifficulty">Difficulty <img id="taskSettingsIconDifficulty" src=${iconDifficultyTrivial}/></label>
+           <label for="taskSettingsDifficulty">Difficulty</label>
            <select name="difficulty" id="taskSettingsDifficulty">
               <option id="taskSettingsDifficultyTrivial" value="trivial">Trivial</option>
               <option id="taskSettingsDifficultyEasy" value="easy">Easy</option>
@@ -126,6 +126,41 @@ class AddTaskView {
   </div>
 </div>
 `;
+  }
+
+  _elemSelections() {
+    const repeatWeek = document.getElementById("taskSettingsRepeatWeek");
+    const repeatEveryDay = document.getElementById("taskSettingsRepeatDaily");
+    const repeatDailyFail = document.getElementById(
+      "taskSettingsRepeatDailyFail"
+    );
+    const repeatDailyInput = document.getElementById("repeatDailyInput");
+    return { repeatWeek, repeatEveryDay, repeatDailyFail, repeatDailyInput };
+  }
+
+  renderNoRepeat() {
+    const { repeatWeek, repeatEveryDay, repeatDailyFail, repeatDailyInput } =
+      this._elemSelections();
+
+    repeatWeek.classList.add("hidden");
+    repeatEveryDay.classList.add("hidden");
+    repeatDailyFail.classList.add("hidden");
+    repeatDailyInput.value = "";
+  }
+
+  renderRepeatEveryOtherDay() {
+    const { repeatWeek, repeatEveryDay } = this._elemSelections();
+    repeatEveryDay.classList.remove("hidden");
+    repeatWeek.classList.add("hidden");
+  }
+
+  renderRepeatEveryWeek() {
+    const { repeatWeek, repeatEveryDay, repeatDailyFail, repeatDailyInput } =
+      this._elemSelections();
+    repeatWeek.classList.remove("hidden");
+    repeatEveryDay.classList.add("hidden");
+    repeatDailyFail.classList.add("hidden");
+    repeatDailyInput.value = "";
   }
 
   renderNewCheckpoint(parentEl) {

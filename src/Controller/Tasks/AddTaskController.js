@@ -1,27 +1,22 @@
-import { addDoc, collection, doc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { swapElems } from "../../helpers/drag";
 import TaskModel, { curTasks } from "../../Model/main/TaskModel";
 import { addTaskView } from "../../View/main/tasks/AddTaskView";
-
-import iconDifficultyTrivial from "../../View/main/tasks/assets/icon-difficulty-trivial.svg";
-import iconDifficultyEasy from "../../View/main/tasks/assets/icon-difficulty-easy.svg";
-import iconDifficultyMedium from "../../View/main/tasks/assets/icon-difficulty-medium.svg";
-import iconDifficultyHard from "../../View/main/tasks/assets/icon-difficulty-hard.svg";
-import iconDifficultyChallenge from "../../View/main/tasks/assets/icon-difficulty-challenge.svg";
-import { createTasksFromDb, renderCards } from "../TasksMenuController";
-import TaskCardController from "../TaskCardController";
+import { createTasksFromDb, renderCards } from "../TasksComponentController";
+import TaskCardController, { getTask } from "../TaskCardController";
+import { curFilter } from "../TasksComponentController";
 
 const root = document.getElementById("root");
-
+const main = document.getElementById("main");
 function addCp(idNumber) {
   const cpsCont = document.getElementById("checkpointsContainer");
   const cpCont = document.getElementById("checkpointContainer-1");
 
   const newCpCont = cpCont.cloneNode(true);
   const newCpInput = newCpCont.childNodes[1];
-  newCpCont.id = `checkpointContainer-${idNumber}`;
-  newCpInput.id = `checkpointInput-${idNumber}`;
+  newCpCont.id = `formCheckpointContainer-${idNumber}`;
+  newCpInput.id = `formCheckpointInput-${idNumber}`;
   newCpInput.value = "";
 
   cpsCont.appendChild(newCpCont);
@@ -94,47 +89,66 @@ function validFormCheck(name, repeatDaily) {
 }
 //prettier-ignore
 function addTask(name,notes,date,repeat,difficulty,energy,cps,repeatValue) {
-  const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
+  const tmCompTask = document.querySelector('.TM__component__tasks')
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTaskRef = collection(docUserRef, "tasks");
-  const taskInst = new TaskModel(name, notes, date, repeat, difficulty, energy);
-  taskInst.addRepeat(repeatValue);
-  cps.forEach((cp) => {
-    if (!cp) return;
-    taskInst.addCp(cp);
-  });
-  const taskData = Object.assign({}, taskInst);
-
+  
+  const taskCardController = new TaskCardController();
+  taskCardController.taskCardModel = new TaskModel(name, notes, date, repeat, difficulty, energy)
+  taskCardController.taskCardModel.addRepeat(repeatValue)
+  cps.forEach(cp => {
+    if(!cp) return
+    taskCardController.taskCardModel.addCp(cp)
+  })
+  const taskData = Object.assign({}, taskCardController.taskCardModel)
   addDoc(colTaskRef, taskData).then((doc) => {
-    const taskCardController = new TaskCardController();
-    taskCardController.taskCardModel = taskData;
-    taskCardController.taskCardModel.id = doc.id;
+    taskCardController.taskCardModel.id = doc.id
 
-    // return early if onSnapshot created the task already
     if (document.getElementById(`taskCard-${doc.id}`)) return;
     curTasks.push(taskCardController);
-    renderCards(tomorrowTasksCards);
-  });
+    taskCardController.taskCardView.render(tmCompTask, taskCardController.taskCardModel)
+    taskCardController.eventListeners()
+  })
 }
 
-function changeTask() {}
+let curTaskCard;
+export function openTaskSettings(taskCard) {
+  render(root);
+  eventListeners();
+  setFormValues(taskCard.taskCardModel.name);
+  curTaskCard = taskCard;
+  // renderChangedTask(taskCard, "okasd");
+}
+
+function setTask() {
+  const changeName = (name, id) => {
+    const docTaskRef = getTask(id);
+    updateDoc(docTaskRef, {
+      name: name,
+    });
+  };
+
+  const taskId = curTaskCard.taskCardModel.id;
+  const taskEl = document.getElementById(`taskCard-${taskId}`);
+  const { name } = getValues();
+  const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
+  // curTaskCard.taskCardModel.name = name;
+
+  curTaskCard.taskCardView.render(
+    tomorrowTasksCards,
+    curTaskCard.taskCardModel
+  );
+}
 
 function eventListeners() {
   let cpCurIdNum = 2;
 
   const taskSettings = document.getElementById("taskSettings");
-  const repeatWeek = document.getElementById("taskSettingsRepeatWeek");
-  const repeatEveryDay = document.getElementById("taskSettingsRepeatDaily");
-  const repeatDailyFail = document.getElementById(
-    "taskSettingsRepeatDailyFail"
-  );
-  const repeatDailyInput = document.getElementById("repeatDailyInput");
   const taskSettingsEnergy = document.getElementById("taskSettingsEnergy");
   const energyValueDisplay = document.getElementById("energyValueDisplay");
   const checkpointContainer = document.getElementsByClassName(
     "checkpoint__container"
   );
-  const iconDifficulty = document.getElementById("taskSettingsIconDifficulty");
 
   // CLICK EVENTS
   taskSettings.addEventListener("click", (e) => {
@@ -146,12 +160,13 @@ function eventListeners() {
       e.preventDefault();
       const newTaskData = getValues();
       //prettier-ignore
-      const {name,startDate,difficulty,energy,cps,repeat,daysOfWeek,repeatDaily,notes,} = newTaskData;
+      const {name,startDate,difficulty,energy,cps,repeat,daysOfWeek,repeatDaily,notes} = newTaskData;
       if (!validFormCheck(name, repeatDaily).ok) return;
 
       if (repeat === "daily") {
         //prettier-ignore
         addTask(name,notes,startDate,repeat,difficulty,energy,cps,repeatDaily);
+        changeTask();
       }
       if (repeat === "weekly") {
         //prettier-ignore
@@ -160,6 +175,7 @@ function eventListeners() {
       if (repeat === "no-repeat") {
         //prettier-ignore
         addTask(name,notes,startDate,repeat,difficulty,energy,cps,repeat);
+        // setTask()
       }
 
       cpCurIdNum = 2;
@@ -168,23 +184,14 @@ function eventListeners() {
 
     // REPEAT
     if (clickedId === "repeatNoRepeat") {
-      repeatWeek.classList.add("hidden");
-      repeatEveryDay.classList.add("hidden");
-      repeatDailyFail.classList.add("hidden");
-      repeatDailyInput.value = "";
+      addTaskView.renderNoRepeat();
     }
     if (clickedId === "repeatEveryOtherDay") {
-      repeatEveryDay.classList.remove("hidden");
-      repeatWeek.classList.add("hidden");
+      addTaskView.renderRepeatEveryOtherDay();
     }
-
     if (clickedId === "repeatEveryWeek") {
-      repeatWeek.classList.remove("hidden");
-      repeatEveryDay.classList.add("hidden");
-      repeatDailyFail.classList.add("hidden");
-      repeatDailyInput.value = "";
+      addTaskView.renderRepeatEveryWeek();
     }
-
     if (clickedId === "taskSettingsRepeatWeekMon") {
       e.target.classList.toggle("day__selected");
     }
@@ -205,23 +212,6 @@ function eventListeners() {
     }
     if (clickedId === "taskSettingsRepeatWeekSun") {
       e.target.classList.toggle("day__selected");
-    }
-
-    // DIFFICULTY
-    if (clickedId === "taskSettingsDifficultyTrivial") {
-      iconDifficulty.src = iconDifficultyTrivial;
-    }
-    if (clickedId === "taskSettingsDifficultyEasy") {
-      iconDifficulty.src = iconDifficultyEasy;
-    }
-    if (clickedId === "taskSettingsDifficultyMedium") {
-      iconDifficulty.src = iconDifficultyMedium;
-    }
-    if (clickedId === "taskSettingsDifficultyHard") {
-      iconDifficulty.src = iconDifficultyHard;
-    }
-    if (clickedId === "taskSettingsDifficultyChallenge") {
-      iconDifficulty.src = iconDifficultyChallenge;
     }
 
     // DELETE CP
@@ -266,11 +256,21 @@ function eventListeners() {
   });
 }
 
+function setFormValues(name) {
+  const nameEl = document.getElementById("taskSettingsName");
+  nameEl.value = name;
+}
+
+function renderChangedTask(task, name) {
+  const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
+  task.taskCardModel.name = name;
+  task.taskCardView.render(tomorrowTasksCards);
+}
+
 function getValues() {
   const checkpointsContainer = document.getElementById("checkpointsContainer");
 
   const name = document.getElementById("taskSettingsName").value;
-  const startDate = document.getElementById("taskSettingsStartDate").value;
   const repeat = document.getElementById("taskSettingsRepeat").value;
   const difficulty = document.getElementById("taskSettingsDifficulty").value;
   const energy = document.getElementById("taskSettingsEnergy").value;
@@ -279,6 +279,8 @@ function getValues() {
   );
   const repeatDaily = document.getElementById("repeatDailyInput").value;
   const notes = document.getElementById("markedInput").value;
+  //prettier-ignore
+  const startDate = document.getElementById("taskSettingsStartDate").value.replace("-", "/").replace("-", "/");
 
   const daysOfWeek = [];
   Array.from(weekly).forEach((day) => {

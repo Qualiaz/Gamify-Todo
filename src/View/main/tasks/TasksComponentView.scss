@@ -1,0 +1,45 @@
+#tasksMenu {
+  height: 100%;
+  margin-left: 28rem;
+}
+
+.TM__component {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+
+  h3 {
+    color: white;
+  }
+  &__addTaskBtn,
+  &__filterBtn {
+    // width: 5rem;
+    background: none;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.2rem 1rem;
+  }
+
+  &__header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+    padding: 0 1rem;
+
+    &__title-wrapper {
+      font-size: 1.8rem;
+      flex: 1;
+    }
+
+    &__addTaskBtn-wrapper {
+      // width: 3rem;
+    }
+
+    &__filterBtn-wrapper {
+      // width: 3rem;
+    }
+  }
+}

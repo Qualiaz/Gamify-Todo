@@ -2,11 +2,12 @@
   &__container {
     display: flex;
     justify-content: stretch;
-    width: 30rem;
+    width: 70rem;
     border: none;
     overflow: hidden;
     border-radius: 1rem;
     margin: 1rem;
+    box-shadow: 2px 2px 2px $secondary;
 
     * {
       // color: rgb(10, 10, 10);
@@ -72,7 +73,7 @@
       padding: 1rem 1rem;
       flex: 1;
       background-color: #272727;
-      // background-color: #fff;
+      // background-color: rgb(253, 253, 253);
     }
   }
 
@@ -100,7 +101,7 @@
       display: flex;
       justify-content: space-between;
       padding: 0 1rem;
-      margin-top: 1rem;
+      margin: 1rem 0;
     }
 
     &__pause-icon {

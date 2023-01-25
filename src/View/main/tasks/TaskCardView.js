@@ -20,11 +20,11 @@ export default class TaskCardView {
         <span class="task-card__checkbox--finished ${
           checked ? null : "hidden"
         }" id="taskCheckboxFinished-${id}"></span> 
-        <input class="task-card__checkbox-input" type="checkbox" name="" id="taskCheckboxInput" />
+        <input class="task-card__checkbox-input" type="checkbox" name="" id="taskCheckboxInput-${id}" />
       </div>
 
       <div class="task-card__main__container">
-        <div class="task-card__top__container">
+        <div id="taskCardTop-${id}" class="task-card__top__container">
           <span class="task-card__name">${name}</span>
           <div class="task-card__top__btns">
             <div class="task-card__timer-icon">
@@ -264,7 +264,6 @@ export default class TaskCardView {
       cpsContainer.remove();
       taskCardLineBreak3.remove();
     }
-    console.log(cpsContainer.firstElementChild);
   }
 
   render(parentEl, cardData) {

@@ -1,15 +1,18 @@
-class DashboardView {
+import "./Dashboard.scss";
+const main = document.getElementById("main");
+
+export default class DashboardMenuView {
   _generateMarkup() {
     return `
-    <div>
-        <button>Add Task</button>
-    </div>
+    <section id="dashboardMenu">
+       <section id="dashboardTasks"></section>
+       <section id="dashboardHabits"></section>
+       <section id="dashboardYIP"></section>
+    </section>
 `;
   }
 
-  render(parentEl) {
-    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup());
+  render() {
+    main.insertAdjacentHTML("beforeend", this._generateMarkup());
   }
 }
-
-export const dashboardView = new DashboardView();

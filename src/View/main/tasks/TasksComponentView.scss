@@ -4,11 +4,20 @@
 }
 
 .TM__component {
-  margin-top: 2rem;
+  margin-top: 4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: end;
+
+  &__tasks {
+    &--tasksMenu {
+      width: 40vw;
+    }
+    &--dashboardMenu {
+      width: 20vw;
+    }
+  }
 
   h3 {
     color: white;

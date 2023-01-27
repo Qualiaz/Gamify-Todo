@@ -1,13 +1,15 @@
-import { dashboardView } from "../View/main/DashboardView";
-const main = document.getElementById("main");
+import DashboardMenuView from "../View/main/DashboardView";
 
-document.addEventListener("click", (e) => {});
+class DashboardMenuController {
+  constructor(view) {
+    this.view = view;
+  }
 
-function renderDashboardMenu() {
-  dashboardView.render(main);
-  const tomorrowTasksCards = document.getElementById("tomorrowTasksCards");
+  init() {
+    renderDashboardMenu();
+  }
 }
 
-export default function dashboardMenuControllerInit() {
-  renderDashboardMenu();
-}
+export const dashboardMenuController = new DashboardMenuController(
+  new DashboardMenuView()
+);

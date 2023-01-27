@@ -75,10 +75,6 @@ export default class TaskCardView {
 `;
   }
 
-  // <div class="task-card__difficulty">
-  //             <img class="task-card__difficulty__icon" src="./icon-difficulty-${difficulty}.svg" />
-  //           </div>
-
   _generateCheckpoint(cpName, checked, num, id) {
     return `
     <div id="cardCheckpoint-${num}-${id}" class="task-card__checkpoint__container">           

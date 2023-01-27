@@ -15,20 +15,20 @@ export let tasksComponentView;
 export let curFilter = {};
 
 export default class TasksComponentController {
-  curView = {
-    isTaskSettings: false,
-    filter: "all",
-    order: {
-      name: "timeCreated",
-      direction: "ascending",
-    },
-    tasks: [],
-  };
-
-  constructor(tasks) {
+  constructor(tasks, menu, filter) {
     this.tasksComponentView = new TasksComponentView();
     this.id = (((1 + Math.random()) * 0x10000) | 0).toString(4).substring(1);
-    this.curView.tasks = tasks;
+
+    this.curView = {
+      isTaskSettings: false,
+      menu: menu,
+      filter: filter,
+      order: {
+        name: "timeCreated",
+        direction: "ascending",
+      },
+      tasks: tasks,
+    };
   }
 
   eventListeners(parentEl) {
@@ -131,7 +131,11 @@ export default class TasksComponentController {
   }
 
   init(parentEl) {
-    this.curView.tasks = this.orderTasks(curTasks, "timeCreated", "ascending");
+    this.curView.tasks = this.orderTasks(
+      this.curView.tasks,
+      "timeCreated",
+      "ascending"
+    );
     this.eventListeners(parentEl);
     this.render(parentEl);
   }

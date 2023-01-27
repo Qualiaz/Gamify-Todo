@@ -1,10 +1,10 @@
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
 import initUser from "./initUserController";
-import dashboardMenuControllerInit from "./dashboardController";
+import { dashboardMenuController } from "./dashboardController";
 import TasksComponentController from "./TasksComponentController";
 import { tasksMenuController } from "./tasksMenuController";
-import { curTasks } from "../Model/main/TaskModel";
+import { curTasks, curTasksToday } from "../Model/main/TaskModel";
 import { createTasksFromDb } from "../Controller/TasksComponentController";
 
 export default async function Controller() {
@@ -20,20 +20,22 @@ export default async function Controller() {
   menuBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      // main.innerHTML = "";
+      main.innerHTML = "";
       switch (btn.id) {
         case "dashboard":
-          console.log("dashboard render");
-          dashboardMenuControllerInit();
+          dashboardMenuController.view.render();
+          // const dashboardMenu = document.getElementById("dashboardMenu");
+          const dashboardTasks = document.getElementById("dashboardTasks");
+          const dashboardTasksComponentController =
+            new TasksComponentController(curTasksToday, "dashboard", "today");
+          dashboardTasksComponentController.init(dashboardTasks);
           break;
         case "tasks":
           tasksMenuController.tasksMenuView.render();
-          //
           const tasksMenu = document.getElementById("tasksMenu");
+          //prettier-ignore
+          const tasksComponentController = new TasksComponentController(curTasks,"tasks","all");
 
-          const tasksComponentController = new TasksComponentController(
-            curTasks
-          );
           tasksComponentController.init(tasksMenu);
           break;
         case "projects":

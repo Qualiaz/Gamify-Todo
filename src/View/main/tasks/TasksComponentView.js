@@ -1,5 +1,4 @@
 import "./TasksComponentView.scss";
-import { curTasks } from "../../../Model/main/TaskModel";
 
 export default class TasksComponentView {
   _generateMarkup(view, id) {
@@ -21,18 +20,22 @@ export default class TasksComponentView {
       view.isTaskSettings ? "" : "hidden"
     }">
 
-            <div class="view-settings__filter__container"> 
+            <div  class="view-settings__filter__container ${
+              view.menu === "dashboard" ? "hidden" : ""
+            }"> 
                <div class="view-settings__filter-name__wrapper">
                   <span>Filter</span>
                </div>
-               <select id="filterSelections-${id}" class="view-settings__selections">
+               <select  ${
+                 view.menu === "dashboard" ? "disabled" : ""
+               } id="filterSelections-${id}" class="view-settings__selections">
                  <option id="filterSelectionToday-${id}"value="today">Today</option>
                  <option id="filterSelectionTomorrow-${id}"value="tomorrow">Tomorrow</option>
                  <option id="filterSelectionThisWeek-${id}"value="thisWeek">This Week</option>
                  <option id="filterSelectionNextWeek-${id}"value="nextWeek">Next Week</option>
                  <option id="filterSelectionWhenever-${id}"value="whenever">Whenever</option>
                  <option id="filterSelectionAll-${id}"value="all">All</option>
-               </select>
+               </select>              
             </div>
       
             <hr class="view-settings__hr" />
@@ -69,7 +72,9 @@ export default class TasksComponentView {
           </div>
           </div>
         </div>
-          <div id="tmComp-${id}" class="TM__component__tasks">         
+          <div id="tmComp-${id}" class="TM__component__tasks--${this.renderViewMenu(
+      view
+    )}">         
         </div>
       </section>    
   `;
@@ -80,6 +85,11 @@ export default class TasksComponentView {
       `viewSettingsContainer-${id}`
     );
     viewSettingsContainer.classList.toggle("hidden");
+  }
+
+  renderViewMenu(view) {
+    if (view.menu === "tasks") return "tasksMenu";
+    if (view.menu === "dashboard") return "dashboardMenu";
   }
 
   renderCards(parentEl, tasks) {
@@ -151,7 +161,9 @@ export default class TasksComponentView {
         break;
     }
 
-    console.log(view.order.direction);
+    if ((view.menu = "dashboard")) {
+    }
+
     this.renderCards(tmComponent, view.tasks);
   }
 }

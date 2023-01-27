@@ -1,4 +1,10 @@
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { swapElems } from "../../helpers/drag";
 import TaskModel, { curTasks } from "../../Model/main/TaskModel";
@@ -100,6 +106,9 @@ function addTask(name,notes,date,repeat,difficulty,energy,cps,repeatValue) {
     if(!cp) return
     taskCardController.taskCardModel.addCp(cp)
   })
+ 
+  const createdTime = Timestamp.now().seconds
+  taskCardController.taskCardModel.createdTime = createdTime
   const taskData = Object.assign({}, taskCardController.taskCardModel)
   addDoc(colTaskRef, taskData).then((doc) => {
     taskCardController.taskCardModel.id = doc.id

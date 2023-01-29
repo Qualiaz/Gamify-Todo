@@ -7,6 +7,12 @@
 @import "./style/layout/header";
 @import "./style/layout/main";
 
+// tasks
 @import "./View/main/tasks/TaskCard";
 @import "./View/main/tasks/taskSettings";
 @import "./style/pages/home";
+
+// habits
+@import "./View/menus/HabitsMenu.scss";
+@import "./View/main/habits/HabitsComponent.scss";
+@import "./View/main/habits/HabitCard.scss";

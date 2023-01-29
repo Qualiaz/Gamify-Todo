@@ -1,0 +1,61 @@
+@import "./HabitCardMixin.scss";
+
+.habit-card {
+  &__container {
+    margin-top: 3rem;
+    width: 30vw;
+    display: flex;
+    align-items: strech;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  &__positive__wrapper {
+    @include habitSides;
+  }
+
+  &__main {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      background-color: rgb(43, 42, 42);
+    }
+    &__top__container {
+      padding: 1rem 1rem;
+
+      display: flex;
+      justify-content: space-between;
+    }
+    &__toggle {
+      transform: rotateZ(180deg);
+      width: 2.5rem;
+
+      &__button {
+        background: none;
+        border: none;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    &__info {
+      &__container {
+        flex: 2;
+      }
+    }
+
+    &__line-break {
+      height: 0.1rem;
+      margin: 1rem 0.5rem;
+      background-color: rgb(54, 128, 226);
+      border: none;
+    }
+  }
+
+  &__negative__wrapper {
+    @include habitSides;
+  }
+}

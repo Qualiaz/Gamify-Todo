@@ -161,9 +161,6 @@ export default class TasksComponentView {
         break;
     }
 
-    if ((view.menu = "dashboard")) {
-    }
-
     this.renderCards(tmComponent, view.tasks);
   }
 }

@@ -48,6 +48,12 @@ export default class HabitCardView {
 `;
   }
 
+  renderToggleInfo(id) {
+    // document.getElementById()
+
+    console.log(id);
+  }
+
   render(habitComponent, model) {
     habitComponent.insertAdjacentHTML("beforeend", this._generateMarkup());
   }

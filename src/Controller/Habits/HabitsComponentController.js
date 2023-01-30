@@ -1,6 +1,7 @@
 import HabitCardController from "./HabitCardController";
 import HabitModel from "../../Model/main/HabitModel";
 import HabitsComponentView from "../../View/main/habits/HabitsComponentView";
+import HabitSettingsController from "./HabitSettingsController";
 
 export default class HabitsComponentController {
   constructor() {
@@ -8,7 +9,19 @@ export default class HabitsComponentController {
     this.habits = HabitModel.allHabits;
   }
 
-  eventListeners() {}
+  eventListeners() {
+    const habitsComponentEl = document.querySelector(
+      ".habits-component__container"
+    );
+    habitsComponentEl.addEventListener("click", (e) => {
+      const clickedId = e.target.id;
+      if (clickedId === "addHabitBtn") {
+        const habitSettingsController = new HabitSettingsController();
+        habitSettingsController.add();
+        // habitSettingsController.change();
+      }
+    });
+  }
 
   openHabitSettings() {
     // add to allHabits

@@ -17,7 +17,9 @@ export default class HabitsComponentController {
       const clickedId = e.target.id;
       if (clickedId === "addHabitBtn") {
         const habitSettingsController = new HabitSettingsController();
-        habitSettingsController.add();
+        habitSettingsController.render();
+        habitSettingsController.eventListeners();
+
         // habitSettingsController.change();
       }
     });

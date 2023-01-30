@@ -10,7 +10,7 @@ export default class HabitModel {
   constructor({ name, difficulty, energy, notes, id }) {
     this.name = name;
     this.difficulty = difficulty;
-    this.energy = energy;
+    this.energy = Number(energy);
     this.notes = notes;
     this.id = id;
     HabitModel.allHabits.push(this);

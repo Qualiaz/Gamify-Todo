@@ -16,7 +16,7 @@ export default class HabitSettingsView {
           </button>
         </div>
         <div class="habit-settings__done-button__wrapper">
-          <button class="habit-settings__done-button" type="button">
+          <button id="habitSettingsDoneBtn" class="habit-settings__done-button" type="button">
             Done
           </button>
         </div>
@@ -78,6 +78,7 @@ export default class HabitSettingsView {
             >Energy</label
           >
           <input
+            id="habitSettingsEnergy"
             class="habit-settings__energy-input"
             type="range"
             min="1"

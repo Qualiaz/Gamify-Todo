@@ -1,20 +1,25 @@
+import HabitModel from "../../Model/main/HabitModel";
 import HabitCardView from "../../View/main/habits/HabitCardView";
+import HabitSettingsController from "./HabitSettingsController";
 
 export default class HabitCardController {
   constructor() {
     this.view = new HabitCardView();
-    // this.model = new HabitCardModel(habitData);
+    this.model;
   }
 
   eventListeners() {
-    const infoCont = document.querySelector(
-      ".habit-card__main__info__container"
-    );
-    const toggleBtn = document.querySelector(
-      ".habit-card__main__toggle__button"
-    );
-    toggleBtn.addEventListener("click", () => {
-      infoCont.classList.toggle("hidden");
+    const id = this.model.habitData.id;
+    const habitCard = document.getElementById(`habitCard-${id}`);
+    console.log(habitCard);
+    habitCard.addEventListener("click", (e) => {
+      if (e.target.id === `habitCardMainTop-${id}`) {
+        // open card task settings
+        const habitSettingsController = new HabitSettingsController();
+        habitSettingsController.model = this.model;
+        habitSettingsController.initChangeHabit();
+        // habitSettingsController.initChangeHabit()
+      }
     });
   }
 
@@ -22,12 +27,14 @@ export default class HabitCardController {
     this.view.renderToggleInfo(model.id);
   }
 
-  render(parentEl) {
-    this.view.render(parentEl, this.model);
+  render() {
+    const container = document.querySelector(".habits-component__container");
+    console.log(this.model.habitData);
+    this.view.render(container, this.model.habitData);
   }
 
-  init(parentEl) {
-    this.render(parentEl);
+  init() {
+    this.render();
     this.eventListeners();
   }
 }

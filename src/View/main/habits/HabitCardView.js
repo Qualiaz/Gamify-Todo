@@ -3,9 +3,9 @@ import "./assets/habit-minus.svg";
 import "./assets/toggle.svg";
 
 export default class HabitCardView {
-  _generateMarkup() {
+  _generateMarkup({ name, id }) {
     return `
-    <div id="habitCard">
+    <div id="habitCard-${id}">
       <div class="habit-card__container">
         <div class="habit-card__positive__wrapper">
           <button class="habit-card__positive__btn">
@@ -13,8 +13,8 @@ export default class HabitCardView {
           </button>
         </div>
         <div class="habit-card__main__container">
-          <div class="habit-card__main__top__container">
-            <div class="habit-card__main__name__wrapper">NAME</div>
+          <div id="habitCardMainTop-${id}" class="habit-card__main__top__container">
+            <div class="habit-card__main__name__wrapper">${name}</div>
             <div class="habit-card__main__toggle__wrapper">
               <button class="habit-card__main__toggle__button">
                 <img
@@ -55,7 +55,8 @@ export default class HabitCardView {
   }
 
   render(habitComponent, model) {
-    habitComponent.insertAdjacentHTML("beforeend", this._generateMarkup());
+    console.log(model);
+    habitComponent.insertAdjacentHTML("beforeend", this._generateMarkup(model));
   }
 
   toggleCard() {}

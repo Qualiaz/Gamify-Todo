@@ -1,22 +1,26 @@
 const root = document.getElementById("root");
 
 export default class HabitSettingsView {
-  _generateMarkup() {
+  _generateMarkup({ id }) {
     return `
-    <div class="habit-settings__container">
+  <div class="habit-settings__container">
     <div class="habit-settings__background"></div>
-    <form id="habitSettingsForm" class="habit-settings__form">
+    <form id="${
+      id ? "habitSettingsForm" + "-" + id : "habitSettingsForm"
+    }" class="habit-settings__form">
       <div class="habit-settings__header">
         <div class="habit-settings__header__name__wrapper">
           <h1 class="habit-settings__header__name">Add habit</h1>
         </div>
         <div class="habit-settings__cancel-button__wrapper">
-          <button class="habit-settings__cancel-button" type="button">
+          <button id="habitSettingsCancelBtn" class="habit-settings__cancel-button" type="button">
             Cancel
           </button>
         </div>
         <div class="habit-settings__done-button__wrapper">
-          <button id="habitSettingsDoneBtn" class="habit-settings__done-button" type="button">
+          <button id="${
+            id ? "habitSettingsDoneBtn" + "-" + id : "habitSettingsDoneBtn"
+          }" class="habit-settings__done-button" type="button">
             Done
           </button>
         </div>
@@ -24,10 +28,12 @@ export default class HabitSettingsView {
       <div id="habitSettingsMain" class="habit-settings__main">
         <div class="habit-settings__name__container">
           <label
+            id="habitSettingsNameLabel"
             class="habit-settings__name__label"
             for="habitSettingsName"
-            >Name</label
-          >
+            >
+              Name *             
+            </label >         
           <input
             class="habit-settings__name__input"
             type="text"
@@ -51,11 +57,11 @@ export default class HabitSettingsView {
             >Difficulty</label
           >
           <select name="difficulty" id="habitSettingsDifficulty">
-            <option value="trivial">Trivial</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-            <option value="challenge">Challenge</option>
+            <option id="habitSettingsDifficultyTrivial" value="trivial">Trivial</option>
+            <option id="habitSettingsDifficultyEasy" value="easy">Easy</option>
+            <option id="habitSettingsDifficultyMedium" value="medium">Medium</option>
+            <option id="habitSettingsDifficultyHard" value="hard">Hard</option>
+            <option id="habitSettingsDifficultyChallenge" value="challenge">Challenge</option>
           </select>
         </div>
         <div class="habit-settings__project__container">
@@ -75,14 +81,17 @@ export default class HabitSettingsView {
           <label
             class="habit-settings__energy-label"
             for="habitSettingsEnergy"
-            >Energy</label
-          >
+            >
+            Energy  
+            <span id="habitSettingsEnergyDispay">1</span>
+          </label>  
           <input
             id="habitSettingsEnergy"
             class="habit-settings__energy-input"
             type="range"
             min="1"
-            max="100"
+            value="1"
+            max="3"
           />
         </div>
         
@@ -92,7 +101,7 @@ export default class HabitSettingsView {
     `;
   }
 
-  _generateMarkupChangeHabit() {
+  _generateAdditionalExistingHabitMarkup() {
     return `
     <div class="habit-settings__streak__container">
     <label
@@ -103,10 +112,12 @@ export default class HabitSettingsView {
     <div class="habit-settings__streak-inputs">
       <div class="habit-settings__streak--positive__wrapper">
         <input
+          id="habitSettingsStreakPositiveInput"
           class="habit-settings__streak--positive__input"
           type="type"
         />
         <button
+          id="habitSettingsStreakPositiveBtn"
           type="button"
           class="habit-settings__streak--positive__button"
         >
@@ -115,10 +126,12 @@ export default class HabitSettingsView {
       </div>
       <div class="habit-settings__streak--negative__wrapper">
         <input
+          id="habitSettingsStreakNegativeInput"
           class="habit-settings__streak--negative__input"
           type="text"
         />
         <button
+          id="habitSettingsStreakNegativeBtn"
           type="button"
           class="habit-settings__streak--negative__button"
         >
@@ -128,19 +141,84 @@ export default class HabitSettingsView {
     </div>
   </div>
   <div class="habit-settings__delete-button__wrapper">
-    <button class="habit-settings__delete-button" type="button">
+    <button id="habitSettingsDeleteBtn" class="habit-settings__delete-button" type="button">
       Delete
     </button>
   </div>
-    `;
+  </div>
+  </form>
+</div> 
+`;
   }
 
-  renderChangeHabit() {
-    const mainForm = document.getElementById("habitSettingsMain");
-    mainForm.insertAdjacentHTML("beforeend", this._generateMarkupChangeHabit());
+  getElems(id = null) {
+    const habitsComponentEl = document.querySelector(
+      ".habits-component__container"
+    );
+    const habitSettingsContainer = document.querySelector(
+      ".habit-settings__container"
+    );
+    console.log(id);
+    const habitSettingsForm = document.getElementById(
+      id ? "habitSettingsForm" + "-" + id : "habitSettingsForm"
+    );
+    // let habitSettingsForm;
+    // if (id)
+    //   habitSettingsForm = document.getElementById(`habitSettingsForm-${id}`);
+    // else habitSettingsForm = document.getElementById("habitSettingsForm");
+    console.log(habitSettingsForm);
+    const habitSettingsMain = document.getElementById("habitSettingsMain");
+    const habitSettingsName = document.getElementById("habitSettingsName");
+    const habitSettingsNameLabel = document.getElementById(
+      "habitSettingsNameLabel"
+    );
+    const habitSettingsNotes = document.getElementById("habitSettingsNotes");
+    const habitSettingsDifficulty = document.getElementById(
+      "habitSettingsDifficulty"
+    );
+    const habitSettingsProjectAssociated = document.getElementById(
+      "habitSettingsProjectAssociated"
+    );
+    const habitSettingsEnergy = document.getElementById("habitSettingsEnergy");
+    const habitSettingsEnergyDispay = document.getElementById(
+      "habitSettingsEnergyDispay"
+    );
+    return {
+      habitsComponentEl,
+      habitSettingsContainer,
+      habitSettingsForm,
+      habitSettingsMain,
+      habitSettingsName,
+      habitSettingsNameLabel,
+      habitSettingsNotes,
+      habitSettingsDifficulty,
+      habitSettingsProjectAssociated,
+      habitSettingsEnergy,
+      habitSettingsEnergyDispay,
+    };
   }
 
-  render(parentEl) {
-    root.insertAdjacentHTML("beforeend", this._generateMarkup());
+  renderChangesInEnergyDisplay(value) {
+    const { habitSettingsEnergyDispay } = this.getElems();
+    habitSettingsEnergyDispay.textContent = value;
+  }
+
+  renderExistingHabit(habitData = null) {
+    this.render(habitData.id);
+    const { habitSettingsMain } = this.getElems(habitData.id);
+    habitSettingsMain.insertAdjacentHTML(
+      "beforeend",
+      this._generateAdditionalExistingHabitMarkup()
+    );
+  }
+
+  render(id = null) {
+    root.insertAdjacentHTML("beforeend", this._generateMarkup({ id }));
+  }
+
+  renderFormError() {
+    const { habitSettingsNameLabel } = this.getElems();
+    const nameErrorMarkup = `<span id="habitSettingsNameError" class="habit-settings__name__error">At least one character</span>`;
+    habitSettingsNameLabel.insertAdjacentHTML("beforeend", nameErrorMarkup);
   }
 }

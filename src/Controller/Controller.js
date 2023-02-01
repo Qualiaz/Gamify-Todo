@@ -6,7 +6,7 @@ import TasksComponentController from "./TasksComponentController";
 import { tasksMenuController } from "./tasksMenuController";
 import { curTasks, curTasksToday } from "../Model/main/TaskModel";
 import { createTasksFromDb } from "../Controller/TasksComponentController";
-import { habitsMenuController } from "./Menus/habitsMenuController";
+import habitsMenuController from "./Menus/habitsMenuController";
 
 export default async function Controller() {
   // getCur User
@@ -49,13 +49,7 @@ export default async function Controller() {
           main.innerHTML = projectsMarkup;
           break;
         case "habits":
-          habitsMenuController.view.render();
-          const habitsMenu = document.getElementById("habitsMenu");
-          const habitsComponent = habitsMenuController.createComponent();
-          habitsComponent.init(habitsMenu);
-          const compEl = document.querySelector(".habits-component__container");
-          habitsComponent.renderHabits(compEl);
-          habitsComponent.openHabitSettings();
+          habitsMenuController();
           break;
         case "calendar":
           main.innerHTML = calendarMarkup;

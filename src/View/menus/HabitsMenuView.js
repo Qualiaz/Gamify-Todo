@@ -1,13 +1,15 @@
 const main = document.getElementById("main");
 
-export default class HabitsMenuView {
+class HabitsMenuView {
   _generateMarkup() {
     return `<section id="habitsMenu">
-       
-            </section>;`;
+  
+            </section>`;
   }
 
   render() {
     main.insertAdjacentHTML("beforeend", this._generateMarkup());
   }
 }
+
+export const habitsMenuView = new HabitsMenuView();

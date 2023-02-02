@@ -15,7 +15,8 @@ export default class HabitCardController {
     habitCardEl.addEventListener("click", (e) => {
       if (e.target.id === `habitCardMainTop-${id}`) {
         // open card task settings
-        this.settingsController.initChangeHabit();
+        console.log(this.model.habitData);
+        this.settingsController.initChangeHabit(this.model.habitData);
         this.settingsController.habitCard = this;
       }
 
@@ -26,6 +27,7 @@ export default class HabitCardController {
   }
 
   render() {
+    console.log(this.model.habitData);
     const container = document.querySelector(".habits-component__container");
     this.view.render(container, this.model.habitData);
   }

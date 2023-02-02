@@ -25,13 +25,15 @@ export default class HabitsComponentController {
     const compEl = document.querySelector("habits-component__container");
     // HabitCardController.render()
     allHabits.forEach((habit) => {
-      habit.render(compEl);
+      habit.init();
+      // habit.render(compEl);
     });
     // take all habitCardController and render
   }
 
   init(parentEl) {
     this.view.render(parentEl);
+    this.renderHabits();
     this.eventListeners();
   }
 }

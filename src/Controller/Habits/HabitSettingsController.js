@@ -6,9 +6,9 @@ import HabitCardController from "./HabitCardController";
 
 const main = document.getElementById("main");
 export default class HabitSettingsController {
-  constructor() {
+  constructor(model) {
     this.view = new HabitSettingsView();
-    this.model = new HabitModel();
+    this.model = model || new HabitModel();
   }
 
   eventListeners() {
@@ -28,6 +28,7 @@ export default class HabitSettingsController {
             habitCard.model = this.model;
             habitCard.settingsController = this;
             this.model.isCardCreated = true;
+            console.log(habitCard.model.habitData);
             habitCard.init();
           });
           //the check also occurs in modal but if is true it must remove element sync
@@ -54,7 +55,7 @@ export default class HabitSettingsController {
             streakPositive,
             streakNegative,
           } = this.model.getValuesForm();
-          console.log(streakPositive);
+
           this.model.changeHabit({
             name,
             notes,
@@ -65,7 +66,7 @@ export default class HabitSettingsController {
             streakNegative,
           });
 
-          console.log(this.habitCard);
+          this.model.updateHabitDb();
           this.habitCard.view.renderChanges(this.model.habitData);
           //the check also occurs in modal but if is true it must remove element sync
           if (this.model.isFormChecks()) habitSettingsContainer.remove();
@@ -100,10 +101,12 @@ export default class HabitSettingsController {
     });
   }
 
-  initChangeHabit() {
-    this.view.renderExistingHabit(this.model.habitData);
-    this.view.renderChangesInEnergyDisplay(this.model.habitData.energy);
-    this.model.setElems(this.view.getElems(this.model.habitData.id));
+  initChangeHabit(data) {
+    this.view.renderExistingHabit(data || this.model.habitData);
+    this.view.renderChangesInEnergyDisplay(
+      data.energy || this.model.habitData.energy
+    );
+    this.model.setElems(this.view.getElems(data.id || this.model.habitData.id));
     this.model.setValuesForm();
     this.eventListeners();
   }

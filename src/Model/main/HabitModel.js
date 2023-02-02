@@ -1,20 +1,20 @@
-import { addDoc, collection, doc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import HabitCardController from "../../Controller/Habits/HabitCardController";
 import HabitSettingsController from "../../Controller/Habits/HabitSettingsController";
 import { auth, db } from "../../firebase/config";
 
 export const allHabits = [];
+
 export default class HabitModel {
   habitData;
   isCardCreated;
+
   setElems(elems) {
     return (this.elems = elems);
   }
 
   createHabitData({ name, difficulty, energy, notes }) {
     this.habitData = {
-      id: "",
-      checked: false,
       name: name,
       difficulty: difficulty,
       energy: Number(energy),
@@ -22,7 +22,7 @@ export default class HabitModel {
       streakPositive: 0,
       streakNegative: 0,
     };
-    allHabits.push(this.habitData);
+    // allHabits.push(this.habitData);
     return this.habitData;
   }
 
@@ -48,6 +48,20 @@ export default class HabitModel {
     const docId = await this.addHabitDb(habitData);
     habitData.id = docId;
     return habitData;
+  }
+
+  updateHabitDb(habitData = this.habitData) {
+    const colHabitsRef = this.#getColHabitsRef();
+    const docHabitRef = doc(colHabitsRef, habitData.id);
+
+    updateDoc(docHabitRef, {
+      name: habitData.name,
+      difficulty: habitData.difficulty,
+      energy: habitData.energy,
+      notes: habitData.notes,
+      streakPositive: habitData.streakPositive,
+      streakNegative: habitData.streakNegative,
+    });
   }
 
   changeHabit({

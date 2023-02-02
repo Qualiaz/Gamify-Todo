@@ -10,26 +10,23 @@ export default class HabitCardController {
 
   eventListeners() {
     const id = this.model.habitData.id;
-    const habitCard = document.getElementById(`habitCard-${id}`);
-    console.log(habitCard);
-    habitCard.addEventListener("click", (e) => {
+    const habitCardEl = document.getElementById(`habitCard-${id}`);
+
+    habitCardEl.addEventListener("click", (e) => {
       if (e.target.id === `habitCardMainTop-${id}`) {
         // open card task settings
-        const habitSettingsController = new HabitSettingsController();
-        habitSettingsController.model = this.model;
-        habitSettingsController.initChangeHabit();
-        // habitSettingsController.initChangeHabit()
+        this.settingsController.initChangeHabit();
+        this.settingsController.habitCard = this;
+      }
+
+      if (e.target.id === `habitCardToggleImgBtn-${id}`) {
+        this.view.toggleCard(id);
       }
     });
   }
 
-  toggleInfo() {
-    this.view.renderToggleInfo(model.id);
-  }
-
   render() {
     const container = document.querySelector(".habits-component__container");
-    console.log(this.model.habitData);
     this.view.render(container, this.model.habitData);
   }
 

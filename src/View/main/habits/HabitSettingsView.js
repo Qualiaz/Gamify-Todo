@@ -10,7 +10,9 @@ export default class HabitSettingsView {
     }" class="habit-settings__form">
       <div class="habit-settings__header">
         <div class="habit-settings__header__name__wrapper">
-          <h1 class="habit-settings__header__name">Add habit</h1>
+          <h1 class="habit-settings__header__name">${
+            id ? "Change habit" : "Add habit"
+          }</h1>
         </div>
         <div class="habit-settings__cancel-button__wrapper">
           <button id="habitSettingsCancelBtn" class="habit-settings__cancel-button" type="button">
@@ -47,7 +49,7 @@ export default class HabitSettingsView {
             id="habitSettingsNotes"
             cols="30"
             rows="5"
-            class="habit-settings__notes__textarea"
+            class="habit-settings__notes__textarea"            
           ></textarea>
         </div>
         <div class="habit-settings__difficulty__container">
@@ -74,7 +76,8 @@ export default class HabitSettingsView {
             name="project-associated"
             id="habitSettingsProjectAssociated"
           >
-            <option value="none">None</option>
+            <option value="" selected disabled hidden>Choose...</option>
+           
           </select>
         </div>
         <div class="habit-settings__energy">
@@ -115,12 +118,13 @@ export default class HabitSettingsView {
           id="habitSettingsStreakPositiveInput"
           class="habit-settings__streak--positive__input"
           type="type"
+          value="0"
         />
         <button
           id="habitSettingsStreakPositiveBtn"
           type="button"
-          class="habit-settings__streak--positive__button"
-        >
+          class="habit-settings__streak--positive__button"          
+          >
           <img src="./habit-plus.svg" alt="" />
         </button>
       </div>
@@ -129,6 +133,7 @@ export default class HabitSettingsView {
           id="habitSettingsStreakNegativeInput"
           class="habit-settings__streak--negative__input"
           type="text"
+          value="0"
         />
         <button
           id="habitSettingsStreakNegativeBtn"
@@ -158,15 +163,9 @@ export default class HabitSettingsView {
     const habitSettingsContainer = document.querySelector(
       ".habit-settings__container"
     );
-    console.log(id);
     const habitSettingsForm = document.getElementById(
       id ? "habitSettingsForm" + "-" + id : "habitSettingsForm"
     );
-    // let habitSettingsForm;
-    // if (id)
-    //   habitSettingsForm = document.getElementById(`habitSettingsForm-${id}`);
-    // else habitSettingsForm = document.getElementById("habitSettingsForm");
-    console.log(habitSettingsForm);
     const habitSettingsMain = document.getElementById("habitSettingsMain");
     const habitSettingsName = document.getElementById("habitSettingsName");
     const habitSettingsNameLabel = document.getElementById(
@@ -183,6 +182,13 @@ export default class HabitSettingsView {
     const habitSettingsEnergyDispay = document.getElementById(
       "habitSettingsEnergyDispay"
     );
+    const habitSettingsStreakPositiveInput = document.getElementById(
+      "habitSettingsStreakPositiveInput"
+    );
+    const habitSettingsStreakNegativeInput = document.getElementById(
+      "habitSettingsStreakNegativeInput"
+    );
+
     return {
       habitsComponentEl,
       habitSettingsContainer,
@@ -195,6 +201,8 @@ export default class HabitSettingsView {
       habitSettingsProjectAssociated,
       habitSettingsEnergy,
       habitSettingsEnergyDispay,
+      habitSettingsStreakPositiveInput,
+      habitSettingsStreakNegativeInput,
     };
   }
 
@@ -204,7 +212,7 @@ export default class HabitSettingsView {
   }
 
   renderExistingHabit(habitData = null) {
-    this.render(habitData.id);
+    this.render(habitData);
     const { habitSettingsMain } = this.getElems(habitData.id);
     habitSettingsMain.insertAdjacentHTML(
       "beforeend",
@@ -212,8 +220,11 @@ export default class HabitSettingsView {
     );
   }
 
-  render(id = null) {
-    root.insertAdjacentHTML("beforeend", this._generateMarkup({ id }));
+  render(habitData = null) {
+    root.insertAdjacentHTML(
+      "beforeend",
+      this._generateMarkup(habitData ? habitData : {})
+    );
   }
 
   renderFormError() {

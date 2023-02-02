@@ -1,7 +1,7 @@
 export default class HabitsComponentView {
   _generateMarkup() {
     return `
-    <section class="habits-component__container" style="color: white">
+    <section id="habitsComponentContainerMain" class="habits-component__container" style="color: white">
       <button id="addHabitBtn">Add</button>
     </section>`;
   }

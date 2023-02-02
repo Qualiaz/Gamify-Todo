@@ -17,7 +17,6 @@ export default class HabitSettingsController {
       habitSettingsEnergy,
       habitSettingsDifficulty,
     } = this.view.getElems();
-    console.log(habitSettingsContainer);
 
     const newHabit = () => {
       let { habitSettingsForm } = this.view.getElems();
@@ -27,6 +26,7 @@ export default class HabitSettingsController {
           this.model.initHabit().then(() => {
             const habitCard = new HabitCardController();
             habitCard.model = this.model;
+            habitCard.settingsController = this;
             this.model.isCardCreated = true;
             habitCard.init();
           });
@@ -41,11 +41,33 @@ export default class HabitSettingsController {
 
     const existingHabit = () => {
       const { habitSettingsForm } = this.view.getElems(this.model.habitData.id);
-      console.log(habitSettingsForm);
-      console.log(this.model.habitData.id);
+
       habitSettingsForm.addEventListener("click", (e) => {
         const clickedId = e.target.id;
         if (clickedId === `habitSettingsDoneBtn-${this.model.habitData.id}`) {
+          const {
+            name,
+            notes,
+            difficulty,
+            energy,
+            projectAssociated,
+            streakPositive,
+            streakNegative,
+          } = this.model.getValuesForm();
+          console.log(streakPositive);
+          this.model.changeHabit({
+            name,
+            notes,
+            difficulty,
+            energy,
+            projectAssociated,
+            streakPositive,
+            streakNegative,
+          });
+
+          console.log(this.habitCard);
+          this.habitCard.view.renderChanges(this.model.habitData);
+          //the check also occurs in modal but if is true it must remove element sync
           if (this.model.isFormChecks()) habitSettingsContainer.remove();
           else {
             this.view.renderFormError();
@@ -66,7 +88,6 @@ export default class HabitSettingsController {
 
     habitSettingsDifficulty.querySelectorAll("option").forEach((el) => {
       el.addEventListener("click", (e) => {
-        console.log(habitSettingsEnergy);
         const minValueDifficulty = this.model.changeEnergyValues(
           e.target.value
         );
@@ -81,7 +102,9 @@ export default class HabitSettingsController {
 
   initChangeHabit() {
     this.view.renderExistingHabit(this.model.habitData);
+    this.view.renderChangesInEnergyDisplay(this.model.habitData.energy);
     this.model.setElems(this.view.getElems(this.model.habitData.id));
+    this.model.setValuesForm();
     this.eventListeners();
   }
 

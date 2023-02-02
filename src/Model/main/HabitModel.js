@@ -6,7 +6,7 @@ import { auth, db } from "../../firebase/config";
 export const allHabits = [];
 export default class HabitModel {
   habitData;
-
+  isCardCreated;
   setElems(elems) {
     return (this.elems = elems);
   }
@@ -15,14 +15,12 @@ export default class HabitModel {
     this.habitData = {
       id: "",
       checked: false,
-      streak: {
-        positive: 0,
-        negative: 0,
-      },
       name: name,
       difficulty: difficulty,
       energy: Number(energy),
       notes: notes,
+      streakPositive: 0,
+      streakNegative: 0,
     };
     allHabits.push(this.habitData);
     return this.habitData;
@@ -32,7 +30,6 @@ export default class HabitModel {
     const habitData = this.getValuesForm();
     if (!this.isFormChecks()) return;
     const habit = this.createHabitData(habitData);
-    console.log(habitData);
     allHabits.push(habit);
     return habit;
   }
@@ -53,6 +50,24 @@ export default class HabitModel {
     return habitData;
   }
 
+  changeHabit({
+    name,
+    notes,
+    difficulty,
+    energy,
+    streakPositive,
+    streakNegative,
+  }) {
+    this.habitData.name = name;
+    this.habitData.notes = notes;
+    this.habitData.difficulty = difficulty;
+    this.habitData.energy = energy;
+    this.habitData.streakPositive = streakPositive;
+    this.habitData.streakNegative = streakNegative;
+
+    return this.habitData;
+  }
+
   getValuesForm() {
     const {
       habitSettingsName,
@@ -60,15 +75,47 @@ export default class HabitModel {
       habitSettingsDifficulty,
       habitSettingsProjectAssociated,
       habitSettingsEnergy,
+      habitSettingsStreakPositiveInput,
+      habitSettingsStreakNegativeInput,
     } = this.elems;
 
-    return {
-      name: habitSettingsName.value,
-      notes: habitSettingsNotes.value,
-      difficulty: habitSettingsDifficulty.value,
-      projectAssociated: habitSettingsProjectAssociated.value,
-      energy: habitSettingsEnergy.value,
-    };
+    if (this.isCardCreated) {
+      return {
+        name: habitSettingsName.value,
+        notes: habitSettingsNotes.value,
+        difficulty: habitSettingsDifficulty.value,
+        projectAssociated: habitSettingsProjectAssociated.value,
+        energy: habitSettingsEnergy.value,
+        streakPositive: habitSettingsStreakPositiveInput.value,
+        streakNegative: habitSettingsStreakNegativeInput.value,
+      };
+    } else
+      return {
+        name: habitSettingsName.value,
+        notes: habitSettingsNotes.value,
+        difficulty: habitSettingsDifficulty.value,
+        projectAssociated: habitSettingsProjectAssociated.value,
+        energy: habitSettingsEnergy.value,
+      };
+  }
+
+  setValuesForm() {
+    const {
+      habitSettingsName,
+      habitSettingsNotes,
+      habitSettingsDifficulty,
+      habitSettingsProjectAssociated,
+      habitSettingsStreakPositiveInput,
+      habitSettingsStreakNegativeInput,
+    } = this.elems;
+
+    habitSettingsName.value = this.habitData.name;
+    habitSettingsNotes.textContent = this.habitData.notes;
+    habitSettingsDifficulty.value = this.habitData.difficulty;
+    habitSettingsProjectAssociated.value = this.habitData.projectAssociated;
+    habitSettingsStreakPositiveInput.value = this.habitData.streakPositive;
+    habitSettingsStreakNegativeInput.value = this.habitData.streakNegative;
+    this.changeEnergyValues(this.habitData.difficulty, this.habitData.energy);
   }
 
   isFormChecks() {
@@ -80,15 +127,15 @@ export default class HabitModel {
     return ok;
   }
 
-  changeEnergyValues(difficulty) {
+  changeEnergyValues(difficulty, value = null) {
     const { habitSettingsEnergy } = this.elems;
     console.log(habitSettingsEnergy);
 
     const changeInputValues = (min, max) => {
       habitSettingsEnergy.setAttribute("min", min);
       habitSettingsEnergy.setAttribute("max", max);
-      habitSettingsEnergy.setAttribute("value", min);
-      habitSettingsEnergy.value = min;
+      habitSettingsEnergy.setAttribute("value", value || min);
+      habitSettingsEnergy.value = value || min;
       return min;
     };
 

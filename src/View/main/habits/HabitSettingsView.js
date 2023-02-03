@@ -76,7 +76,7 @@ export default class HabitSettingsView {
             name="project-associated"
             id="habitSettingsProjectAssociated"
           >
-            <option value="" selected disabled hidden>Choose...</option>
+            <option value="Choose..." selected disabled hidden>Choose...</option>
            
           </select>
         </div>
@@ -125,7 +125,7 @@ export default class HabitSettingsView {
           type="button"
           class="habit-settings__streak--positive__button"          
           >
-          <img src="./habit-plus.svg" alt="" />
+          <img id="habitSettingsStreakPositiveImgBtn" src="./habit-plus.svg" alt="" />
         </button>
       </div>
       <div class="habit-settings__streak--negative__wrapper">
@@ -136,11 +136,11 @@ export default class HabitSettingsView {
           value="0"
         />
         <button
-          id="habitSettingsStreakNegativeBtn"
-          type="button"
+         type="button"
           class="habit-settings__streak--negative__button"
+          id="habitSettingsStreakNegativeBtn"
         >
-          <img src="./habit-minus.svg" alt="" />
+          <img id="habitSettingsStreakNegativeImgBtn" src="./habit-minus.svg" alt="" />
         </button>
       </div>
     </div>
@@ -188,6 +188,15 @@ export default class HabitSettingsView {
     const habitSettingsStreakNegativeInput = document.getElementById(
       "habitSettingsStreakNegativeInput"
     );
+    const habitSettingsDeleteBtn = document.getElementById(
+      "habitSettingsDeleteBtn"
+    );
+    const habitSettingsStreakPositiveBtn = document.getElementById(
+      "habitSettingsStreakPositiveBtn"
+    );
+    const habitSettingsStreakNegativeBtn = document.getElementById(
+      "habitSettingsStreakNegativeBtn"
+    );
 
     return {
       habitsComponentEl,
@@ -203,6 +212,9 @@ export default class HabitSettingsView {
       habitSettingsEnergyDispay,
       habitSettingsStreakPositiveInput,
       habitSettingsStreakNegativeInput,
+      habitSettingsDeleteBtn,
+      habitSettingsStreakPositiveBtn,
+      habitSettingsStreakNegativeBtn,
     };
   }
 

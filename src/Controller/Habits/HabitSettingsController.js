@@ -4,7 +4,7 @@ import HabitModel, { allHabits } from "../../Model/main/HabitModel";
 import HabitSettingsView from "../../View/main/habits/HabitSettingsView";
 import HabitCardController from "./HabitCardController";
 
-const main = document.getElementById("main");
+// const main = document.getElementById("main");
 export default class HabitSettingsController {
   constructor(model) {
     this.view = new HabitSettingsView();
@@ -16,6 +16,8 @@ export default class HabitSettingsController {
       habitSettingsContainer,
       habitSettingsEnergy,
       habitSettingsDifficulty,
+      habitSettingsStreakPositiveBtn,
+      habitSettingsStreakNegativeBtn,
     } = this.view.getElems();
 
     const newHabit = () => {
@@ -23,12 +25,11 @@ export default class HabitSettingsController {
       habitSettingsForm.addEventListener("click", (e) => {
         const clickedId = e.target.id;
         if (clickedId === "habitSettingsDoneBtn") {
-          this.model.initHabit().then(() => {
-            const habitCard = new HabitCardController();
-            habitCard.model = this.model;
+          this.model.initHabit().then((habitCard) => {
+            // const habitCard = new HabitCardController();
+            // habitCard.model = this.model;
             habitCard.settingsController = this;
-            this.model.isCardCreated = true;
-            console.log(habitCard.model.habitData);
+            // this.model.isCardCreated = true;
             habitCard.init();
           });
           //the check also occurs in modal but if is true it must remove element sync
@@ -42,20 +43,22 @@ export default class HabitSettingsController {
 
     const existingHabit = () => {
       const { habitSettingsForm } = this.view.getElems(this.model.habitData.id);
+      const habitCardEl = document.getElementById(
+        `habitCard-${this.model.habitData.id}`
+      );
 
       habitSettingsForm.addEventListener("click", (e) => {
         const clickedId = e.target.id;
+        const {
+          name,
+          notes,
+          difficulty,
+          energy,
+          projectAssociated,
+          streakPositive,
+          streakNegative,
+        } = this.model.getValuesForm();
         if (clickedId === `habitSettingsDoneBtn-${this.model.habitData.id}`) {
-          const {
-            name,
-            notes,
-            difficulty,
-            energy,
-            projectAssociated,
-            streakPositive,
-            streakNegative,
-          } = this.model.getValuesForm();
-
           this.model.changeHabit({
             name,
             notes,
@@ -74,6 +77,21 @@ export default class HabitSettingsController {
             this.view.renderFormError();
           }
         }
+        if (clickedId === `habitSettingsDeleteBtn`) {
+          this.model.initDeleteHabit();
+          habitCardEl.remove();
+          habitSettingsContainer.remove();
+        }
+      });
+
+      habitSettingsStreakPositiveBtn.addEventListener("click", (e) => {
+        const { habitSettingsStreakPositiveInput } = this.view.getElems();
+        habitSettingsStreakPositiveInput.value++;
+      });
+
+      habitSettingsStreakNegativeBtn.addEventListener("click", (e) => {
+        const { habitSettingsStreakNegativeInput } = this.view.getElems();
+        habitSettingsStreakNegativeInput.value++;
       });
     };
 

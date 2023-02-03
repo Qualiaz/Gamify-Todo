@@ -1,4 +1,10 @@
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import HabitCardController from "../../Controller/Habits/HabitCardController";
 import HabitSettingsController from "../../Controller/Habits/HabitSettingsController";
 import { auth, db } from "../../firebase/config";
@@ -8,6 +14,51 @@ export const allHabits = [];
 export default class HabitModel {
   habitData;
   isCardCreated;
+  localStorageObj;
+  isCardToggle = false;
+
+  setIsCardToggleLocalStorage() {
+    if (this.localStorageObj.isHabitCardToggled) {
+      this.localStorageObj.isHabitCardToggled = false;
+      localStorage.setItem(
+        `habitCard-${this.habitData.id}`,
+        JSON.stringify(this.localStorageObj)
+      );
+    } else {
+      this.localStorageObj.isHabitCardToggled = true;
+      console.log("HI");
+      localStorage.setItem(
+        `habitCard-${this.habitData.id}`,
+        JSON.stringify(this.localStorageObj)
+      );
+    }
+  }
+
+  getLocalStorageParsedObj() {
+    const lsItem = localStorage.getItem(`habitCard-${this.habitData.id}`);
+    this.localStorageObj = JSON.parse(lsItem);
+    return this.localStorageObj;
+  }
+
+  deleteHabitDb() {
+    const colHabitsRef = this.#getColHabitsRef();
+    const docHabitRef = doc(colHabitsRef, this.habitData.id);
+    deleteDoc(docHabitRef);
+  }
+
+  deleteHabitLocal() {
+    allHabits.forEach((habitController, i) => {
+      if (habitController.model.habitData.id === this.habitData.id) {
+        allHabits.splice(i, 1);
+      }
+      return allHabits;
+    });
+  }
+
+  initDeleteHabit() {
+    this.deleteHabitLocal();
+    this.deleteHabitDb();
+  }
 
   setElems(elems) {
     return (this.elems = elems);
@@ -29,9 +80,13 @@ export default class HabitModel {
   addHabitLocal() {
     const habitData = this.getValuesForm();
     if (!this.isFormChecks()) return;
-    const habit = this.createHabitData(habitData);
-    allHabits.push(habit);
-    return habit;
+    this.createHabitData(habitData);
+    const habitCard = new HabitCardController();
+    habitCard.model = this;
+
+    this.isCardCreated = true;
+    allHabits.push(habitCard);
+    return habitCard;
   }
 
   addHabitDb(habitModel) {
@@ -44,10 +99,24 @@ export default class HabitModel {
   }
 
   async initHabit() {
-    const habitData = this.addHabitLocal();
-    const docId = await this.addHabitDb(habitData);
-    habitData.id = docId;
-    return habitData;
+    const habitCard = this.addHabitLocal();
+    const docId = await this.addHabitDb(habitCard.model.habitData);
+    habitCard.model.habitData.id = docId;
+    this.createLocalStorageObj(docId);
+    return habitCard;
+  }
+
+  createLocalStorageObj(id) {
+    const localStorageObj = {
+      id: id,
+      isHabitCardToggled: false,
+    };
+    this.localStorageObj = localStorageObj;
+    localStorage.setItem(
+      `habitCard-${id}`,
+      JSON.stringify(this.localStorageObj)
+    );
+    return this.localStorageObj;
   }
 
   updateHabitDb(habitData = this.habitData) {
@@ -143,7 +212,6 @@ export default class HabitModel {
 
   changeEnergyValues(difficulty, value = null) {
     const { habitSettingsEnergy } = this.elems;
-    console.log(habitSettingsEnergy);
 
     const changeInputValues = (min, max) => {
       habitSettingsEnergy.setAttribute("min", min);

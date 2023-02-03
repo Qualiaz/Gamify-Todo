@@ -25,6 +25,7 @@ export default class HabitsComponentController {
     const compEl = document.querySelector("habits-component__container");
     // HabitCardController.render()
     allHabits.forEach((habit) => {
+      console.log(habit);
       habit.init();
       // habit.render(compEl);
     });

@@ -21,15 +21,20 @@ export default class HabitCardController {
       }
 
       if (e.target.id === `habitCardToggleImgBtn-${id}`) {
-        this.view.toggleCard(id);
+        this.model.setIsCardToggleLocalStorage();
+        const lsCardState = this.model.getLocalStorageParsedObj();
+        this.view.toggleCard(id, lsCardState.isHabitCardToggled);
+        console.log(this.model.localStorageObj);
+        console.log(this.model);
       }
     });
   }
 
   render() {
-    console.log(this.model.habitData);
     const container = document.querySelector(".habits-component__container");
-    this.view.render(container, this.model.habitData);
+    const lsCard = this.model.getLocalStorageParsedObj();
+    this.view.render(container, this.model.habitData, lsCard);
+    // this.view.renderState(lsParsedObj)
   }
 
   init() {

@@ -1,6 +1,7 @@
 import "./assets/habit-plus.svg";
 import "./assets/habit-minus.svg";
 import "./assets/toggle.svg";
+import { marked } from "marked";
 
 export default class HabitCardView {
   _generateMarkup({ id, name, notes, energy, streakPositive, streakNegative }) {
@@ -29,7 +30,7 @@ export default class HabitCardView {
           <div id="habitCardMainInfoContainer-${id}" class="habit-card__main__info__container hidden">
             <hr id="habitCardLineBreak1-${id}" class="habit-card__main__line-break" />
             <div id="habitCardNotes-${id}" class="habit-card__main__notes">
-              ${notes}
+            ${marked.parse(notes)}
             </div>
             <hr id="habitCardLineBreak2-${id}" class="habit-card__main__line-break" />
             <div class="habit-card__main__additional-info">
@@ -119,10 +120,13 @@ export default class HabitCardView {
     } = this._getElems(habitData.id);
 
     habitCardName.textContent = habitData.name;
-    habitCardNotes.textContent = habitData.notes;
     habitCardEnergy.textContent = habitData.energy;
     habitCardPositiveStreak.textContent = `+ ${habitData.streakPositive}`;
     habitCardNegativeStreak.textContent = `- ${habitData.streakNegative}`;
+
+    const parsedNotes = marked.parse(habitData.notes);
+    habitCardNotes.textContent = "";
+    habitCardNotes.insertAdjacentHTML("afterbegin", parsedNotes);
 
     this.renderColorBasedOnDifficulty(habitData);
     this.toggleLineBreaks(habitData.id);

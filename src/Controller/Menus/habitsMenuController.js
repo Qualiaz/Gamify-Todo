@@ -18,7 +18,7 @@ export default function habitsMenuController() {
   habitsMenuView.render();
 
   const habitsMenuEl = document.getElementById("habitsMenu");
-
   const habitsComponentController = new HabitsComponentController();
+
   habitsComponentController.init(habitsMenuEl);
 }

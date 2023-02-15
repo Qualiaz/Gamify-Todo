@@ -19,7 +19,7 @@
 
 .habit-card {
   &__container {
-    margin-top: 3rem;
+    // margin-top: 1rem;
     width: 30vw;
     display: flex;
     align-items: stretch;
@@ -79,6 +79,13 @@
 
     &__notes {
       margin: 0.5rem 1rem;
+      ul {
+        list-style: inside;
+        margin-left: 1.6rem;
+      }
+      p {
+        margin-left: 0.8rem;
+      }
     }
 
     &__info {

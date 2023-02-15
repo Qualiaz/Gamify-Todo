@@ -49,6 +49,7 @@ export default class HabitSettingsView {
             id="habitSettingsNotes"
             cols="30"
             rows="5"
+            data-provide="markdown"
             class="habit-settings__notes__textarea"            
           ></textarea>
         </div>

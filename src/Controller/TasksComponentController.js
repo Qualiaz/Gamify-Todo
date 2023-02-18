@@ -2,13 +2,13 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
 import TasksComponentView from "../View/main/tasks/TasksComponentView";
 import TaskCardController from "./TaskCardController";
-import addTaskControllerInit from "./Tasks/AddTaskController";
 //prettier-ignore
 import {curTasks,curTasksTomorrow,curTasksToday,curTasksThisWeek, curTasksWhenever} from "../Model/main/TaskModel";
 //prettier-ignore
 import {addTasksWeekDaysFilter,addTasksOtherDayFilter,addTasksNoRepeatFilter} from "../helpers/filters";
 import { removeDuplicateTasks } from "../helpers/removeDuplicate";
 import OrderTask from "../helpers/orderTask";
+import TaskSettingsController from "./Tasks/AddTaskController";
 
 export let userId;
 export let tasksComponentView;
@@ -35,7 +35,8 @@ export default class TasksComponentController {
     document.addEventListener("click", (e) => {
       const clickedId = e.target.id;
       if (clickedId === `addTaskBtn-${this.id}`) {
-        addTaskControllerInit();
+        const taskSettingsController = new TaskSettingsController();
+        taskSettingsController.init();
       }
       // CHANGE VIEW
       if (clickedId === `tmComponentViewSettings-${this.id}`) {

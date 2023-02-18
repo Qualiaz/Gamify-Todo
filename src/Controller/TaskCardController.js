@@ -5,11 +5,12 @@ import TaskModel, { curTasks } from "../Model/main/TaskModel";
 import TaskCardView from "../View/main/tasks/TaskCardView";
 import Timer from "easytimer.js";
 import { openTaskSettings } from "./Tasks/AddTaskController";
+
 export default class TaskCardController {
   #stopwatch = new Timer();
   constructor() {
     this.taskCardView = new TaskCardView();
-    this.taskCardModel;
+    this.model = new TaskModel();
   }
 
   eventListeners() {
@@ -21,7 +22,7 @@ export default class TaskCardController {
         console.log("hi");
       }
       if (clickedId === `taskCardTop-${id}`) {
-        openTaskSettings(this);
+        this.model.openTaskSettings();
       }
       if (clickedId === `taskCheckboxUnfinished-${id}`) {
         this.checkTask(true);

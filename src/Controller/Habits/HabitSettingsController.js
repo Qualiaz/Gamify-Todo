@@ -26,10 +26,7 @@ export default class HabitSettingsController {
         const clickedId = e.target.id;
         if (clickedId === "habitSettingsDoneBtn") {
           this.model.initHabit().then((habitCard) => {
-            // const habitCard = new HabitCardController();
-            // habitCard.model = this.model;
             habitCard.settingsController = this;
-            // this.model.isCardCreated = true;
             habitCard.init();
           });
           //the check also occurs in modal but if is true it must remove element sync

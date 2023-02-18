@@ -28,25 +28,13 @@ export default async function Controller() {
       switch (btn.id) {
         case "dashboard":
           dashboardMenuController.view.render();
-          // const dashboardMenu = document.getElementById("dashboardMenu");
           const dashboardTasks = document.getElementById("dashboardTasks");
           const dashboardTasksComponentController =
             new TasksComponentController(curTasksToday, "dashboard", "today");
           dashboardTasksComponentController.init(dashboardTasks);
-
-          // HABITS
-          // const dashboardHabits = document.getElementById("dashboardHabits");
-          // habitsMenuController.createComponent(allHabits)
-          // habitsComponent.init(dashboardHabits)
-
           break;
         case "tasks":
-          tasksMenuController.tasksMenuView.render();
-          const tasksMenu = document.getElementById("tasksMenu");
-          //prettier-ignore
-          const tasksComponentController = new TasksComponentController(curTasks,"tasks","all");
-
-          tasksComponentController.init(tasksMenu);
+          tasksMenuController.init();
           break;
         case "projects":
           main.innerHTML = projectsMarkup;

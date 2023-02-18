@@ -26,7 +26,6 @@ export default class HabitModel {
       );
     } else {
       this.localStorageObj.isHabitCardToggled = true;
-      console.log("HI");
       localStorage.setItem(
         `habitCard-${this.habitData.id}`,
         JSON.stringify(this.localStorageObj)

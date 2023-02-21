@@ -4,11 +4,10 @@ export default class OrderTask {
   }
 
   difficulty(direction) {
-    console.log(this.tasksArr);
     const orderedTasks = [];
     const diffValues = this.tasksArr.map((task) => {
-      const diff = task.taskCardModel.difficulty;
-      const id = task.taskCardModel.id;
+      const diff = task.model.difficulty;
+      const id = task.model.id;
       if (diff === "trivial") return { taskId: id, difficulty: diff, v: 1 };
       if (diff === "easy") return { taskId: id, difficulty: diff, v: 2 };
       if (diff === "medium") return { taskId: id, difficulty: diff, v: 3 };
@@ -31,8 +30,7 @@ export default class OrderTask {
 
     orderedDiffValue.forEach((shallowTask) => {
       this.tasksArr.forEach((task) => {
-        if (task.taskCardModel.id === shallowTask.taskId)
-          orderedTasks.push(task);
+        if (task.model.id === shallowTask.taskId) orderedTasks.push(task);
       });
     });
     return orderedTasks;
@@ -40,8 +38,8 @@ export default class OrderTask {
 
   energy(direction) {
     const orderedTasks = this.tasksArr.sort((a, b) => {
-      const prevEnergy = Number(a.taskCardModel.energy);
-      const nextEnergy = Number(b.taskCardModel.energy);
+      const prevEnergy = Number(a.model.energy);
+      const nextEnergy = Number(b.model.energy);
       if (direction === "ascending") {
         if (prevEnergy > nextEnergy) return 1;
         if (prevEnergy < nextEnergy) return -1;
@@ -58,8 +56,8 @@ export default class OrderTask {
 
   timeCreated(direction) {
     const orderedTasks = this.tasksArr.sort((prev, next) => {
-      const prevCreatedTime = prev.taskCardModel.createdTime;
-      const nextCreatedTime = next.taskCardModel.createdTime;
+      const prevCreatedTime = prev.model.createdTime;
+      const nextCreatedTime = next.model.createdTime;
       if (direction === "ascending") {
         if (prevCreatedTime > nextCreatedTime) return 1;
         if (prevCreatedTime < nextCreatedTime) return -1;

@@ -132,6 +132,7 @@ export default class TasksComponentController {
   }
 
   init(parentEl) {
+    console.log(this.curView.tasks);
     this.curView.tasks = this.orderTasks(
       this.curView.tasks,
       "timeCreated",
@@ -142,6 +143,7 @@ export default class TasksComponentController {
   }
 
   render(parentEl, view = this.curView, id = this.id) {
+    console.log(this.curView);
     this.tasksComponentView.render(parentEl, view, id);
   }
 }
@@ -155,22 +157,25 @@ export async function createTasksFromDb() {
 
   tasksDocs.forEach((doc) => {
     const taskCard = new TaskCardController();
-    taskCard.taskCardModel = doc.data();
-    taskCard.taskCardModel.id = doc.id;
+    taskCard.model.cardState = doc.data();
+    taskCard.model.cardState.id = doc.id;
     const localTimeTracked = localStorage.getItem(`timeElapsed-${doc.id}`);
     if (localTimeTracked) {
-      taskCard.taskCardModel.timeTracked = localTimeTracked;
+      taskCard.model.cardState.timeTracked = localTimeTracked;
     }
+
     curTasks.push(taskCard);
+    console.log(taskCard.model.cardState);
+
     // filter tasks
-    if (taskCard.taskCardModel.startDate) {
-      if (taskCard.taskCardModel.repeat.type === "daily") {
-        const everyOtherDay = taskCard.taskCardModel.repeat.everyOtherDay;
+    if (taskCard.model.cardState.startDate) {
+      if (taskCard.model.cardState.repeat.type === "daily") {
+        const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
         addTasksOtherDayFilter(everyOtherDay, taskCard);
         return;
       }
-      if (taskCard.taskCardModel.repeat.type === "weekly") {
-        const days = taskCard.taskCardModel.repeat.days;
+      if (taskCard.model.repeat.type === "weekly") {
+        const days = taskCard.model.cardState.repeat.days;
         addTasksWeekDaysFilter(days, taskCard);
         return;
       }

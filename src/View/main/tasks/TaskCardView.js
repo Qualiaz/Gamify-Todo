@@ -51,7 +51,7 @@ export default class TaskCardView {
         <hr id="taskCardLineBreak-1-${id}" class="task-card__line-break">
 
         <div id="taskCardNotes-${id}" class="task-card__notes__container">
-          ${marked.parse(notes)}
+          ${notes ? marked.parse(notes) : null}
           <br />
         </div>
         
@@ -91,6 +91,7 @@ export default class TaskCardView {
   }
 
   _renderCps(cardData) {
+    console.log(cardData);
     const cardCheckpoints = document.getElementById(
       `cardCheckpoints-${cardData.id}`
     );
@@ -106,6 +107,7 @@ export default class TaskCardView {
     const timerEl = document.getElementById(`timer-${id}`);
     const playTimer = document.getElementById(`playTimer-${id}`);
     const pauseTimer = document.getElementById(`pauseTimer-${id}`);
+    console.log(timerEl);
 
     playTimer.classList.add("hidden");
     pauseTimer.classList.remove("hidden");
@@ -125,13 +127,8 @@ export default class TaskCardView {
     const taskInfo = document.getElementById(`taskInfo-${id}`);
     const cardToggleIcon = document.getElementById(`cardToggleIcon-${id}`);
 
-    const isToggled = taskInfo.classList.contains("hidden");
-
     taskInfo.classList.toggle("hidden");
     !cardToggleIcon.classList.toggle("reverse-icon");
-
-    // returns like this so it can sync in controller with the model state
-    return isToggled;
   }
 
   renderToggleTimer(id) {
@@ -139,12 +136,10 @@ export default class TaskCardView {
       `taskCardTimerContainer-${id}`
     );
     timerContainer.classList.toggle("hidden");
-
-    // returns like this so it can sync in controller with the model state
-    return !timerContainer.classList.contains("hidden");
   }
 
   renderToggleCheckTask(id) {
+    console.log(id);
     const checkboxTaskUnfinished = document.getElementById(
       `taskCheckboxUnfinished-${id}`
     );
@@ -263,6 +258,8 @@ export default class TaskCardView {
   }
 
   render(parentEl, cardData) {
+    console.log(cardData);
+    // const cardData = cardModel.cardState;
     parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(cardData));
     this._renderCps(cardData);
     this._renderColorDifficulty(cardData);

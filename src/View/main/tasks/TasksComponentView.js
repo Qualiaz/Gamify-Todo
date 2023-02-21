@@ -95,14 +95,13 @@ export default class TasksComponentView {
   renderCards(parentEl, tasks) {
     // parentEl.innerHTML = "";
     tasks.forEach((task) => {
-      task.taskCardView.render(parentEl, task.taskCardModel);
+      console.log(task.model.cardState);
+      task.view.render(parentEl, task.model.cardState);
       task.eventListeners();
     });
   }
 
-  render(parentEl, view, id) {
-    parentEl.innerHTML = "";
-    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(view, id));
+  getElems(id) {
     const tmComponent = document.getElementById(`tmComp-${id}`);
     const tmComponentName = document.getElementById(`tmComponentName-${id}`);
     const optionToday = document.getElementById(`filterSelectionToday-${id}`);
@@ -126,6 +125,33 @@ export default class TasksComponentView {
     const optionOrderEnergy = document.getElementById(
       `orderSelectionEnergy-${id}`
     );
+
+    return {
+      tmComponent,
+      tmComponentName,
+      optionToday,
+      optionTomorrow,
+      optionThisWeek,
+      optionWhenever,
+      optionAll,
+      optionOrderTimeCreated,
+      optionOrderDifficulty,
+      optionOrderEnergy,
+    };
+  }
+
+  switchView(view, id) {
+    const {
+      tmComponentName,
+      optionToday,
+      optionTomorrow,
+      optionThisWeek,
+      optionWhenever,
+      optionAll,
+      optionOrderTimeCreated,
+      optionOrderDifficulty,
+      optionOrderEnergy,
+    } = this.getElems(id);
 
     switch (view.filter) {
       case "all":
@@ -160,7 +186,15 @@ export default class TasksComponentView {
         optionOrderEnergy.selected = true;
         break;
     }
+  }
 
+  render(parentEl, view, id) {
+    parentEl.innerHTML = "";
+    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(view, id));
+    const { tmComponent } = this.getElems(id);
+
+    this.switchView(view, id);
     this.renderCards(tmComponent, view.tasks);
+    return tmComponent;
   }
 }

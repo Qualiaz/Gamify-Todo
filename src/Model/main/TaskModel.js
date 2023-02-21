@@ -1,11 +1,16 @@
+import Timer from "easytimer.js";
 import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
-import TaskCardController from "../../Controller/TaskCardController";
+import TaskCardController, {
+  getTask,
+} from "../../Controller/TaskCardController";
 import { auth, db } from "../../firebase/config";
 
 export const curTasks = [];
@@ -13,13 +18,16 @@ export const curTasksToday = [];
 export const curTasksTomorrow = [];
 export const curTasksThisWeek = [];
 export const curTasksWhenever = [];
+const root = document.getElementById("root");
 
 export class TaskSettingsModel {
   state = {
     curCpId: 1,
   };
 
-  setValue() {}
+  setValues() {
+    console.log(this.state);
+  }
 
   incrementCurCpId() {
     return ++this.state.curCpId;
@@ -37,26 +45,42 @@ export class TaskSettingsModel {
     return colTasksRef;
   }
 
+  closeSettings() {
+    this.state.curCpId = 1;
+    root.removeChild(root.children[0]);
+  }
   //prettier-ignore
-  addTask({ name,notes,startDate,difficulty,energy,repeat,repeatDaily,daysOfWeek,cps,}) {
+  async addTask({ name,notes,startDate,difficulty,energy,repeat,repeatDaily,daysOfWeek,cps}) {
     const colTasksRef = this.getTasksCol()
     
+    if (!this.validFormCheck(name, repeatDaily).ok) return
+
     const taskCardController = new TaskCardController();
     taskCardController.model.addTaskDataCardState({name, notes, startDate, repeat,repeatDaily,daysOfWeek, difficulty, energy, cps})
 
     this.state = taskCardController.model.cardState
     const taskData = Object.assign({}, taskCardController.model.cardState)
 
-    this.addDocDb(taskCardController, taskData, colTasksRef)
-    
+    const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
+    taskDataDb.then((data) => {
+      taskCardController.model.cardState.id = data.id
+      taskCardController.view.render(tasksComponent, data)
+      taskCardController.eventListeners()
+    })
+    this.state.curCpId = 1
+    root.removeChild(root.children[0]);
+    // TO BE MOVED
+    const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu')
+    //    
     return taskCardController
   }
 
-  addDocDb(taskCardController, taskData, colTaskRef) {
-    addDoc(colTaskRef, taskData).then((doc) => {
-      taskCardController.model.id = doc.id;
+  async addDocDb(taskCardController, taskData, colTaskRef) {
+    return addDoc(colTaskRef, taskData).then((doc) => {
+      taskCardController.model.cardState.id = doc.id;
       if (document.getElementById(`taskCard-${doc.id}`)) return;
       curTasks.push(taskCardController);
+      return taskCardController.model.cardState;
     });
   }
 
@@ -103,6 +127,8 @@ export class TaskSettingsModel {
     };
 
     if (name) {
+      console.log(nameCheckFail);
+      console.log(repeatDaily);
       check.name = true;
       nameCheckFail.classList.add("hidden");
     } else {
@@ -143,7 +169,6 @@ export class TaskSettingsModel {
 
     name = name.value;
     repeat = repeat.value;
-    console.log(repeat);
     difficulty = difficulty.value;
     energy = energy.value;
     repeatDaily = repeatDaily.value;
@@ -165,6 +190,7 @@ export class TaskSettingsModel {
 }
 
 export default class TaskCardModel {
+  #stopwatch = new Timer();
   cardState = {
     checked: false,
     timeTracked: "00:00:00",
@@ -184,9 +210,6 @@ export default class TaskCardModel {
     energy,
     cps,
   }) {
-    console.log(repeatDaily);
-    console.log(daysOfWeek);
-
     this.cardState.name = name;
     this.cardState.startDate = startDate;
     this.cardState.repeat = repeat;
@@ -198,7 +221,7 @@ export default class TaskCardModel {
       if (!cp) return;
       this.addCpDataCardState(cp);
     });
-    console.log(this.cardState);
+
     return this.cardState;
   }
 
@@ -225,5 +248,136 @@ export default class TaskCardModel {
     if (this.cardState.repeat === "no-repeat") {
       this.cardState.repeat = false;
     }
+  };
+
+  checkCheckpoint(clickedId, isChecked) {
+    if (isChecked) {
+      // console.log(this.cardState);
+      this.cardState.checkpoints.forEach((cp) => {
+        // if (cp.id === clickedId.replace("Unfinished", "")) {
+        cp.checked = true;
+        this.sendToDb.updateIsCpChecked(true, clickedId, this.cardState.id);
+        // }
+      });
+    }
+    //
+    else {
+      this.cardState.checkpoints.forEach((cp) => {
+        // if (cp.id === clickedId.replace("Finished", "")) {
+        cp.checked = false;
+        this.sendToDb.updateIsCpChecked(false, clickedId, this.cardState.id);
+        // }
+      });
+    }
+  }
+
+  // _generateCpId() {
+  //   let numId = 0;
+  //   this.model.cardState.checkpoints.forEach((cp) => {
+  //     cp.id = `cardCheckpoint-${numId}-${this.model.id}`;
+  //     numId++;
+  //   });
+  // }
+
+  checkTask(isChecked, id = this.cardState.id) {
+    this.cardState.checked = isChecked;
+    this.sendToDb.updateChecked(isChecked, id);
+  }
+
+  openTaskSettings() {
+    const taskSettingsState = this.taskSettingsController.model.state;
+    this.taskSettingsController.init(taskSettingsState);
+  }
+
+  // MOVE TO VIEW
+  toggleTimer(id = this.cardState.id) {
+    console.log(this.cardState.isTimerToggled);
+    console.log(id);
+    if (!this.cardState.isTimerToggled) {
+      this.cardState.isTimerToggled = true;
+      this.sendToDb.updateIsTimerToggled(true, id);
+    } else {
+      this.cardState.isTimerToggled = false;
+      this.sendToDb.updateIsTimerToggled(false, id);
+    }
+  }
+
+  toggleInfo(id = this.cardState.id) {
+    if (this.cardState.isInfoToggled) {
+      this.cardState.isInfoToggled = true;
+      this.sendToDb.updateIsInfoToggled(true, id);
+    } else {
+      this.cardState.isInfoToggled = false;
+      this.sendToDb.updateIsInfoToggled(false, id);
+    }
+  }
+
+  playTime(cardView) {
+    this.#stopwatch.start({
+      precision: "seconds",
+      startValues: {
+        seconds: this.cardState.timeTracked.split(":")[2],
+        minutes: this.cardState.timeTracked.split(":")[1],
+        hours: this.cardState.timeTracked.split(":")[0],
+      },
+      callback: (stopwatch) => {
+        const timeValuesStr = stopwatch.getTimeValues().toString();
+        const timeValues = stopwatch.getTimeValues();
+
+        localStorage.setItem(`timeElapsed-${this.cardState.id}`, timeValues);
+        this.cardState.timeTracked = timeValuesStr;
+        cardView.renderPlayTimer(this.cardState.id);
+      },
+    });
+  }
+
+  pauseTime(cardView) {
+    this.#stopwatch.pause();
+    const timeValuesStr = this.#stopwatch.getTimeValues().toString();
+    this.sendToDb.updateTimeTracked(timeValuesStr, this.cardState.id);
+    cardView.renderPauseTimer(this.cardState.id);
+  }
+
+  sendToDb = {
+    updateChecked(isChecked, id) {
+      const docTaskRef = getTask(id);
+      updateDoc(docTaskRef, {
+        checked: isChecked,
+      });
+    },
+    updateTimeTracked(time, id) {
+      const docTaskRef = getTask(id);
+      updateDoc(docTaskRef, {
+        timeTracked: time,
+      });
+    },
+    updateIsInfoToggled(isToggled, id) {
+      const docTaskRef = getTask(id);
+      console.log(docTaskRef);
+      updateDoc(docTaskRef, {
+        isInfoToggled: isToggled,
+      });
+    },
+    updateIsTimerToggled(isToggled, id) {
+      console.log("timer toggle");
+      const docTaskRef = getTask(id);
+      updateDoc(docTaskRef, {
+        isTimerToggled: isToggled,
+      });
+    },
+    async updateIsCpChecked(isChecked, clickedId, id) {
+      const docTaskRef = getTask(id);
+      const docTask = await getDoc(docTaskRef);
+      const clickedNumId = clickedId.split("-")[1];
+
+      const cpsData = docTask.data().checkpoints;
+      const cpData = cpsData[clickedNumId];
+      cpData.checked = isChecked;
+      cpsData.splice(clickedNumId, 1, cpData);
+      console.log(cpsData);
+      updateDoc(docTaskRef, {
+        checkpoints: cpsData,
+      });
+    },
   };
 }

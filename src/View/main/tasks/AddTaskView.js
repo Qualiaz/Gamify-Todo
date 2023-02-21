@@ -286,7 +286,8 @@ export default class TaskSettingsView {
       deleteIconBtn.closest(".checkpoint__container").remove();
   }
 
-  render(parentEl) {
-    parentEl.insertAdjacentHTML("afterbegin", this._generateMarkup());
+  render(parentEl, state) {
+    console.log(state);
+    parentEl.insertAdjacentHTML("afterbegin", this._generateMarkup(state));
   }
 }

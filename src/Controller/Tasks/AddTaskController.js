@@ -11,7 +11,7 @@ export default class TaskSettingsController {
     this.model = new TaskSettingsModel();
   }
 
-  eventListeners() {
+  async eventListeners() {
     const {
       energy,
       cpsCont,
@@ -27,12 +27,14 @@ export default class TaskSettingsController {
 
     doneBtn.addEventListener("click", () => {
       const taskSettingsValues = this.model.getValues(this.view.getElems());
-      this.model.addTask(taskSettingsValues);
+      const taskCardController = this.model.addTask(taskSettingsValues);
+      taskCardController.then(
+        (controller) => (controller.model.taskSettingsController = this)
+      );
     });
 
     closeBtn.addEventListener("click", () => {
-      this.model.state.curCpId = 1;
-      root.removeChild(root.children[0]);
+      this.model.closeSettings();
     });
 
     ///////////////////////////////////
@@ -104,8 +106,10 @@ export default class TaskSettingsController {
     });
   }
 
-  init() {
-    this.view.render(root);
+  init(state) {
+    // console.log(values);
+    // if (values) this.model.setValues();
+    this.view.render(root, state);
     this.eventListeners();
   }
 }

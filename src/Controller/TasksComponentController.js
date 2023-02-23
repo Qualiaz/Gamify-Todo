@@ -164,17 +164,18 @@ export async function createTasksFromDb() {
       taskCard.model.cardState.timeTracked = localTimeTracked;
     }
 
+    const taskSettingsController =
+      taskCard.model.createTaskSettingsController();
+    taskSettingsController.curTaskCard = taskCard;
     curTasks.push(taskCard);
-    console.log(taskCard.model.cardState);
-
     // filter tasks
     if (taskCard.model.cardState.startDate) {
-      if (taskCard.model.cardState.repeat.type === "daily") {
+      if (taskCard.model.cardState.repeat === "daily") {
         const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
         addTasksOtherDayFilter(everyOtherDay, taskCard);
         return;
       }
-      if (taskCard.model.repeat.type === "weekly") {
+      if (taskCard.model.repeat === "weekly") {
         const days = taskCard.model.cardState.repeat.days;
         addTasksWeekDaysFilter(days, taskCard);
         return;

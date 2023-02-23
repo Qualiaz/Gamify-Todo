@@ -25,7 +25,7 @@ export default class TaskCardView {
 
       <div class="task-card__main__container">
         <div id="taskCardTop-${id}" class="task-card__top__container">
-          <span class="task-card__name">${name}</span>
+          <span class="task-card__name" id="taskCardName-${id}">${name}</span>
           <div class="task-card__top__btns">
             <div class="task-card__timer-icon">
               <img id="cardTimerIcon-${id}" draggable="false" class="task-card__timer-icon" src=${timerIcon} />
@@ -66,7 +66,7 @@ export default class TaskCardView {
           <div id="taskCardAdditionalInfo-${id}" class="task-card__additional-info">
             <div class="task-card__energy__container">
               <img class="task-card__energy__icon" src=${energyIcon} />
-              <span class="task-card__energy__points">${energy}</span>
+              <span id="taskCardEnergy-${id}" class="task-card__energy__points">${energy}</span>
             </div>          
         </div>          
       </div>
@@ -75,7 +75,18 @@ export default class TaskCardView {
 `;
   }
 
+  getElems(id) {
+    const taskCard = document.getElementById(`taskCard-${id}`);
+    const name = document.getElementById(`taskCardName-${id}`);
+    const notes = document.getElementById(`taskCardNotes-${id}`);
+    const lineBreak1 = document.getElementById(`taskCardLineBreak-1-${id}`);
+    const energy = document.getElementById(`taskCardEnergy-${id}`);
+
+    return { taskCard, name, notes, lineBreak1, energy };
+  }
+
   _generateCheckpoint(cpName, checked, num, id) {
+    console.log(cpName, checked, num, id);
     return `
     <div id="cardCheckpoint-${num}-${id}" class="task-card__checkpoint__container">           
       <span id="cardCheckpointUnfinished-${num}-${id}" class="task-card__checkpoint--unfinished ${
@@ -91,11 +102,15 @@ export default class TaskCardView {
   }
 
   _renderCps(cardData) {
-    console.log(cardData);
-    const cardCheckpoints = document.getElementById(
+    let cardCheckpoints = document.getElementById(
       `cardCheckpoints-${cardData.id}`
     );
+
+    cardCheckpoints.textContent = "";
     cardData.checkpoints.forEach((cp, i) => {
+      console.log(cp);
+      if (!cp.name) return;
+      console.log(cardCheckpoints);
       cardCheckpoints.insertAdjacentHTML(
         "beforeend",
         this._generateCheckpoint(cp["name"], cp["checked"], i, cardData.id)
@@ -195,8 +210,11 @@ export default class TaskCardView {
         const finishedCp = document.getElementById(
           `cardCheckpointFinished-${i}-${id}`
         );
-        finishedCp.style.setProperty("--difficultyColor", color);
-        unfinishedCp.style.setProperty("--difficultyColor", color);
+        if (unfinishedCp)
+          unfinishedCp.style.setProperty("--difficultyColor", color);
+
+        if (finishedCp)
+          finishedCp.style.setProperty("--difficultyColor", color);
       });
       [
         taskCardCheckboxContainer,
@@ -204,6 +222,7 @@ export default class TaskCardView {
         taskCardLineBreak2,
         taskCardLineBreak3,
       ].forEach((e) => {
+        if (!e) return;
         e.style.setProperty("--difficultyColor", color);
       });
     };
@@ -232,38 +251,88 @@ export default class TaskCardView {
     br.remove();
   }
 
-  _removeLinebreaks(cardData) {
-    const cpsContainer = document.getElementById(
-      `cardCheckpoints-${cardData.id}`
-    );
+  _removeLinebreaks(id) {
+    const cpsContainer = document.getElementById(`cardCheckpoints-${id}`);
     const taskCardLineBreak3 = document.getElementById(
-      `taskCardLineBreak-3-${cardData.id}`
+      `taskCardLineBreak-3-${id}`
     );
     const taskCardLineBreak2 = document.getElementById(
-      `taskCardLineBreak-2-${cardData.id}`
+      `taskCardLineBreak-2-${id}`
     );
-    const taskCardNotes = document.getElementById(
-      `taskCardNotes-${cardData.id}`
-    );
+    const taskCardNotes = document.getElementById(`taskCardNotes-${id}`);
 
-    if (!taskCardNotes.firstElementChild) {
-      taskCardNotes.remove();
-      taskCardLineBreak2.remove();
+    if (taskCardNotes) {
+      if (!taskCardNotes.firstElementChild) {
+        taskCardNotes.classList.add("hidden");
+        taskCardLineBreak2.classList.add("hidden");
+      } else {
+        taskCardNotes.classList.remove("hidden");
+        taskCardLineBreak2.classList.remove("hidden");
+      }
     }
 
-    if (!cpsContainer.firstElementChild) {
-      cpsContainer.remove();
-      taskCardLineBreak3.remove();
+    if (cpsContainer) {
+      if (!cpsContainer.firstElementChild) {
+        cpsContainer.classList.add("hidden");
+        taskCardLineBreak3.classList.add("hidden");
+      } else {
+        cpsContainer.classList.remove("hidden");
+        taskCardLineBreak3.classList.remove("hidden");
+      }
     }
+  }
+
+  addNotes({ notes, id }) {
+    const { lineBreak1 } = this.getElems(id);
+    const notesEl = document.createElement("div");
+    const lineBreak2 = document.createElement("hr");
+    notesEl.id = `taskCardNotes-${id}`;
+    notesEl.className = "task-card__notes__container";
+    lineBreak2.id = `taskCardLineBreak-2-${id}`;
+    lineBreak2.className = "task-card__line-break";
+    ///
+    notesEl.insertAdjacentHTML("afterbegin", marked.parse(notes));
+    // notesEl.insertAdjacentElement("afterend");
+    lineBreak1.insertAdjacentElement("afterend", notesEl);
+    notesEl.insertAdjacentElement("afterend", lineBreak2);
+  }
+
+  changeNotes({ notes, id }) {
+    const { notes: notesEl } = this.getElems(id);
+    notesEl.textContent = "";
+    if (notes) {
+      notesEl.insertAdjacentHTML("afterbegin", marked.parse(notes));
+    } else {
+      this._removeLinebreaks(id);
+    }
+  }
+
+  _setEnergy({ energy, id }) {
+    const { energy: energyEl } = this.getElems(id);
+    energyEl.textContent = energy;
+  }
+
+  setCardData(cardData) {
+    const { name, notes } = this.getElems(cardData.id);
+    name.textContent = cardData.name;
+    if (!notes) {
+      this.addNotes(cardData);
+    } else {
+      this.changeNotes(cardData);
+    }
+
+    this._renderCps(cardData);
+    this._renderColorDifficulty(cardData);
+    this._setEnergy(cardData);
+    this._removeLinebreaks(cardData.id);
   }
 
   render(parentEl, cardData) {
     console.log(cardData);
-    // const cardData = cardModel.cardState;
     parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(cardData));
     this._renderCps(cardData);
     this._renderColorDifficulty(cardData);
     this._removeGeneratedLastBrMarkdownNotes(cardData);
-    this._removeLinebreaks(cardData);
+    this._removeLinebreaks(cardData.id);
   }
 }

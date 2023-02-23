@@ -4,24 +4,41 @@ import iconEnergy from "./assets/energy-icon.svg";
 import { swapElems } from "../../../helpers/drag";
 
 export default class TaskSettingsView {
-  _generateMarkup() {
+  _generateMarkup({
+    name,
+    notes,
+    repeat,
+    difficulty,
+    checkpoints,
+    energy,
+    startDate,
+    id,
+  }) {
     return `
-  <div id="taskSettings" class="task__settings__background">
+  <div id="${
+    id ? "taskSettings" + "-" + id : "taskSettings"
+  }" class="task__settings__background">
     <div class="task__settings__container">
      <form action="POST">
         <div class="task__settings__el task__settings__name">
            <label for="taskSettingsName">Name <span id="taskSettingsNameCheckFail" class="hidden">At least one character</span> </label>
-           <input type="text" id="taskSettingsName" />
+           <input type="text" id="taskSettingsName" value="${
+             name ? name : ""
+           }" />
         </div>
         <div class="task__settings__el task__settings__notes">
            <label>Notes</label>
-           <textarea data-provide="markdown" id="markedInput"></textarea>
+           <textarea data-provide="markdown" id="markedInput"> ${
+             notes ? notes : ""
+           }</textarea>
         </div>
         <div class="task__settings__el task__settings__start-date">
            <label for="taskSettingsStartDate">Start Date</label>
            <input type="date" name="date" min=${
              new Date().toISOString().split("T")[0]
-           } id="taskSettingsStartDate" />
+           } value="${
+      startDate ? startDate.replace("/", "-").replace("/", "-") : ""
+    }" id="taskSettingsStartDate" />
         </div>
         <div id="repeatContainer" class="task__settings__el task__settings__repeat">
            <label for="taskSettingsRepeat">Repeat <span id="taskSettingsRepeatDailyFail" class="hidden">Only numbers allowed</span></label>
@@ -96,7 +113,7 @@ export default class TaskSettingsView {
         </div>
         <div class="task__settings__el task__settings__energy">
            <label for="taskSettingsEnergy">Energy gain <img id="taskSettingsEnergyIcon" src=${iconEnergy} /> <span id="energyValueDisplay">1</span></label>
-           <input type="range" value="1" min="1" max="100" id="taskSettingsEnergy" />
+           <input type="range" value="1" min="1" max="6" id="taskSettingsEnergy" />
         </div>
         <div class="task__settings__el task__settings__checkpoints">
            <label for="taskSettingsCheckpoints">Checkpoints</label>
@@ -118,7 +135,7 @@ export default class TaskSettingsView {
            </div>
         </div>
 
-        <div class="task__settings__el task__settings__buttons">
+        <div id="taskSettingsButtonsContainer" class="task__settings__el task__settings__buttons">
            <button type="button" id="taskSettingsDoneBtn">Done</button>
            <button type="button" id="taskSettingsCloseBtn">Close</button>
         </div>        
@@ -128,10 +145,12 @@ export default class TaskSettingsView {
 `;
   }
 
-  _generateCheckpointMarkup(id) {
+  _generateCheckpointMarkup(id, name) {
     return `
       <div id="taskSettingsCpCont-${id}" class="checkpoint__container">
-         <input type="text" id="taskSettingsCheckpointInput-${id}" class="checkpoint__input" />
+         <input type="text" id="taskSettingsCheckpointInput-${id}" class="checkpoint__input" value="${
+      name ? name : ""
+    }" />
          <div class="cps__icons__container hidden">
               <div class="cp__icon--delete__wrapper">
                   <img class="cp__icon--delete" src=${iconDelete} />
@@ -144,7 +163,71 @@ export default class TaskSettingsView {
       `;
   }
 
-  getElems() {
+  _generateExistingCardMarkup() {
+    return `
+      <div>
+        <button type="button" id="taskSettingsDeleteBtn">Delete</button>
+      </div>
+  `;
+  }
+
+  renderExistingCardSettings(id) {
+    const { mainButtonsCont } = this.getElems();
+    mainButtonsCont.insertAdjacentHTML(
+      "beforebegin",
+      this._generateExistingCardMarkup()
+    );
+  }
+
+  setSelectedRepeatOption(curRepeat) {
+    const {
+      repeatNoRepeat,
+      repeatEveryOtherDay,
+      repeatEveryWeek,
+      repeatEveryDay,
+      repeatDailyInput,
+      repeatWeek,
+    } = this.getElems();
+
+    console.log(curRepeat);
+    if (curRepeat.type === "daily") {
+      repeatEveryOtherDay.setAttribute("selected", "selected");
+      repeatEveryDay.classList.remove("hidden");
+      repeatDailyInput.value = curRepeat.everyOtherDay;
+    }
+
+    if (curRepeat.type === "weekly") {
+      repeatEveryWeek.setAttribute("selected", "selected");
+      repeatWeek.classList.remove("hidden");
+
+      Array.from(repeatWeek.children).forEach((day) => {
+        day.classList.remove("day__selected");
+      });
+
+      curRepeat.days.forEach((day) => {
+        const dayUpperCase = day.slice(0, 1).toUpperCase() + day.slice(1);
+        const dayEl = document.getElementById(
+          `taskSettingsRepeatWeek${dayUpperCase}`
+        );
+        dayEl.classList.add("day__selected");
+      });
+    }
+
+    if (curRepeat.type === "no-repeat") {
+      repeatNoRepeat.setAttribute("selected", "selected");
+    }
+  }
+
+  setSelectedDifficultyOption(difficulty) {
+    const difficultyUpperCase =
+      difficulty.slice(0, 1).toUpperCase() + difficulty.slice(1);
+    const difficultyOptionEl = document.getElementById(
+      `taskSettingsDifficulty${difficultyUpperCase}`
+    );
+    difficultyOptionEl.setAttribute("selected", "selected");
+  }
+
+  getElems(id) {
     const taskSettings = document.getElementById("taskSettings");
     const repeatWeek = document.getElementById("taskSettingsRepeatWeek");
     const repeatEveryDay = document.getElementById("taskSettingsRepeatDaily");
@@ -172,6 +255,10 @@ export default class TaskSettingsView {
     const cpIconDelete = document.querySelectorAll(".cp__icon--delete");
     const closeBtn = document.getElementById("taskSettingsCloseBtn");
     const doneBtn = document.getElementById("taskSettingsDoneBtn");
+    const deleteBtn = document.getElementById("taskSettingsDeleteBtn");
+    const mainButtonsCont = document.getElementById(
+      `taskSettingsButtonsContainer`
+    );
 
     return {
       taskSettings,
@@ -197,6 +284,8 @@ export default class TaskSettingsView {
       startDate,
       closeBtn,
       doneBtn,
+      deleteBtn,
+      mainButtonsCont,
     };
   }
 
@@ -247,12 +336,24 @@ export default class TaskSettingsView {
     repeatDailyInput.value = "";
   }
 
-  renderNewCheckpoint(id) {
+  renderNewCheckpoint(id, name) {
     const { cpsCont } = this.getElems();
-    cpsCont.insertAdjacentHTML("beforeend", this._generateCheckpointMarkup(id));
+    cpsCont.insertAdjacentHTML(
+      "beforeend",
+      this._generateCheckpointMarkup(id, name)
+    );
     const curCpCont = document.getElementById(`taskSettingsCpCont-${id}`);
     curCpCont.firstElementChild.focus();
     return curCpCont;
+  }
+
+  setCheckpoints(checkpoints) {
+    const { cpCont, name } = this.getElems();
+    cpCont.remove();
+    checkpoints.forEach((checkpoint, i) => {
+      this.renderNewCheckpoint(i, checkpoint.name);
+    });
+    name.focus();
   }
 
   isOnlyOneCp(cpsCont) {
@@ -277,6 +378,35 @@ export default class TaskSettingsView {
     energyValueDisplay.textContent = el.value;
   }
 
+  setEnergyRange(difficulty, energy) {
+    const { energyValueDisplay, energy: energyEl } = this.getElems();
+    const setEnergyValues = (min, max, energy) => {
+      console.log(energyEl);
+      energyEl.min = min.toString();
+      energyEl.max = max.toString();
+      energyEl.value = energy.toString();
+      energyValueDisplay.textContent = energy.toString();
+    };
+
+    switch (difficulty) {
+      case "trivial":
+        setEnergyValues(1, 6, energy);
+        break;
+      case "easy":
+        setEnergyValues(7, 19, energy);
+        break;
+      case "medium":
+        setEnergyValues(20, 59, energy);
+        break;
+      case "hard":
+        setEnergyValues(60, 99, energy);
+        break;
+      case "challenge":
+        setEnergyValues(100, 200, energy);
+        break;
+    }
+  }
+
   toggleDayOfWeek(weekEl) {
     weekEl.classList.toggle("day__selected");
   }
@@ -287,7 +417,18 @@ export default class TaskSettingsView {
   }
 
   render(parentEl, state) {
+    parentEl.insertAdjacentHTML(
+      "afterbegin",
+      this._generateMarkup(state ? state : {})
+    );
     console.log(state);
-    parentEl.insertAdjacentHTML("afterbegin", this._generateMarkup(state));
+    if (state) {
+      this.setSelectedRepeatOption(state.repeat);
+      this.setSelectedDifficultyOption(state.difficulty);
+      this.setEnergyRange(state.difficulty, state.energy);
+      if (state.checkpoints.length >= 1) {
+        this.setCheckpoints(state.checkpoints);
+      }
+    }
   }
 }

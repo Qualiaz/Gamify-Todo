@@ -23,19 +23,46 @@ export default class TaskSettingsController {
       repeatEveryWeek,
       closeBtn,
       doneBtn,
+      deleteBtn,
     } = this.view.getElems();
 
     doneBtn.addEventListener("click", () => {
       const taskSettingsValues = this.model.getValues(this.view.getElems());
-      const taskCardController = this.model.addTask(taskSettingsValues);
-      taskCardController.then(
-        (controller) => (controller.model.taskSettingsController = this)
-      );
+      // if task exists
+      if (this.curTaskCard) {
+        const cardState =
+          this.curTaskCard.model.setCardState(taskSettingsValues);
+        this.curTaskCard.view.setCardData(cardState);
+        this.model.state = cardState;
+        this.model.updateTaskDb(cardState);
+        this.curTaskCard.view.setCardData(cardState);
+        root.removeChild(root.children[0]);
+      }
+      // if task doesn't exist
+      else {
+        const taskCardController = this.model.addTask(taskSettingsValues);
+        taskCardController.then((controller) => {
+          controller.model.taskSettingsController = this;
+          this.curTaskCard = controller;
+        });
+      }
     });
 
     closeBtn.addEventListener("click", () => {
       this.model.closeSettings();
     });
+
+    if (this.curTaskCard) {
+      deleteBtn.addEventListener("click", () => {
+        this.curTaskCard.model.deleteTask();
+        this.model.removeDocDb();
+        const { taskCard: taskCardEl } = this.curTaskCard.view.getElems(
+          this.curTaskCard.model.cardState.id
+        );
+        taskCardEl.remove();
+        this.model.closeSettings();
+      });
+    }
 
     ///////////////////////////////////
     ////////////// REPEAT /////////////
@@ -109,7 +136,12 @@ export default class TaskSettingsController {
   init(state) {
     // console.log(values);
     // if (values) this.model.setValues();
-    this.view.render(root, state);
+    if (state) {
+      this.view.render(root, state);
+      this.view.renderExistingCardSettings();
+    } else {
+      this.view.render(root);
+    }
     this.eventListeners();
   }
 }

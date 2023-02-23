@@ -5,7 +5,7 @@ import {curTasksThisWeek,curTasksToday,curTasksTomorrow} from "../Model/main/Tas
 import { formatStartDate } from "./date";
 
 export function addTasksNoRepeatFilter(task) {
-  const startDateSimple = formatStartDate(task.taskCardModel.startDate);
+  const startDateSimple = formatStartDate(task.model.cardState.startDate);
   const [y, m, d] = startDateSimple;
   const startDate = new Date(y, m, d);
   if (isToday(startDate)) curTasksToday.push(task);
@@ -26,7 +26,7 @@ export function addTasksOtherDayFilter(otherDay, task) {
 }
 
 export function addTasksWeekDaysFilter(weekDays, task) {
-  const startDateSimple = formatStartDate(task.taskCardModel.startDate);
+  const startDateSimple = formatStartDate(task.model.cardState.startDate);
   const [y, m, d] = startDateSimple;
   const today = new Date();
   const tomorrow = new Date();
@@ -47,7 +47,7 @@ export function addTasksWeekDaysFilter(weekDays, task) {
 }
 
 function everyOtherDay(otherDay, task) {
-  const startDateArr = formatStartDate(task.taskCardModel.startDate);
+  const startDateArr = formatStartDate(task.model.cardState.startDate);
   const [y, m, d] = startDateArr;
   let result = [];
   const eachDay = eachDayOfInterval({

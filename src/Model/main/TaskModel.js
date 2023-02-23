@@ -2,6 +2,7 @@ import Timer from "easytimer.js";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -12,6 +13,7 @@ import TaskCardController, {
   getTask,
 } from "../../Controller/TaskCardController";
 import { auth, db } from "../../firebase/config";
+import TaskSettingsController from "../../Controller/Tasks/AddTaskController";
 
 export const curTasks = [];
 export const curTasksToday = [];
@@ -24,10 +26,6 @@ export class TaskSettingsModel {
   state = {
     curCpId: 1,
   };
-
-  setValues() {
-    console.log(this.state);
-  }
 
   incrementCurCpId() {
     return ++this.state.curCpId;
@@ -54,7 +52,9 @@ export class TaskSettingsModel {
     const colTasksRef = this.getTasksCol()
     
     if (!this.validFormCheck(name, repeatDaily).ok) return
-
+ // TO BE MOVED
+const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu')
+ //  
     const taskCardController = new TaskCardController();
     taskCardController.model.addTaskDataCardState({name, notes, startDate, repeat,repeatDaily,daysOfWeek, difficulty, energy, cps})
 
@@ -69,9 +69,7 @@ export class TaskSettingsModel {
     })
     this.state.curCpId = 1
     root.removeChild(root.children[0]);
-    // TO BE MOVED
-    const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu')
-    //    
+     
     return taskCardController
   }
 
@@ -84,14 +82,22 @@ export class TaskSettingsModel {
     });
   }
 
+  removeDocDb() {
+    const taskRef = getTask(this.state.id);
+    deleteDoc(taskRef);
+  }
+
+  updateTaskDb(cardState) {
+    const docTaskRef = getTask(this.state.id);
+    updateDoc(docTaskRef, cardState);
+  }
+
   setEnergyRange(difficulty, energy, energyValueDisplay) {
     const setEnergyValues = (min, max) => {
       energy.min = min.toString();
       energy.max = max.toString();
       energy.value = min.toString();
       energyValueDisplay.textContent = min.toString();
-      console.log(energy.value);
-      console.log(energyValueDisplay.textContent);
     };
 
     switch (difficulty.value) {
@@ -221,16 +227,34 @@ export default class TaskCardModel {
       if (!cp) return;
       this.addCpDataCardState(cp);
     });
-
+    this.cardState.createdTime = new Date().getTime();
+    console.log(this.cardState);
     return this.cardState;
   }
 
   addCpDataCardState = (name) => {
+    console.log(this.cardState.checkpoints);
     this.cardState.checkpoints.push({
       checked: false,
       name: name,
     });
   };
+
+  setCardState(data) {
+    this.cardState.name = data.name;
+    this.cardState.notes = data.notes;
+    this.cardState.repeat = data.repeat;
+    this.cardState.energy = data.energy;
+    this.cardState.difficulty = data.difficulty;
+    this.cardState.startDate = data.startDate;
+    this.cardState.checkpoints = [];
+    data.cps.forEach((cpName) => {
+      this.addCpDataCardState(cpName);
+    });
+    this.addRepeatDataCardState(data);
+
+    return this.cardState;
+  }
 
   addRepeatDataCardState = ({ daysOfWeek, repeatDaily }) => {
     if (this.cardState.repeat === "weekly") {
@@ -246,7 +270,7 @@ export default class TaskCardModel {
       };
     }
     if (this.cardState.repeat === "no-repeat") {
-      this.cardState.repeat = false;
+      this.cardState.repeat = "no-repeat";
     }
   };
 
@@ -255,6 +279,7 @@ export default class TaskCardModel {
       // console.log(this.cardState);
       this.cardState.checkpoints.forEach((cp) => {
         // if (cp.id === clickedId.replace("Unfinished", "")) {
+        console.log(cp);
         cp.checked = true;
         this.sendToDb.updateIsCpChecked(true, clickedId, this.cardState.id);
         // }
@@ -271,6 +296,19 @@ export default class TaskCardModel {
     }
   }
 
+  deleteTask() {
+    const index = this.findTaskIndexInArr();
+    const deletedTask = curTasks.splice(index, 1);
+    return deletedTask;
+  }
+
+  findTaskIndexInArr() {
+    const taskIndex = curTasks.findIndex((task, i) => {
+      return task.model.cardState.id === this.cardState.id;
+    });
+    return taskIndex;
+  }
+
   // _generateCpId() {
   //   let numId = 0;
   //   this.model.cardState.checkpoints.forEach((cp) => {
@@ -278,6 +316,10 @@ export default class TaskCardModel {
   //     numId++;
   //   });
   // }
+
+  getFinishedCheckpoints() {
+    // console.log(this.cardState.checkpoints);
+  }
 
   checkTask(isChecked, id = this.cardState.id) {
     this.cardState.checked = isChecked;
@@ -287,6 +329,12 @@ export default class TaskCardModel {
   openTaskSettings() {
     const taskSettingsState = this.taskSettingsController.model.state;
     this.taskSettingsController.init(taskSettingsState);
+  }
+
+  createTaskSettingsController() {
+    this.taskSettingsController = new TaskSettingsController();
+    this.taskSettingsController.model.state = this.cardState;
+    return this.taskSettingsController;
   }
 
   // MOVE TO VIEW

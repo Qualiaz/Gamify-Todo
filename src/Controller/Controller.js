@@ -27,11 +27,7 @@ export default async function Controller() {
       main.innerHTML = "";
       switch (btn.id) {
         case "dashboard":
-          dashboardMenuController.view.render();
-          const dashboardTasks = document.getElementById("dashboardTasks");
-          const dashboardTasksComponentController =
-            new TasksComponentController(curTasksToday, "dashboard", "today");
-          dashboardTasksComponentController.init(dashboardTasks);
+          dashboardMenuController.init()
           break;
         case "tasks":
           tasksMenuController.init();

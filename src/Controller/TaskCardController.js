@@ -23,7 +23,6 @@ export default class TaskCardController {
         console.log("hi");
       }
       if (clickedId === `taskCardTop-${id}`) {
-        console.log(this.model.taskSettingsController);
         this.model.openTaskSettings();
       }
       if (clickedId === `taskCheckboxUnfinished-${id}`) {

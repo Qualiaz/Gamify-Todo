@@ -134,8 +134,6 @@ export default class TaskSettingsController {
   }
 
   init(state) {
-    // console.log(values);
-    // if (values) this.model.setValues();
     if (state) {
       this.view.render(root, state);
       this.view.renderExistingCardSettings();

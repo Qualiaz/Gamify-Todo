@@ -132,7 +132,6 @@ export default class TasksComponentController {
   }
 
   init(parentEl) {
-    console.log(this.curView.tasks);
     this.curView.tasks = this.orderTasks(
       this.curView.tasks,
       "timeCreated",
@@ -143,7 +142,6 @@ export default class TasksComponentController {
   }
 
   render(parentEl, view = this.curView, id = this.id) {
-    console.log(this.curView);
     this.tasksComponentView.render(parentEl, view, id);
   }
 }

@@ -309,14 +309,6 @@ export default class TaskCardModel {
     return taskIndex;
   }
 
-  // _generateCpId() {
-  //   let numId = 0;
-  //   this.model.cardState.checkpoints.forEach((cp) => {
-  //     cp.id = `cardCheckpoint-${numId}-${this.model.id}`;
-  //     numId++;
-  //   });
-  // }
-
   getFinishedCheckpoints() {
     // console.log(this.cardState.checkpoints);
   }
@@ -337,10 +329,7 @@ export default class TaskCardModel {
     return this.taskSettingsController;
   }
 
-  // MOVE TO VIEW
   toggleTimer(id = this.cardState.id) {
-    console.log(this.cardState.isTimerToggled);
-    console.log(id);
     if (!this.cardState.isTimerToggled) {
       this.cardState.isTimerToggled = true;
       this.sendToDb.updateIsTimerToggled(true, id);

@@ -3,15 +3,15 @@
     display: flex;
     justify-content: stretch;
     // width: 70rem;
-    width: 100%;
+    // width: 100%;
     border: none;
     overflow: hidden;
     border-radius: 1rem;
     margin: 1rem;
     box-shadow: 2px 2px 2px $secondary;
+    min-height: 5rem;
 
     * {
-      // color: rgb(10, 10, 10);
       color: #edecee;
     }
   }

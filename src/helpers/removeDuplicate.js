@@ -2,10 +2,10 @@ export function removeDuplicateTasks(arr) {
   const uniqueIds = [];
   const uniqueCards = [];
   arr.filter((task) => {
-    const isDuplicate = uniqueIds.includes(task.taskCardModel.id);
+    const isDuplicate = uniqueIds.includes(task.model.cardState.id);
 
     if (!isDuplicate) {
-      uniqueIds.push(task.taskCardModel.id);
+      uniqueIds.push(task.model.cardState.id);
       uniqueCards.push(task);
     }
   });

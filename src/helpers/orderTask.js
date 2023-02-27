@@ -2,12 +2,12 @@ export default class OrderTask {
   constructor(tasksArr) {
     this.tasksArr = tasksArr;
   }
-
+  
   difficulty(direction) {
     const orderedTasks = [];
     const diffValues = this.tasksArr.map((task) => {
-      const diff = task.model.difficulty;
-      const id = task.model.id;
+      const diff = task.model.cardState.difficulty;
+      const id = task.model.cardState.id;
       if (diff === "trivial") return { taskId: id, difficulty: diff, v: 1 };
       if (diff === "easy") return { taskId: id, difficulty: diff, v: 2 };
       if (diff === "medium") return { taskId: id, difficulty: diff, v: 3 };
@@ -27,10 +27,13 @@ export default class OrderTask {
         return 0;
       }
     });
-
+    console.log(this.tasksArr)
+    console.log(orderedDiffValue)
     orderedDiffValue.forEach((shallowTask) => {
       this.tasksArr.forEach((task) => {
-        if (task.model.id === shallowTask.taskId) orderedTasks.push(task);
+        console.log(task)
+        console.log(shallowTask)
+        if (task.model.cardState.id === shallowTask.taskId) orderedTasks.push(task);
       });
     });
     return orderedTasks;
@@ -38,8 +41,8 @@ export default class OrderTask {
 
   energy(direction) {
     const orderedTasks = this.tasksArr.sort((a, b) => {
-      const prevEnergy = Number(a.model.energy);
-      const nextEnergy = Number(b.model.energy);
+      const prevEnergy = Number(a.model.cardState.energy);
+      const nextEnergy = Number(b.model.cardState.energy);
       if (direction === "ascending") {
         if (prevEnergy > nextEnergy) return 1;
         if (prevEnergy < nextEnergy) return -1;
@@ -56,8 +59,8 @@ export default class OrderTask {
 
   timeCreated(direction) {
     const orderedTasks = this.tasksArr.sort((prev, next) => {
-      const prevCreatedTime = prev.model.createdTime;
-      const nextCreatedTime = next.model.createdTime;
+      const prevCreatedTime = prev.model.cardState.createdTime;
+      const nextCreatedTime = next.model.cardState.createdTime;
       if (direction === "ascending") {
         if (prevCreatedTime > nextCreatedTime) return 1;
         if (prevCreatedTime < nextCreatedTime) return -1;

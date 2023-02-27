@@ -86,7 +86,6 @@ export default class TaskCardView {
   }
 
   _generateCheckpoint(cpName, checked, num, id) {
-    console.log(cpName, checked, num, id);
     return `
     <div id="cardCheckpoint-${num}-${id}" class="task-card__checkpoint__container">           
       <span id="cardCheckpointUnfinished-${num}-${id}" class="task-card__checkpoint--unfinished ${
@@ -108,9 +107,7 @@ export default class TaskCardView {
 
     cardCheckpoints.textContent = "";
     cardData.checkpoints.forEach((cp, i) => {
-      console.log(cp);
       if (!cp.name) return;
-      console.log(cardCheckpoints);
       cardCheckpoints.insertAdjacentHTML(
         "beforeend",
         this._generateCheckpoint(cp["name"], cp["checked"], i, cardData.id)
@@ -122,7 +119,6 @@ export default class TaskCardView {
     const timerEl = document.getElementById(`timer-${id}`);
     const playTimer = document.getElementById(`playTimer-${id}`);
     const pauseTimer = document.getElementById(`pauseTimer-${id}`);
-    console.log(timerEl);
 
     playTimer.classList.add("hidden");
     pauseTimer.classList.remove("hidden");
@@ -328,7 +324,6 @@ export default class TaskCardView {
   }
 
   render(parentEl, cardData) {
-    console.log(cardData);
     parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(cardData));
     this._renderCps(cardData);
     this._renderColorDifficulty(cardData);

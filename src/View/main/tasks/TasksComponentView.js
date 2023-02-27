@@ -2,6 +2,7 @@ import "./TasksComponentView.scss";
 
 export default class TasksComponentView {
   _generateMarkup(view, id) {
+    console.log(view)
     return `
       <section class="TM__component">
         <div class="TM__component__header">
@@ -95,7 +96,6 @@ export default class TasksComponentView {
   renderCards(parentEl, tasks) {
     // parentEl.innerHTML = "";
     tasks.forEach((task) => {
-      console.log(task.model.cardState);
       task.view.render(parentEl, task.model.cardState);
       task.eventListeners();
     });

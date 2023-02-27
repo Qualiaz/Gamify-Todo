@@ -13,7 +13,6 @@ export default class TasksMenuController {
   }
 
   init() {
-    console.log(this.tasksComponentController);
     this.tasksMenuView.render();
     const tasksMenu = document.getElementById("tasksMenu");
     this.tasksComponentController.init(tasksMenu);

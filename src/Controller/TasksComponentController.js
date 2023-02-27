@@ -16,7 +16,7 @@ export let curFilter = {};
 
 export default class TasksComponentController {
   constructor(tasks, menu, filter) {
-    this.tasksComponentView = new TasksComponentView();
+    this.view = new TasksComponentView();
     this.id = (((1 + Math.random()) * 0x10000) | 0).toString(4).substring(1);
 
     this.curView = {
@@ -25,7 +25,7 @@ export default class TasksComponentController {
       filter: filter,
       order: {
         name: "timeCreated",
-        direction: "ascending",
+        direction: "descending",
       },
       tasks: tasks,
     };
@@ -40,7 +40,7 @@ export default class TasksComponentController {
       }
       // CHANGE VIEW
       if (clickedId === `tmComponentViewSettings-${this.id}`) {
-        this.tasksComponentView.renderViewSettings(this.id);
+        this.view.renderViewSettings(this.id);
         this.curView.isTaskSettings = true;
       }
       /////////////// FILTER ////////////
@@ -106,6 +106,17 @@ export default class TasksComponentController {
         this.curView.tasks = this.orderTasks();
         this.render(parentEl);
       }
+
+      // RESET ALL //
+      if (clickedId === `resetAllViewBtn`){
+        this.curView.filter = 'all'
+        this.curView.name = 'timeCreated'
+        this.curView.order.direction = 'descending'
+        this.curView.order.name = 'timeCreated'
+        this.curView.tasks = curTasks
+        this.orderTasks()
+        this.render(parentEl)
+      }
     });
   }
 
@@ -114,7 +125,8 @@ export default class TasksComponentController {
     orderType = this.curView.order.name,
     orderDirection = this.curView.order.direction
   ) {
-    this.curView.order.direction = orderDirection;
+    // this.curView.order.direction = orderDirection;
+    console.log(orderDirection)
     const tasksOrderInst = new OrderTask(tasks);
 
     if (orderType === "difficulty") {
@@ -135,14 +147,14 @@ export default class TasksComponentController {
     this.curView.tasks = this.orderTasks(
       this.curView.tasks,
       "timeCreated",
-      "ascending"
+      "descending"
     );
     this.eventListeners(parentEl);
     this.render(parentEl);
   }
 
   render(parentEl, view = this.curView, id = this.id) {
-    this.tasksComponentView.render(parentEl, view, id);
+    this.view.render(parentEl, view, id);
   }
 }
 

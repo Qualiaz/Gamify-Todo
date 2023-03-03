@@ -2,9 +2,10 @@
 @import "./style/base/fonts";
 @import "./style/base/reset";
 
-@import "./static/home.scss";
-@import "./Auth/style/auth.scss";
-@import "./style/layout/header";
+@import "./static/home";
+@import "./Auth/style/auth";
+@import "./style/layout/root";
+@import "./style/layout/sidebar";
 @import "./style/layout/main";
 
 // tasks
@@ -13,7 +14,7 @@
 @import "./style/pages/home";
 
 // habits
-@import "./View/menus/HabitsMenu.scss";
-@import "./View/main/habits/HabitSettings.scss";
-@import "./View/main/habits/HabitsComponent.scss";
-@import "./View/main/habits/HabitCard.scss";
+@import "./View/menus/HabitsMenu";
+@import "./View/main/habits/HabitSettings";
+@import "./View/main/habits/HabitsComponent";
+@import "./View/main/habits/HabitCard";

@@ -12,12 +12,12 @@ export default class DashboardMenuView {
 `;
   }
 
-  getElems(){
-    const dashboardTasks = document.getElementById('dashboardTasks')
-    const dashboardHabits = document.getElementById('dashboardHabits')
-    const dashboardYIP = document.getElementById('dashboardYIP')
-    
-    return {dashboardTasks, dashboardHabits, dashboardYIP}
+  getElems() {
+    const dashboardTasks = document.getElementById("dashboardTasks");
+    const dashboardHabits = document.getElementById("dashboardHabits");
+    const dashboardYIP = document.getElementById("dashboardYIP");
+
+    return { dashboardTasks, dashboardHabits, dashboardYIP };
   }
 
   render() {

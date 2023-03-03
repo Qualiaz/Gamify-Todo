@@ -1,3 +1,4 @@
+// used for safety
 export function removeDuplicateTasks(arr) {
   const uniqueIds = [];
   const uniqueCards = [];

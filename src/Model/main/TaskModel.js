@@ -32,7 +32,7 @@ export class TaskSettingsModel {
   }
 
   isCpElemFocusedLast(cpEl) {
-    const curCpCont = cpEl.closest(".checkpoint__container");
+    const curCpCont = cpEl.closest(".task-settings__checkpoint");
     return curCpCont.nextElementSibling ? false : true;
   }
 
@@ -43,9 +43,8 @@ export class TaskSettingsModel {
     return colTasksRef;
   }
 
-  closeSettings() {
+  resetCurCpId() {
     this.state.curCpId = 1;
-    root.removeChild(root.children[0]);
   }
   //prettier-ignore
   async addTask({ name,notes,startDate,difficulty,energy,repeat,repeatDaily,daysOfWeek,cps}) {
@@ -159,40 +158,64 @@ const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu'
     return { ok };
   }
 
-  getValues(getElems) {
-    //prettier-ignore
-    let {name, repeat, difficulty, energy, weekly, repeatDaily, notes, startDate} = getElems
-    const daysOfWeek = [];
-    const cps = [];
+  // getValues(getElems) {
+  //   let {
+  //     name,
+  //     repeatSelect,
+  //     difficultySelect,
+  //     energy,
+  //     repeatWeekContainer,
+  //     repeatInputEveryOtherDay,
+  //     notes,
+  //     startDate,
+  //     cpsCont,
+  //   } = getElems;
 
-    Array.from(weekly).forEach((day) => {
-      daysOfWeek.push(day.value);
-    });
+  //   const daysOfWeek = [];
+  //   const cps = [];
 
-    for (let i = 0; i < checkpointsContainer.children.length; i++) {
-      cps.push(checkpointsContainer.children[i].children[0].value);
-    }
+  //   console.log(
+  //     name.value,
+  //     repeatSelect.value,
+  //     difficultySelect.value,
+  //     energy.value,
+  //     repeatInputEveryOtherDay.value,
+  //     notes.value,
+  //     startDate,
+  //     repeatWeekContainer,
+  //     cpsCont.children
+  //   );
 
-    name = name.value;
-    repeat = repeat.value;
-    difficulty = difficulty.value;
-    energy = energy.value;
-    repeatDaily = repeatDaily.value;
-    notes = notes.value;
-    startDate = startDate.value.replace("-", "/").replace("-", "/");
+  //   Array.from(repeatWeekContainer).forEach((day) => {
+  //     daysOfWeek.push(day.value);
+  //   });
 
-    return {
-      name,
-      notes,
-      startDate,
-      difficulty,
-      energy,
-      repeat,
-      repeatDaily,
-      daysOfWeek,
-      cps,
-    };
-  }
+  //   if (cpsCont.children.length >= 1) {
+  //     for (let i = 0; i < cpsCont.children.length; i++) {
+  //       cps.push(cpsCont.children[i].children[0].value);
+  //     }
+  //   }
+
+  //   name = name.value;
+  //   repeat = repeatSelect.value;
+  //   difficulty = difficultySelect.value;
+  //   energy = energy.value;
+  //   repeatDaily = repeatInputEveryOtherDay.value;
+  //   notes = notes.value;
+  //   startDate = startDate.value.replace("-", "/").replace("-", "/");
+
+  //   return {
+  //     name,
+  //     notes,
+  //     startDate,
+  //     difficulty,
+  //     energy,
+  //     repeat,
+  //     repeatDaily,
+  //     daysOfWeek,
+  //     cps,
+  //   };
+  // }
 }
 
 export default class TaskCardModel {
@@ -241,6 +264,7 @@ export default class TaskCardModel {
   };
 
   setCardState(data) {
+    console.log(data);
     this.cardState.name = data.name;
     this.cardState.notes = data.notes;
     this.cardState.repeat = data.repeat;
@@ -257,7 +281,7 @@ export default class TaskCardModel {
   }
 
   addRepeatDataCardState = ({ daysOfWeek, repeatDaily }) => {
-    if (this.cardState.repeat === "weekly") {
+    if (this.cardState.repeat === "repeatWeekContainer") {
       this.cardState.repeat = {
         type: "weekly",
         days: daysOfWeek,
@@ -309,10 +333,6 @@ export default class TaskCardModel {
     return taskIndex;
   }
 
-  getFinishedCheckpoints() {
-    // console.log(this.cardState.checkpoints);
-  }
-
   checkTask(isChecked, id = this.cardState.id) {
     this.cardState.checked = isChecked;
     this.sendToDb.updateChecked(isChecked, id);
@@ -320,6 +340,7 @@ export default class TaskCardModel {
 
   openTaskSettings() {
     const taskSettingsState = this.taskSettingsController.model.state;
+    console.log(taskSettingsState);
     this.taskSettingsController.init(taskSettingsState);
   }
 

@@ -1,4 +1,5 @@
 import { swapElems } from "../../helpers/drag";
+import { turnElemsCursorInto } from "../../helpers/set-cursor";
 import { TaskSettingsModel } from "../../Model/main/TaskModel";
 import TaskSettingsView from "../../View/main/tasks/AddTaskView";
 
@@ -15,23 +16,27 @@ export default class TaskSettingsController {
     const {
       energy,
       cpsCont,
-      difficulty,
+      difficultySelect,
       energyValueDisplay,
-      repeatWeek,
-      repeatNoRepeat,
-      repeatEveryOtherDay,
-      repeatEveryWeek,
+      repeatOptionEveryWeek,
+      repeatOptionNoRepeat,
+      repeatOptionEveryOtherDay,
+      repeatWeekContainer,
       closeBtn,
       doneBtn,
       deleteBtn,
+      inputValues,
     } = this.view.getElems();
-
-    doneBtn.addEventListener("click", () => {
-      const taskSettingsValues = this.model.getValues(this.view.getElems());
+    console.log(deleteBtn);
+    // console.log(doneBtn);
+    doneBtn.addEventListener("click", (e) => {
+      // const taskSettingsValues = this.view.getElems()
+      // console.log(values());
       // if task exists
+
+      // console.log(inputValues());
       if (this.curTaskCard) {
-        const cardState =
-          this.curTaskCard.model.setCardState(taskSettingsValues);
+        const cardState = this.curTaskCard.model.setCardState(inputValues());
         this.curTaskCard.view.setCardData(cardState);
         this.model.state = cardState;
         this.model.updateTaskDb(cardState);
@@ -40,7 +45,7 @@ export default class TaskSettingsController {
       }
       // if task doesn't exist
       else {
-        const taskCardController = this.model.addTask(taskSettingsValues);
+        const taskCardController = this.model.addTask(inputValues());
         taskCardController.then((controller) => {
           controller.model.taskSettingsController = this;
           this.curTaskCard = controller;
@@ -49,9 +54,11 @@ export default class TaskSettingsController {
     });
 
     closeBtn.addEventListener("click", () => {
-      this.model.closeSettings();
+      this.view.closeSettings();
+      this.model.resetCurCpId();
     });
 
+    // DELETE
     if (this.curTaskCard) {
       deleteBtn.addEventListener("click", () => {
         this.curTaskCard.model.deleteTask();
@@ -60,27 +67,28 @@ export default class TaskSettingsController {
           this.curTaskCard.model.cardState.id
         );
         taskCardEl.remove();
-        this.model.closeSettings();
+        this.view.closeSettings();
       });
     }
 
     ///////////////////////////////////
     ////////////// REPEAT /////////////
     ///////////////////////////////////
-    repeatWeek.addEventListener("click", (e) => {
-      this.view.toggleDayOfWeek(e.target);
-    });
-
-    repeatNoRepeat.addEventListener("click", () => {
+    repeatOptionNoRepeat.addEventListener("click", () => {
       this.view.renderNoRepeat();
     });
 
-    repeatEveryOtherDay.addEventListener("click", () => {
+    repeatOptionEveryOtherDay.addEventListener("click", () => {
       this.view.renderRepeatEveryOtherDay();
     });
 
-    repeatEveryWeek.addEventListener("click", () => {
+    repeatOptionEveryWeek.addEventListener("click", () => {
       this.view.renderRepeatEveryWeek();
+    });
+
+    repeatWeekContainer.addEventListener("click", (e) => {
+      console.log(e.target.dataset.selected);
+      this.view.toggleDayOfWeek(e.target);
     });
 
     ///////////////////////////////////
@@ -88,9 +96,9 @@ export default class TaskSettingsController {
     ///////////////////////////////////
 
     // Set energy range based on difficulty
-    Array.from(difficulty.children).forEach((diffEl) => {
+    Array.from(difficultySelect.children).forEach((diffEl) => {
       diffEl.addEventListener("click", () => {
-        this.model.setEnergyRange(difficulty, energy, energyValueDisplay);
+        this.model.setEnergyRange(difficultySelect, energy, energyValueDisplay);
       });
     });
 
@@ -106,16 +114,13 @@ export default class TaskSettingsController {
     // Add checkpoint
     cpsCont.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
+        console.log(e.target);
+        console.log(this.model.state.curCpId);
         if (this.model.isCpElemFocusedLast(e.target)) {
           const cpId = this.model.incrementCurCpId();
           this.view.renderNewCheckpoint(cpId);
         }
       }
-    });
-
-    // Delete checkpoint
-    cpsCont.addEventListener("click", (e) => {
-      this.view.deleteCp(e.target);
     });
 
     // Hover checkpoints
@@ -127,9 +132,21 @@ export default class TaskSettingsController {
       this.view.hoverDisplayCpIcons(e.target);
     });
 
+    // Delete view checkpoint
+    cpsCont.addEventListener("click", (e) => {
+      this.view.deleteCp(e.target);
+    });
+
     // Drag checkpoint
     cpsCont.addEventListener("mousedown", (e) => {
-      this.view.dragIcons(e.target);
+      if (e.target.classList.contains("icon-drag")) {
+        this.view.dragIcons(e.target);
+        turnElemsCursorInto("grab");
+      }
+    });
+
+    window.addEventListener("mouseup", () => {
+      turnElemsCursorInto("reset");
     });
   }
 

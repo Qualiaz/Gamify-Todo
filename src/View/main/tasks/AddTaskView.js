@@ -67,47 +67,54 @@ export default class TaskSettingsView {
          <div class="hidden" id="taskSettingsRepeatEveryOtherDayWrapper">
             <input id="taskSettingsRepeatEveryOtherDayInput" type="text" />                    
          </div>      
-         <div class="hidden" id="taskSettingsRepeatWeekContainer">
+         <div class="task-settings__repeat-weekly-container hidden" id="taskSettingsRepeatWeekContainer">
             <input
-               class="task-settings__repeat__week-el day__selected--true"
+               class="task-settings__repeat-weekly-el task-settings__day-selected"
                type="button"
                value="Mon"
+               data-selected="true"
                id="taskSettingsBtnRepeatWeekMon"
                />
             <input
-               class="task-settings__repeat__week-el day__selected--true"
+               class="task-settings__repeat-weekly-el task-settings__day-selected"
                value="Tue"
                type="button"
+               data-selected="true"
                id="taskSettingsBtnRepeatWeekTue"
                />
             <input
-               class="task-settings__repeat__week-el day__selected--true"
+               class="task-settings__repeat-weekly-el task-settings__day-selected"
                value="Wed"
                type="button"
+               data-selected="true"
                id="taskSettingsBtnRepeatWeekWed"
                />
             <input
-               class="task-settings__repeat__week-el day__selected--true"
+               class="task-settings__repeat-weekly-el task-settings__day-selected"
                value="Thu"
                type="button"
+               data-selected="true"
                id="taskSettingsBtnRepeatWeekThu"
                />
             <input
-               class="task-settings__repeat__week-el day__selected--true"
+               class="task-settings__repeat-weekly-el task-settings__day-selected"
                value="Fri"
                type="button"
+               data-selected="true"
                id="taskSettingsBtnRepeatWeekFri"
                />
             <input
-               class="task-settings__repeat__week-el day__selected--true"
+               class="task-settings__repeat-weekly-el task-settings__day-selected"
                value="Sat"
                type="button"
+               data-selected="true"
                id="taskSettingsBtnRepeatWeekSat"
                />
             <input
-               class="task-settings__repeat__week-el day__selected--true"
+               class="task-settings__repeat-weekly-el task-settings__day-selected"
                value="Sun"
                type="button"
+               data-selected="true"
                id="taskSettingsBtnRepeatWeekSun"
                />
          </div>     
@@ -126,25 +133,25 @@ export default class TaskSettingsView {
         <div class="task-settings__energy-top-container">
           <label for="taskSettingsEnergyInput" class="task-settings__energy-label">Energy gain</label> 
           <img id="taskSettingsEnergyIcon" class="task-settings__energy-icon" src=${iconEnergy} /> 
-          <span id="taskSettingsEnergyValue" class="task-settings__energy-display">1</span>                  
+          <span id="taskSettingsEnergyValueDisplay" class="task-settings__energy-display">1</span>                  
         </div>
          <input type="range" value="1" min="1" max="6" id="taskSettingsEnergyInput" class="task-settings__energy-input" />
       </div>
+      <span>Checkpoints</span>
       <div id="taskSettingsCheckpointsContainer" class="task-settings__checkpoints task-settings__el-container">              
-        <span>Checkpoints</span>
-        <div id="taskSettingsCheckpointContainer1" class="task-settings__checkpoint">
-           <input type="text" id="taskSettingsCheckpointInput1" class="checkpoint__input" />
-           <div class="checkpoint__icons__container hidden">                        
-               <div class="checkpoint__icon-delete__wrapper">
-                   <img class="checkpoint__icon-delete__img" src=${iconDelete} />
+        <div id="taskSettingsCheckpointContainer-1" draggable="false" class="task-settings__checkpoint">
+           <input type="text" id="taskSettingsCheckpointInput-1" class="task-settings__checkpoint-input" />
+           <div class="task-settings__checkpoint-icons-container ">                        
+               <div class="task-settings__checkpoint-icon-delete-wrapper">
+                   <img class="icon-drag task-settings__checkpoint-icon-delete" src=${iconDelete} />
                </div>                  
-               <div class="checkpoint__icon-drag__wrapper">
-                  <img class="checkpoint__icon-drag__img" src=${iconDrag} />
+               <div class="task-settings__checkpoint-icon-drag-wrapper">
+                  <img class="icon-drag task-settings__checkpoint-icon-drag" src=${iconDrag} />
                </div>
            </div>
         </div>              
-     </div>      
-      </form>
+     </div>     
+     </form>
     </div>      
     </div>
 `;
@@ -152,16 +159,16 @@ export default class TaskSettingsView {
 
   _generateCheckpointMarkup(id, name) {
     return `
-      <div id="taskSettingsCpCont-${id}" class="checkpoint__container">
-         <input type="text" id="taskSettingsCheckpointInput-${id}" class="checkpoint__input" value="${
+      <div id="taskSettingsCheckpointContainer-${id}" draggable="false" class="task-settings__checkpoint">
+         <input type="text" id="taskSettingsCheckpointInput-${id}" class="task-settings__checkpoint-input" value="${
       name ? name : ""
     }" />
-         <div class="cps__icons__container hidden">
-              <div class="cp__icon--delete__wrapper">
-                  <img class="cp__icon--delete" src=${iconDelete} />
+         <div class="task-settings__checkpoint-icons-container hidden">
+              <div class="task-settings__checkpoint-icon-delete-wrapper">
+                  <img class="icon-drag task-settings__checkpoint-icon-delete" src=${iconDelete} />
               </div>
-              <div class="cp__icon--drag__wrapper">
-                 <img class="cp__icon--drag" src=${iconDrag} />
+              <div class="task-settings__checkpoint-icon-drag-wrapper">
+                 <img class="icon-drag task-settings__checkpoint-icon-drag" src=${iconDrag} />
               </div>
          </div>
       </div>    
@@ -171,41 +178,288 @@ export default class TaskSettingsView {
   _generateExistingCardMarkup() {
     return `
       <div>
-        <button type="button" id="taskSettingsDeleteBtn">Delete</button>
+        <button type="button" id="taskSettingsBtnDelete">Delete</button>
       </div>
   `;
   }
 
-  renderExistingCardSettings(id) {
-    const { mainButtonsCont } = this.getElems();
-    mainButtonsCont.insertAdjacentHTML(
-      "beforebegin",
-      this._generateExistingCardMarkup()
+  getElems(id) {
+    const root = document.getElementById("root");
+    const taskSettings = document.getElementById(
+      id ? `taskSettings-${id}` : "taskSettings"
     );
+    const closeBtn = document.getElementById("taskSettingsBtnCancel");
+    const doneBtn = document.getElementById("taskSettingsBtnDone");
+    const deleteBtn = document.getElementById("taskSettingsBtnDelete");
+    const mainButtonsCont = document.getElementById(
+      `taskSettingsButtonsContainer`
+    );
+    console.log(mainButtonsCont);
+    const name = document.getElementById("taskSettingsName");
+    const notes = document.getElementById("taskSettingsNotes");
+    const startDate = document.getElementById("taskSettingsStartDate");
+
+    /////// REPEAT ///////
+    const repeatSelect = document.getElementById("taskSettingsRepeatSelect");
+    const repeatTextError = document.getElementById(
+      "taskSettingsSpanRepeatDailyFail"
+    );
+    //repeat options
+    const repeatOptionNoRepeat = document.getElementById(
+      "taskSettingsOptionRepeatNoRepeat"
+    );
+    const repeatOptionEveryOtherDay = document.getElementById(
+      "taskSettingsOptionRepeatEveryOtherDay"
+    );
+    const repeatOptionEveryWeek = document.getElementById(
+      "taskSettingsOptionRepeatEveryWeek"
+    );
+
+    ////// every other day
+    const repeatEveryOtherDayWrapper = document.getElementById(
+      "taskSettingsRepeatEveryOtherDayWrapper"
+    );
+    const repeatInputEveryOtherDay = document.getElementById(
+      "taskSettingsRepeatEveryOtherDayInput"
+    );
+
+    ////// every week
+    const repeatWeekContainer = document.getElementById(
+      "taskSettingsRepeatWeekContainer"
+    );
+    const repeatBtnMon = document.getElementById(
+      "taskSettingsBtnRepeatWeekMon"
+    );
+    const repeatBtnTue = document.getElementById(
+      "taskSettingsBtnRepeatWeekTue"
+    );
+    const repeatBtnWed = document.getElementById(
+      "taskSettingsBtnRepeatWeekWed"
+    );
+    const repeatBtnThu = document.getElementById(
+      "taskSettingsBtnRepeatWeekThu"
+    );
+    const repeatBtnFri = document.getElementById(
+      "taskSettingsBtnRepeatWeekFri"
+    );
+    const repeatBtnSat = document.getElementById(
+      "taskSettingsBtnRepeatWeekSat"
+    );
+    const repeatBtnSun = document.getElementById(
+      "taskSettingsBtnRepeatWeekSun"
+    );
+
+    /////// DIFFICULTY ///////
+    const difficultySelect = document.getElementById(
+      "taskSettingsDifficultySelect"
+    );
+
+    const energyValueDisplay = document.getElementById(
+      "taskSettingsEnergyValueDisplay"
+    );
+    const energy = document.getElementById("taskSettingsEnergyInput");
+
+    /////// CHECKPOINTS ///////
+    const cpsCont = document.getElementById("taskSettingsCheckpointsContainer");
+    const cpCont = document.getElementById("taskSettingsCheckpointContainer-1");
+    const cpsChildrenContArr = Array.from(cpsCont.children);
+
+    const cpIconsCont = document.querySelectorAll(
+      ".task-settings__checkpoint-icons-container"
+    );
+    const cpIconDelete = document.querySelectorAll(
+      ".task-settings__checkpoint-icon-delete"
+    );
+    const cpIconDrag = document.querySelectorAll(
+      ".task-settings__checkpoint-icon-drag"
+    );
+
+    const inputValues = () => {
+      const getCpsValues = () => {
+        const cpsValues = [];
+        [...Array.from(cpsCont.children)].forEach((cp) => {
+          cpsValues.push(cp.querySelector("input").value);
+        });
+        return cpsValues;
+      };
+
+      return {
+        name: name.value,
+        notes: notes.value,
+        startDate: startDate.value,
+        repeat: repeatSelect.value,
+        repeatEveryWeek: {
+          Mon: repeatBtnMon.dataset.selected,
+          Tue: repeatBtnTue.dataset.selected,
+          Wed: repeatBtnWed.dataset.selected,
+          Thu: repeatBtnThu.dataset.selected,
+          Fri: repeatBtnFri.dataset.selected,
+          Sat: repeatBtnSat.dataset.selected,
+          Sun: repeatBtnSun.dataset.selected,
+        },
+        repeatEveryOtherDay:
+          repeatInputEveryOtherDay !== null
+            ? repeatInputEveryOtherDay.value
+            : null,
+        difficulty: difficultySelect.value,
+        energy: energy.value,
+        cps: getCpsValues(),
+      };
+    };
+
+    return {
+      root,
+      taskSettings,
+      closeBtn,
+      doneBtn,
+      deleteBtn,
+      mainButtonsCont,
+      name,
+      notes,
+      startDate,
+
+      // REPEAT
+      repeatSelect,
+
+      repeatTextError,
+      repeatOptionNoRepeat,
+      repeatOptionEveryOtherDay,
+      repeatOptionEveryWeek,
+
+      repeatEveryOtherDayWrapper,
+      repeatInputEveryOtherDay,
+
+      repeatWeekContainer,
+      repeatBtnMon,
+      repeatBtnTue,
+      repeatBtnWed,
+      repeatBtnThu,
+      repeatBtnFri,
+      repeatBtnSat,
+      repeatBtnSun,
+      //
+      difficultySelect,
+      energyValueDisplay,
+      energy,
+      //
+      cpsCont,
+      cpCont,
+      cpsChildrenContArr,
+      cpIconsCont,
+      cpIconDelete,
+      cpIconDrag,
+      //
+      inputValues,
+    };
+  }
+
+  renderExistingCardSettings(id) {
+    const { cpsCont } = this.getElems();
+    cpsCont.insertAdjacentHTML("afterend", this._generateExistingCardMarkup());
+
+    const { deleteBtn } = this.getElems();
+    console.log(deleteBtn);
+  }
+
+  hoverDisplayCpIcons(cpsCont) {
+    const handleMouseEnter = (el) => {
+      el.addEventListener("mouseenter", () => {
+        if (this.isOnlyOneCp(cpsCont)) return;
+        const curCheckpointsIcons = el.querySelector(
+          ".task-settings__checkpoint-icons-container"
+        );
+        curCheckpointsIcons.classList.remove("hidden");
+      });
+    };
+
+    const handleMouseLeave = (el) => {
+      el.addEventListener("mouseleave", () => {
+        const curCheckpointsIcons = el.querySelector(
+          ".task-settings__checkpoint-icons-container"
+        );
+        curCheckpointsIcons.classList.add("hidden");
+      });
+    };
+
+    Array.from(cpsCont.children).forEach((el) => {
+      if (!el.classList.contains("task-settings__checkpoint")) return;
+      handleMouseEnter(el);
+      handleMouseLeave(el);
+    });
+  }
+
+  renderNoRepeat() {
+    const {
+      repeatWeekContainer,
+      repeatEveryOtherDayWrapper,
+      repeatTextError,
+      repeatInputEveryOtherDay,
+    } = this.getElems();
+
+    repeatWeekContainer.classList.add("hidden");
+    repeatEveryOtherDayWrapper.classList.add("hidden");
+    repeatTextError.classList.add("hidden");
+    repeatInputEveryOtherDay.value = "";
+  }
+
+  renderRepeatEveryOtherDay() {
+    const { repeatWeekContainer, repeatEveryOtherDayWrapper } = this.getElems();
+    repeatEveryOtherDayWrapper.classList.remove("hidden");
+    repeatWeekContainer.classList.add("hidden");
+  }
+
+  renderRepeatEveryWeek() {
+    const {
+      repeatWeekContainer,
+      repeatEveryOtherDayWrapper,
+      repeatTextError,
+      repeatInputEveryOtherDay,
+    } = this.getElems();
+    console.log(repeatWeekContainer);
+    repeatWeekContainer.classList.remove("hidden");
+
+    // resets
+    repeatEveryOtherDayWrapper.classList.add("hidden");
+    repeatTextError.classList.add("hidden");
+    repeatInputEveryOtherDay.value = "";
+  }
+
+  renderNewCheckpoint(id, name) {
+    const { cpsCont } = this.getElems();
+    cpsCont.insertAdjacentHTML(
+      "beforeend",
+      this._generateCheckpointMarkup(id, name)
+    );
+    const curCpCont = document.getElementById(
+      `taskSettingsCheckpointContainer-${id}`
+    );
+    console.log(curCpCont);
+    curCpCont.firstElementChild.focus();
+    return curCpCont;
   }
 
   setSelectedRepeatOption(curRepeat) {
     const {
-      repeatNoRepeat,
-      repeatEveryOtherDay,
-      repeatEveryWeek,
-      repeatEveryDay,
-      repeatDailyInput,
-      repeatWeek,
+      repeatOptionNoRepeat,
+      repeatOptionEveryOtherDay,
+      repeatOptionEveryWeek,
+      repeatEveryOtherDayWrapper,
+      repeatInputEveryOtherDay,
+      repeatWeekContainer,
     } = this.getElems();
 
-    console.log(curRepeat);
+    // console.log(repeatEveryOtherDay);
     if (curRepeat.type === "daily") {
-      repeatEveryOtherDay.setAttribute("selected", "selected");
-      repeatEveryDay.classList.remove("hidden");
-      repeatDailyInput.value = curRepeat.everyOtherDay;
+      repeatOptionEveryOtherDay.setAttribute("selected", "selected");
+      repeatEveryOtherDayWrapper.classList.remove("hidden");
+      repeatInputEveryOtherDay.value = curRepeat.everyOtherDay;
     }
 
     if (curRepeat.type === "weekly") {
-      repeatEveryWeek.setAttribute("selected", "selected");
-      repeatWeek.classList.remove("hidden");
+      repeatOptionEveryWeek.setAttribute("selected", "selected");
+      repeatWeekContainer.classList.remove("hidden");
 
-      Array.from(repeatWeek.children).forEach((day) => {
+      Array.from(repeatWeekContainer.children).forEach((day) => {
         day.classList.remove("day__selected");
       });
 
@@ -219,7 +473,7 @@ export default class TaskSettingsView {
     }
 
     if (curRepeat.type === "no-repeat") {
-      repeatNoRepeat.setAttribute("selected", "selected");
+      repeatOptionNoRepeat.setAttribute("selected", "selected");
     }
   }
 
@@ -227,155 +481,9 @@ export default class TaskSettingsView {
     const difficultyUpperCase =
       difficulty.slice(0, 1).toUpperCase() + difficulty.slice(1);
     const difficultyOptionEl = document.getElementById(
-      `taskSettingsDifficulty${difficultyUpperCase}`
+      `taskSettingsDifficultyOption${difficultyUpperCase}`
     );
     difficultyOptionEl.setAttribute("selected", "selected");
-  }
-
-  getElems(id) {
-    const taskSettings = document.getElementById("taskSettings");
-    const repeatWeek = document.getElementById("taskSettingsRepeatWeek");
-    const repeatEveryDay = document.getElementById("taskSettingsRepeatDaily");
-    const repeatDailyFail = document.getElementById(
-      "taskSettingsRepeatDailyFail"
-    );
-    const repeatDailyInput = document.getElementById("repeatDailyInput");
-    const cpsCont = document.getElementById("checkpointsContainer");
-    const cpCont = document.getElementById("taskSettingsCpCont-1");
-    const name = document.getElementById("taskSettingsName");
-    const repeat = document.getElementById("taskSettingsRepeat");
-    const repeatNoRepeat = document.getElementById("repeatNoRepeat");
-    const repeatEveryOtherDay = document.getElementById("repeatEveryOtherDay");
-    const repeatEveryWeek = document.getElementById("repeatEveryWeek");
-    const difficulty = document.getElementById("taskSettingsDifficulty");
-    const energy = document.getElementById("taskSettingsEnergy");
-    const energyValueDisplay = document.getElementById("energyValueDisplay");
-    const weekly = document.getElementsByClassName(
-      "repeat__week__el day__selected"
-    );
-    const startDate = document.getElementById("taskSettingsStartDate");
-    const repeatDaily = document.getElementById("repeatDailyInput");
-    const notes = document.getElementById("markedInput");
-    const cpsChildrenContArr = Array.from(cpsCont.children);
-    const cpIconDelete = document.querySelectorAll(".cp__icon--delete");
-    const closeBtn = document.getElementById("taskSettingsCloseBtn");
-    const doneBtn = document.getElementById("taskSettingsDoneBtn");
-    const deleteBtn = document.getElementById("taskSettingsDeleteBtn");
-    const mainButtonsCont = document.getElementById(
-      `taskSettingsButtonsContainer`
-    );
-
-    return {
-      taskSettings,
-      cpIconDelete,
-      repeatWeek,
-      repeatEveryWeek,
-      repeatNoRepeat,
-      repeatEveryDay,
-      repeatEveryOtherDay,
-      repeatDailyFail,
-      repeatDailyInput,
-      cpsCont,
-      cpsChildrenContArr,
-      cpCont,
-      name,
-      repeat,
-      difficulty,
-      energy,
-      energyValueDisplay,
-      weekly,
-      repeatDaily,
-      notes,
-      startDate,
-      closeBtn,
-      doneBtn,
-      deleteBtn,
-      mainButtonsCont,
-    };
-  }
-
-  hoverDisplayCpIcons(cpsCont) {
-    const handleMouseEnter = (el) => {
-      el.addEventListener("mouseenter", () => {
-        if (this.isOnlyOneCp(cpsCont)) return;
-        const curCheckpointIcons = el.querySelector(".cps__icons__container");
-        curCheckpointIcons.classList.remove("hidden");
-      });
-    };
-
-    const handleMouseLeave = (el) => {
-      el.addEventListener("mouseleave", () => {
-        const cpIcons = el.querySelector(".cps__icons__container");
-        cpIcons.classList.add("hidden");
-      });
-    };
-
-    Array.from(cpsCont.children).forEach((el) => {
-      handleMouseEnter(el);
-      handleMouseLeave(el);
-    });
-  }
-
-  renderNoRepeat() {
-    const { repeatWeek, repeatEveryDay, repeatDailyFail, repeatDailyInput } =
-      this.getElems();
-
-    repeatWeek.classList.add("hidden");
-    repeatEveryDay.classList.add("hidden");
-    repeatDailyFail.classList.add("hidden");
-    repeatDailyInput.value = "";
-  }
-
-  renderRepeatEveryOtherDay() {
-    const { repeatWeek, repeatEveryDay } = this.getElems();
-    repeatEveryDay.classList.remove("hidden");
-    repeatWeek.classList.add("hidden");
-  }
-
-  renderRepeatEveryWeek() {
-    const { repeatWeek, repeatEveryDay, repeatDailyFail, repeatDailyInput } =
-      this.getElems();
-    repeatWeek.classList.remove("hidden");
-    repeatEveryDay.classList.add("hidden");
-    repeatDailyFail.classList.add("hidden");
-    repeatDailyInput.value = "";
-  }
-
-  renderNewCheckpoint(id, name) {
-    const { cpsCont } = this.getElems();
-    cpsCont.insertAdjacentHTML(
-      "beforeend",
-      this._generateCheckpointMarkup(id, name)
-    );
-    const curCpCont = document.getElementById(`taskSettingsCpCont-${id}`);
-    curCpCont.firstElementChild.focus();
-    return curCpCont;
-  }
-
-  setCheckpoints(checkpoints) {
-    const { cpCont, name } = this.getElems();
-    cpCont.remove();
-    checkpoints.forEach((checkpoint, i) => {
-      this.renderNewCheckpoint(i, checkpoint.name);
-    });
-    name.focus();
-  }
-
-  isOnlyOneCp(cpsCont) {
-    return Array.from(cpsCont.children).length === 1;
-  }
-
-  dragIcons(targetIcon) {
-    if (targetIcon.classList.contains("cp__icon--drag")) {
-      const container = targetIcon.closest(".checkpoints__container");
-      swapElems(container, "cp__icon--drag");
-    }
-  }
-
-  hideCpIcons(cpsCont) {
-    cpsCont.firstElementChild
-      .querySelector(".cps__icons__container")
-      .classList.add("hidden");
   }
 
   setEnergyValueDisplay(el) {
@@ -412,13 +520,45 @@ export default class TaskSettingsView {
     }
   }
 
+  setCheckpoints(checkpoints) {
+    const { cpCont, name } = this.getElems();
+    cpCont.remove();
+    checkpoints.forEach((checkpoint, i) => {
+      this.renderNewCheckpoint(i, checkpoint.name);
+    });
+    name.focus();
+  }
+
   toggleDayOfWeek(weekEl) {
-    weekEl.classList.toggle("day__selected");
+    if (weekEl.dataset.selected === "true") {
+      weekEl.dataset.selected = "false";
+    } else {
+      weekEl.dataset.selected = "true";
+    }
+    weekEl.classList.toggle("task-settings__day-selected");
+  }
+
+  closeSettings() {
+    root.removeChild(root.children[0]);
+  }
+
+  isOnlyOneCp(cpsCont) {
+    return Array.from(cpsCont.children).length === 1;
+  }
+
+  dragIcons(targetIcon) {
+    const container = document.querySelector(".task-settings__checkpoints");
+    // const containers = document.getElementsByClassName(
+    //   ".task-settings__checkpoint"
+    // );
+    swapElems(container, "task-settings__checkpoint-icon-drag");
   }
 
   deleteCp(deleteIconBtn) {
-    if (deleteIconBtn.classList.contains("cp__icon--delete"))
-      deleteIconBtn.closest(".checkpoint__container").remove();
+    if (
+      deleteIconBtn.classList.contains("task-settings__checkpoint-icon-delete")
+    )
+      deleteIconBtn.closest(".task-settings__checkpoint").remove();
   }
 
   render(parentEl, state) {

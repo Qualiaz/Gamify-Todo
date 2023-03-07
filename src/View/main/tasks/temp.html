@@ -1,0 +1,132 @@
+<div id="${
+    id ? "taskSettings" + "-" + id : "taskSettings"
+  }" class="task-settings">
+   <div id="taskSettingsContainer" class="task-settings__container">
+  <div id="taskSettingsHeader" class="task-settings__header task-settings-header">
+    <div id="taskSettingsHeaderNameWrapper" class="task-settings-header__name-wrapper">
+      <h3 id="taskSettingsHeaderName" class="task-settings-header__name">Add Task</h3>
+    </div>
+    <div id="taskSettingsHeaderBtnsContainer" class="task-settings-header__btns-container">
+      <div id="taskSettingsHeaderBtnCancelWrapper" class="task-settings-header__btn-cancel-wrapper">
+        <button id="taskSettingsBtnCancel" class="task-settings-header__btn-cancel">Cancel</button>
+      </div>
+      <div id="taskSettingsHeaderBtnDoneWrapper" class="task-settings-header-btn-done-wrapper">
+        <button id="taskSettingsBtnDone" class="task-settings-header__btn-done">Done</button>
+      </div>
+    </div>
+    </div>
+    <form id="taskSettingsForm" class="task-settings__form" action="POST">  
+    <div id="taskSettingsNameContainer" class="task-settings__name task-settings__el-container">
+        <label id="taskSettingsNameLabel" class="task-settings__name-label" for="taskSettingsName">Name *</label>
+        <input type="text" id="taskSettingsName" class="task-settings__name-input" value="${
+          name ? name : ""
+        }" />
+        <span id="taskSettingsNameCheckFail" class="task-settings__name-error hidden">At least one character</span>
+    </div>
+    <div id="taskSettingsNotesContainer" class="task-settings__notes task-settings__el-container">
+       <label id="taskSettingsNotesLabel" for="taskSettingsNotes">Notes</label>
+         <textarea data-provide="markdown" id="taskSettingsNotes"> ${
+           notes ? notes : ""
+         }</textarea>
+    </div>
+    <div id="taskSettingsDateWrapper" class="task-settings__date task-settings__el-container">
+       <label id="taskSettingsStartDateLabel" for="taskSettingsStartDate">Start Date</label>
+       <input id="taskSettingsStartDate" type="date" name="date" min=${
+         new Date().toISOString().split("T")[0]
+       } value="${
+    startDate ? startDate.replace("/", "-").replace("/", "-") : ""
+  }" />              
+    </div>
+    <div id="taskSettingsRepeatContainer" class="task-settings__repeat task-settings__el-container">
+       <span id="taskSettingsSpanRepeatDailyFail" class="task-settings__repeat-span hidden">Only numbers allowed</span>
+       <div id="taskSettingsRepeatSelectWrapper" class="task-settings__repeat-container">
+          <label id="taskSettingsRepeatLabel" class="task-settings__repeat-label" for="taskSettingsRepeatSelect">Repeat</label>
+          <select name="repetition" class="task-settings__repeat-selection" id="taskSettingsRepeatSelect">
+             <option id="taskSettingsOptionRepeatNoRepeat" class="task-settings__repeat-option-no-repeat" value="no-repeat">No Repeat</option>
+             <option id="taskSettingsOptionRepeatEveryOtherDay" class="task-settings__repeat-option-every-other-day" value="daily">Every Other Day</option>
+             <option id="taskSettingsOptionRepeatEveryWeek" class="task-settings__repeat-option-every-week" value="weekly">Every Week</option>
+          </select>
+       </div>
+       <div class="hidden" id="taskSettingsRepeatEveryOtherDayWrapper">
+          <input id="taskSettingsRepeatEveryOtherDayInput" type="text" />                    
+       </div>      
+       <div class="hidden" id="taskSettingsRepeatWeekContainer">
+          <input
+             class="task-settings__repeat__week-el day__selected"
+             type="button"
+             value="Mon"
+             id="taskSettingsBtnRepeatWeekMon"
+             />
+          <input
+             class="task-settings__repeat__week-el day__selected"
+             value="Tue"
+             type="button"
+             id="taskSettingsBtnRepeatWeekTue"
+             />
+          <input
+             class="task-settings__repeat__week-el day__selected"
+             value="Wed"
+             type="button"
+             id="taskSettingsBtnRepeatWeekWed"
+             />
+          <input
+             class="task-settings__repeat__week-el day__selected"
+             value="Thu"
+             type="button"
+             id="taskSettingsBtnRepeatWeekThu"
+             />
+          <input
+             class="task-settings__repeat__week-el day__selected"
+             value="Fri"
+             type="button"
+             id="taskSettingsBtnRepeatWeekFri"
+             />
+          <input
+             class="task-settings__repeat__week-el day__selected"
+             value="Sat"
+             type="button"
+             id="taskSettingsBtnRepeatWeekSat"
+             />
+          <input
+             class="task-settings__repeat__week-el day__selected"
+             value="Sun"
+             type="button"
+             id="taskSettingsBtnRepeatWeekSun"
+             />
+       </div>     
+    </div>
+    <div id="taskSettingsDifficultyContainer" class="task-settings__difficulty task-settings__el-container">
+       <label id="taskSettingsDifficultySelectLabel" for="taskSettingsDifficultySelect">Difficulty</label>
+       <select name="difficulty" id="taskSettingsDifficultySelect">
+          <option id="taskSettingsDifficultyOptionTrivial" value="trivial">Trivial</option>
+          <option id="taskSettingsDifficultyOptionEasy" value="easy">Easy</option>
+          <option id="taskSettingsDifficultyOptionMedium" value="medium">Medium</option>
+          <option id="taskSettingsDifficultyOptionHard" value="hard">Hard</option>
+          <option id="taskSettingsDifficultyOptionChallenge" value="challenge">Challenge</option>
+       </select>
+    </div>
+    <div id="taskSettingsEnergyContainer" class="task-settings__energy task-settings__el-container">
+      <div class="task-settings__energy-top-container">
+        <label for="taskSettingsEnergyInput" class="task-settings__energy-label">Energy gain</label> 
+        <img id="taskSettingsEnergyIcon" class="task-settings__energy-icon" src=${iconEnergy} /> 
+        <span id="taskSettingsEnergyValue" class="task-settings__energy-display">1</span>                  
+      </div>
+       <input type="range" value="1" min="1" max="6" id="taskSettingsEnergyInput" class="task-settings__energy-input" />
+    </div>
+    <div id="taskSettingsCheckpointsContainer" class="task-settings__checkpoints task-settings__el-container">              
+      <span>Checkpoints</span>
+      <div id="taskSettingsCheckpointContainer-1" class="task-settings__checkpoint">
+         <input type="text" id="taskSettingsCheckpointInput1" class="checkpoint__input" />
+         <div class="checkpoint__icons__container hidden">                        
+             <div class="checkpoint__icon-delete__wrapper">
+                 <img class="checkpoint__icon-delete__img" src=${iconDelete} />
+             </div>                  
+             <div class="checkpoint__icon-drag__wrapper">
+                <img class="checkpoint__icon-drag__img" src=${iconDrag} />
+             </div>
+         </div>
+      </div>              
+   </div>      
+    </form>
+  </div>      
+  </div>

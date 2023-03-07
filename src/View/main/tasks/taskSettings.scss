@@ -1,5 +1,8 @@
+//////////////////
+//////////////////
+//////////////////
 .task-settings {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
@@ -11,13 +14,19 @@
   align-items: center;
   padding: 1rem;
   z-index: 100;
+  overflow: scroll;
+  padding: 2rem;
+  // pointer-events: none;
 
   &__container {
     position: absolute;
     top: 2rem;
+    // bottom: 2rem;
     display: flex;
     flex-direction: column;
     margin-left: 28rem;
+    border-radius: 0.5rem;
+    // overflow: scroll;
   }
 
   &-header {
@@ -100,6 +109,8 @@
     border-radius: 0.2rem;
     padding: 0.5rem 0.2rem;
     color: white;
+    width: 100%;
+    // cursor: grab;
 
     &:focus {
       outline: 2px solid orange;
@@ -139,6 +150,25 @@
     &-container {
       display: flex;
       flex-direction: column;
+      margin-bottom: 1rem;
+    }
+
+    //week day selects
+    &-weekly-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0.7rem;
+    }
+
+    &-weekly-el {
+      flex: 1;
+      opacity: 40%;
+    }
+
+    .task-settings__day-selected {
+      opacity: 100%;
     }
   }
 
@@ -188,11 +218,140 @@
   &__checkpoints {
     display: flex;
     justify-content: stretch;
+    margin-bottom: 1rem;
+    // position: relative;
 
     .task-settings__checkpoint {
+      position: relative;
       input {
-        width: 100%;
+        // width: 100%;
+        margin-bottom: 1rem;
+        // outline: 1px solid red;
+      }
+
+      &-icons-container {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 1rem;
+      }
+
+      &-icon-delete {
+        margin-top: 0.1rem;
+        width: 2.4rem;
+        margin-right: 1.3rem;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        &-wrapper {
+          &::before {
+            content: "";
+            width: 0.2rem;
+            height: 2rem;
+            right: 2.1rem;
+            top: 0.4rem;
+            position: absolute;
+            background-color: rgb(190, 188, 188);
+          }
+        }
+      }
+
+      &-icon-drag {
+        margin-top: 0.4rem;
+        width: 1.2rem;
+
+        &:hover {
+          cursor: grab;
+        }
       }
     }
   }
+}
+// .gu-mirror {
+//   position: fixed !important;
+//   margin: 0 !important;
+//   z-index: 9999 !important;
+//   opacity: 0.8;
+//   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+//   filter: alpha(opacity=80);
+// }
+
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  // background-color: pink;
+  // height: 3rem;
+  border-radius: 0.2rem;
+  transform: translateX(-2rem);
+  cursor: grab !important;
+  overflow: hidden;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=10);
+}
+
+.gu-hide {
+  display: none !important;
+}
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+.gu-transit {
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=0);
+}
+
+.task-settings__checkpoint {
+  position: relative;
+  border-radius: 0.5rem;
+  input {
+    background-color: rgb(94, 94, 94);
+    border: none;
+    font-size: 1.4rem;
+    border-radius: 0.2rem;
+    padding: 0.5rem 0.2rem;
+    color: white;
+    width: 100%;
+  }
+
+  &-icons-container {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 1rem;
+  }
+
+  &-icon-delete {
+    margin-top: 0.1rem;
+    width: 2.4rem;
+    margin-right: 1.3rem;
+
+    &-wrapper {
+      &::before {
+        content: "";
+        width: 0.2rem;
+        height: 2rem;
+        right: 2.1rem;
+        top: 0.4rem;
+        position: absolute;
+        background-color: rgb(190, 188, 188);
+      }
+    }
+  }
+
+  &-icon-drag {
+    margin-top: 0.4rem;
+    width: 1.2rem;
+  }
+}
+
+.helper-mouse-down {
+  cursor: grab !important;
 }

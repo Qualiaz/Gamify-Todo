@@ -1,5 +1,9 @@
 export function formatStartDate(startDate) {
-  const date = startDate.split("/");
+  let date;
+  if (startDate.includes("/")) date = startDate.split("/");
+  if (startDate.includes("-")) date = startDate.split("-");
+  // console.log(startDate.includes("="));
+
   const y = Number(date[0]);
   let m = (() => {
     if (date[1].charAt(0) === "0") {

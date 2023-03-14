@@ -268,16 +268,34 @@
       }
     }
   }
-}
-// .gu-mirror {
-//   position: fixed !important;
-//   margin: 0 !important;
-//   z-index: 9999 !important;
-//   opacity: 0.8;
-//   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
-//   filter: alpha(opacity=80);
-// }
 
+  // Not valid form
+  &__name {
+    position: relative;
+    &-error {
+      color: red;
+      position: absolute;
+      top: 1rem;
+      right: 0;
+      font-size: 1.4rem;
+    }
+  }
+
+  &__repeat {
+    &-container {
+      position: relative;
+    }
+    &-error {
+      color: red;
+      position: absolute;
+      top: 1rem;
+      right: 0;
+      font-size: 1.4rem;
+    }
+  }
+}
+
+/// FOR DRAGGING CHECKPOINTS CONTAINER ///
 .gu-mirror {
   position: fixed !important;
   margin: 0 !important;

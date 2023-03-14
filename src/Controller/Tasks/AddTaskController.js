@@ -45,6 +45,7 @@ export default class TaskSettingsController {
       }
       // if task doesn't exist
       else {
+        console.log(inputValues());
         const taskCardController = this.model.addTask(inputValues());
         taskCardController.then((controller) => {
           controller.model.taskSettingsController = this;
@@ -152,6 +153,7 @@ export default class TaskSettingsController {
 
   init(state) {
     if (state) {
+      console.log(state);
       this.view.render(root, state);
       this.view.renderExistingCardSettings();
     } else {

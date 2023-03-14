@@ -2,7 +2,6 @@ export function formatStartDate(startDate) {
   let date;
   if (startDate.includes("/")) date = startDate.split("/");
   if (startDate.includes("-")) date = startDate.split("-");
-  // console.log(startDate.includes("="));
 
   const y = Number(date[0]);
   let m = (() => {

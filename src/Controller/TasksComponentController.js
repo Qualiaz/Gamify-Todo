@@ -108,14 +108,14 @@ export default class TasksComponentController {
       }
 
       // RESET ALL //
-      if (clickedId === `resetAllViewBtn`){
-        this.curView.filter = 'all'
-        this.curView.name = 'timeCreated'
-        this.curView.order.direction = 'descending'
-        this.curView.order.name = 'timeCreated'
-        this.curView.tasks = curTasks
-        this.orderTasks()
-        this.render(parentEl)
+      if (clickedId === `resetAllViewBtn`) {
+        this.curView.filter = "all";
+        this.curView.name = "timeCreated";
+        this.curView.order.direction = "descending";
+        this.curView.order.name = "timeCreated";
+        this.curView.tasks = curTasks;
+        this.orderTasks();
+        this.render(parentEl);
       }
     });
   }
@@ -126,7 +126,7 @@ export default class TasksComponentController {
     orderDirection = this.curView.order.direction
   ) {
     // this.curView.order.direction = orderDirection;
-    console.log(orderDirection)
+    console.log(orderDirection);
     const tasksOrderInst = new OrderTask(tasks);
 
     if (orderType === "difficulty") {
@@ -169,6 +169,7 @@ export async function createTasksFromDb() {
     const taskCard = new TaskCardController();
     taskCard.model.cardState = doc.data();
     taskCard.model.cardState.id = doc.id;
+    console.log(taskCard.model.cardState);
     const localTimeTracked = localStorage.getItem(`timeElapsed-${doc.id}`);
     if (localTimeTracked) {
       taskCard.model.cardState.timeTracked = localTimeTracked;
@@ -180,13 +181,13 @@ export async function createTasksFromDb() {
     curTasks.push(taskCard);
     // filter tasks
     if (taskCard.model.cardState.startDate) {
-      if (taskCard.model.cardState.repeat === "daily") {
+      if (taskCard.model.cardState.repeat.type === "daily") {
         const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
         addTasksOtherDayFilter(everyOtherDay, taskCard);
         return;
       }
-      if (taskCard.model.repeat === "weekly") {
-        const days = taskCard.model.cardState.repeat.days;
+      if (taskCard.model.cardState.repeat.type === "weekly") {
+        const days = taskCard.model.cardState.repeat.daysOfWeek;
         addTasksWeekDaysFilter(days, taskCard);
         return;
       }

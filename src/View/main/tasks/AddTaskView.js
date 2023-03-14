@@ -35,10 +35,10 @@ export default class TaskSettingsView {
       <form id="taskSettingsForm" class="task-settings__form" action="POST">  
       <div id="taskSettingsNameContainer" class="task-settings__name task-settings__el-container">
           <label id="taskSettingsNameLabel" class="task-settings__name-label" for="taskSettingsName">Name *</label>
+          <span id="taskSettingsNameCheckFail" class="task-settings__name-error hidden">Name can't be empty</span>
           <input type="text" id="taskSettingsName" class="task-settings__name-input" value="${
             name ? name : ""
           }" />
-          <span id="taskSettingsNameCheckFail" class="task-settings__name-error hidden">At least one character</span>
       </div>
       <div id="taskSettingsNotesContainer" class="task-settings__notes task-settings__el-container">
          <label id="taskSettingsNotesLabel" for="taskSettingsNotes">Notes</label>
@@ -54,67 +54,109 @@ export default class TaskSettingsView {
       startDate ? startDate.replace("/", "-").replace("/", "-") : ""
     }" />              
       </div>
+     
       <div id="taskSettingsRepeatContainer" class="task-settings__repeat task-settings__el-container">
          <span id="taskSettingsSpanRepeatDailyFail" class="task-settings__repeat-span hidden">Only numbers allowed</span>
          <div id="taskSettingsRepeatSelectWrapper" class="task-settings__repeat-container">
             <label id="taskSettingsRepeatLabel" class="task-settings__repeat-label" for="taskSettingsRepeatSelect">Repeat</label>
+            <span id="taskSettingsRepeatCheckFail" class="task-settings__repeat-error hidden">Field can't be empty</span>
             <select name="repetition" class="task-settings__repeat-selection" id="taskSettingsRepeatSelect">
-               <option id="taskSettingsOptionRepeatNoRepeat" class="task-settings__repeat-option-no-repeat" value="no-repeat">No Repeat</option>
-               <option id="taskSettingsOptionRepeatEveryOtherDay" class="task-settings__repeat-option-every-other-day" value="daily">Every Other Day</option>
-               <option id="taskSettingsOptionRepeatEveryWeek" class="task-settings__repeat-option-every-week" value="weekly">Every Week</option>
+               <option ${
+                 repeat && repeat.type === "no-repeat" ? "selected" : null
+               } id="taskSettingsOptionRepeatNoRepeat" class="task-settings__repeat-option-no-repeat" value="no-repeat">No Repeat</option>
+               <option ${
+                 repeat && repeat.type === "every-other-day" ? "selected" : null
+               } id="taskSettingsOptionRepeatEveryOtherDay" class="task-settings__repeat-option-every-other-day" value="every-other-day">Every Other Day</option>
+               <option ${
+                 repeat && repeat.type === "weekly" ? "selected" : null
+               } id="taskSettingsOptionRepeatEveryWeek" class="task-settings__repeat-option-every-week" value="weekly">Every Week</option>
             </select>
          </div>
-         <div class="hidden" id="taskSettingsRepeatEveryOtherDayWrapper">
-            <input id="taskSettingsRepeatEveryOtherDayInput" type="text" />                    
+         <div class="${
+           repeat && repeat.type === "every-other-day" ? null : "hidden"
+         }" id="taskSettingsRepeatEveryOtherDayWrapper" >
+            <input id="taskSettingsRepeatEveryOtherDayInput" value=${
+              repeat?.everyOtherDay || 1
+            } type="text" />                    
          </div>      
-         <div class="task-settings__repeat-weekly-container hidden" id="taskSettingsRepeatWeekContainer">
+         <div class="task-settings__repeat-weekly-container ${
+           repeat && repeat.type === "weekly" ? null : "hidden"
+         }" id="taskSettingsRepeatWeekContainer">
             <input
-               class="task-settings__repeat-weekly-el task-settings__day-selected"
+               class="task-settings__repeat-weekly-el ${
+                 repeat?.daysOfWeek?.Mon === "true"
+                   ? "task-settings__day-selected"
+                   : null
+               }"
                type="button"
                value="Mon"
-               data-selected="true"
+               data-selected=${repeat?.daysOfWeek?.Mon || "true"}
                id="taskSettingsBtnRepeatWeekMon"
                />
             <input
-               class="task-settings__repeat-weekly-el task-settings__day-selected"
+               class="task-settings__repeat-weekly-el ${
+                 repeat?.daysOfWeek?.Tue === "true"
+                   ? "task-settings__day-selected"
+                   : null
+               }"
                value="Tue"
                type="button"
-               data-selected="true"
+               data-selected=${repeat?.daysOfWeek?.Tue || "true"}
                id="taskSettingsBtnRepeatWeekTue"
                />
             <input
-               class="task-settings__repeat-weekly-el task-settings__day-selected"
+               class="task-settings__repeat-weekly-el ${
+                 repeat?.daysOfWeek?.Wed === "true"
+                   ? "task-settings__day-selected"
+                   : null
+               }"
                value="Wed"
                type="button"
-               data-selected="true"
+               data-selected=${repeat?.daysOfWeek?.Wed || "true"}
                id="taskSettingsBtnRepeatWeekWed"
                />
             <input
-               class="task-settings__repeat-weekly-el task-settings__day-selected"
+               class="task-settings__repeat-weekly-el ${
+                 repeat?.daysOfWeek?.Thu === "true"
+                   ? "task-settings__day-selected"
+                   : null
+               }"
                value="Thu"
                type="button"
-               data-selected="true"
+               data-selected=${repeat?.daysOfWeek?.Thu || "true"}
                id="taskSettingsBtnRepeatWeekThu"
                />
             <input
-               class="task-settings__repeat-weekly-el task-settings__day-selected"
+               class="task-settings__repeat-weekly-el ${
+                 repeat?.daysOfWeek?.Fri === "true"
+                   ? "task-settings__day-selected"
+                   : null
+               }"
                value="Fri"
                type="button"
-               data-selected="true"
+               data-selected=${repeat?.daysOfWeek?.Fri || "true"}
                id="taskSettingsBtnRepeatWeekFri"
                />
             <input
-               class="task-settings__repeat-weekly-el task-settings__day-selected"
+               class="task-settings__repeat-weekly-el ${
+                 repeat?.daysOfWeek?.Sat === "true"
+                   ? "task-settings__day-selected"
+                   : null
+               }"
                value="Sat"
                type="button"
-               data-selected="true"
+               data-selected=${repeat?.daysOfWeek?.Sat || "true"}
                id="taskSettingsBtnRepeatWeekSat"
                />
             <input
-               class="task-settings__repeat-weekly-el task-settings__day-selected"
+               class="task-settings__repeat-weekly-el ${
+                 repeat?.daysOfWeek?.Sun === "true"
+                   ? "task-settings__day-selected"
+                   : null
+               }"
                value="Sun"
                type="button"
-               data-selected="true"
+               data-selected=${repeat?.daysOfWeek?.Sun || "true"}
                id="taskSettingsBtnRepeatWeekSun"
                />
          </div>     
@@ -458,18 +500,32 @@ export default class TaskSettingsView {
     if (curRepeat.type === "weekly") {
       repeatOptionEveryWeek.setAttribute("selected", "selected");
       repeatWeekContainer.classList.remove("hidden");
-
+      console.log(curRepeat);
       Array.from(repeatWeekContainer.children).forEach((day) => {
         day.classList.remove("day__selected");
       });
 
-      curRepeat.days.forEach((day) => {
-        const dayUpperCase = day.slice(0, 1).toUpperCase() + day.slice(1);
+      // curRepeat.daysOfWeek.forEach((day) => {
+      //   const dayUpperCase = day.slice(0, 1).toUpperCase() + day.slice(1);
+      //   const dayEl = document.getElementById(
+      //     `taskSettingsRepeatWeek${dayUpperCase}`
+      //   );
+      //   dayEl.classList.add("day__selected");
+      // });
+
+      for (const [day, value] of Object.entries(curRepeat.daysOfWeek)) {
+        console.log(day, value);
+        // const dayUpperCase = day.slice(0, 1).toUpperCase() + day.slice(1);
         const dayEl = document.getElementById(
-          `taskSettingsRepeatWeek${dayUpperCase}`
+          `taskSettingsBtnRepeatWeek${day}`
         );
-        dayEl.classList.add("day__selected");
-      });
+        console.log(dayEl);
+        if (value === "true") {
+          dayEl.classList.add("day__selected");
+        } else {
+          dayEl.classList.remove("day__selected");
+        }
+      }
     }
 
     if (curRepeat.type === "no-repeat") {

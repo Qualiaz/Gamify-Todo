@@ -47,19 +47,20 @@ export class TaskSettingsModel {
     this.state.curCpId = 1;
   }
   //prettier-ignore
-  async addTask({ name,notes,startDate,difficulty,energy,repeat,repeatDaily,daysOfWeek,cps}) {
+  async addTask({ name,notes,startDate,difficulty,energy,repeat,repeatEveryOtherDay,repeatEveryWeek,cps}) {
     const colTasksRef = this.getTasksCol()
-    
-    if (!this.validFormCheck(name, repeatDaily).ok) return
- // TO BE MOVED
-const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu')
- //  
+    console.log( repeatEveryWeek)
+    if (!this.validFormCheck(name, repeatEveryOtherDay).ok) return
+    // TO BE MOVED
+    const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu')
+    //  
     const taskCardController = new TaskCardController();
-    taskCardController.model.addTaskDataCardState({name, notes, startDate, repeat,repeatDaily,daysOfWeek, difficulty, energy, cps})
+    taskCardController.model.addTaskDataCardState({name, notes, startDate, repeat,repeatEveryOtherDay,repeatEveryWeek, difficulty, energy, cps})
 
     this.state = taskCardController.model.cardState
+    console.log(this.state)
     const taskData = Object.assign({}, taskCardController.model.cardState)
-
+    console.log(taskData)
     const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
     taskDataDb.then((data) => {
       taskCardController.model.cardState.id = data.id
@@ -121,9 +122,11 @@ const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu'
   validFormCheck(name, repeatDaily) {
     const nameCheckFail = document.getElementById("taskSettingsNameCheckFail");
     const repeatDailyFail = document.getElementById(
-      "taskSettingsRepeatDailyFail"
+      "taskSettingsRepeatCheckFail"
     );
-    const taskSettingsRepeat = document.getElementById("taskSettingsRepeat");
+    const taskSettingsRepeat = document.getElementById(
+      "taskSettingsRepeatSelect"
+    );
 
     let ok = true;
     let check = {
@@ -157,65 +160,6 @@ const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu'
 
     return { ok };
   }
-
-  // getValues(getElems) {
-  //   let {
-  //     name,
-  //     repeatSelect,
-  //     difficultySelect,
-  //     energy,
-  //     repeatWeekContainer,
-  //     repeatInputEveryOtherDay,
-  //     notes,
-  //     startDate,
-  //     cpsCont,
-  //   } = getElems;
-
-  //   const daysOfWeek = [];
-  //   const cps = [];
-
-  //   console.log(
-  //     name.value,
-  //     repeatSelect.value,
-  //     difficultySelect.value,
-  //     energy.value,
-  //     repeatInputEveryOtherDay.value,
-  //     notes.value,
-  //     startDate,
-  //     repeatWeekContainer,
-  //     cpsCont.children
-  //   );
-
-  //   Array.from(repeatWeekContainer).forEach((day) => {
-  //     daysOfWeek.push(day.value);
-  //   });
-
-  //   if (cpsCont.children.length >= 1) {
-  //     for (let i = 0; i < cpsCont.children.length; i++) {
-  //       cps.push(cpsCont.children[i].children[0].value);
-  //     }
-  //   }
-
-  //   name = name.value;
-  //   repeat = repeatSelect.value;
-  //   difficulty = difficultySelect.value;
-  //   energy = energy.value;
-  //   repeatDaily = repeatInputEveryOtherDay.value;
-  //   notes = notes.value;
-  //   startDate = startDate.value.replace("-", "/").replace("-", "/");
-
-  //   return {
-  //     name,
-  //     notes,
-  //     startDate,
-  //     difficulty,
-  //     energy,
-  //     repeat,
-  //     repeatDaily,
-  //     daysOfWeek,
-  //     cps,
-  //   };
-  // }
 }
 
 export default class TaskCardModel {
@@ -226,6 +170,9 @@ export default class TaskCardModel {
     checkpoints: [],
     isInfoToggled: true,
     isTimerToggled: false,
+    repeat: {
+      type: "no-repeat",
+    },
   };
 
   addTaskDataCardState({
@@ -233,19 +180,20 @@ export default class TaskCardModel {
     notes,
     startDate,
     repeat,
-    repeatDaily,
-    daysOfWeek,
+    repeatEveryOtherDay,
+    repeatEveryWeek,
     difficulty,
     energy,
     cps,
   }) {
     this.cardState.name = name;
     this.cardState.startDate = startDate;
-    this.cardState.repeat = repeat;
+    this.cardState.repeat.type = repeat;
+    this.addRepeatDataCardState({ repeatEveryWeek, repeatEveryOtherDay });
     this.cardState.difficulty = difficulty;
     this.cardState.energy = energy;
     this.cardState.notes = notes;
-    this.addRepeatDataCardState({ daysOfWeek, repeatDaily });
+
     cps.forEach((cp) => {
       if (!cp) return;
       this.addCpDataCardState(cp);
@@ -267,7 +215,8 @@ export default class TaskCardModel {
     console.log(data);
     this.cardState.name = data.name;
     this.cardState.notes = data.notes;
-    this.cardState.repeat = data.repeat;
+    this.cardState.repeat.type = data.repeat;
+    this.addRepeatDataCardState(data.repeat);
     this.cardState.energy = data.energy;
     this.cardState.difficulty = data.difficulty;
     this.cardState.startDate = data.startDate;
@@ -280,21 +229,14 @@ export default class TaskCardModel {
     return this.cardState;
   }
 
-  addRepeatDataCardState = ({ daysOfWeek, repeatDaily }) => {
-    if (this.cardState.repeat === "repeatWeekContainer") {
-      this.cardState.repeat = {
-        type: "weekly",
-        days: daysOfWeek,
-      };
-    }
-    if (this.cardState.repeat === "daily") {
-      this.cardState.repeat = {
-        type: "daily",
-        everyOtherDay: Number(repeatDaily),
-      };
-    }
-    if (this.cardState.repeat === "no-repeat") {
-      this.cardState.repeat = "no-repeat";
+  addRepeatDataCardState = ({ repeatEveryWeek, repeatEveryOtherDay }) => {
+    if (this.cardState.repeat.type === "weekly") {
+      this.cardState.repeat.daysOfWeek = repeatEveryWeek;
+    } else if (this.cardState.repeat.type === "every-other-day") {
+      this.cardState.repeat.everyOtherDay = Number(repeatEveryOtherDay);
+    } else {
+      // reset whole object
+      this.cardState.repeat.type = "no-repeat";
     }
   };
 

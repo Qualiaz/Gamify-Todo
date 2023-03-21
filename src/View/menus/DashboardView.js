@@ -5,7 +5,7 @@ export default class DashboardMenuView {
   _generateMarkup() {
     return `
     <section id="dashboardMenu">
-       <section id="dashboardTasks">das</section>
+       <section id="dashboardTasks"></section>
        <section id="dashboardHabits"></section>
        <section id="dashboardYIP"></section>
     </section>

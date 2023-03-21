@@ -1,8 +1,10 @@
 import "./TasksComponentView.scss";
+import addImgBtn from "../../../assets/images/add.svg";
+import viewSettingsImgBtn from "../../../assets/images/view-settings.svg";
 
 export default class TasksComponentView {
   _generateMarkup(view, id) {
-    console.log(view)
+    console.log(view);
     return `
       <section class="TM__component">
         <div class="TM__component__header">
@@ -12,13 +14,13 @@ export default class TasksComponentView {
     }"></h3>
           </div>
           <div class="TM__component__header__addTaskBtn-wrapper">
-            <button class="TM__component__addTaskBtn" id="addTaskBtn-${id}">Add</button>
+            <button class="TM__component__addTaskBtn" id="addTaskBtn-${id}"><img class="TM__component__addTaskImgBtn" id="addTaskImgBtn-${id}" src=${addImgBtn} alt="add task button"></button>
           </div>
           <div class="TM__component__header__filterBtn-wrapper">
-            <button id="tmComponentViewSettings-${id}">View</button>  
+            <button class="TM__component__filterBtn" id="tmComponentViewSettingsBtn-${id}"><img class="TM__component__filterImgBtn" id="tmComponentViewSettingsImgBtn-${id}" src=${viewSettingsImgBtn} alt="view filter settings" /></button>  
             
             <div id="viewSettingsContainer-${id}" class="view-settings__container ${
-      view.isTaskSettings ? "" : "hidden"
+      view.isTaskSettings ? "" : ""
     }">
 
             <div  class="view-settings__filter__container ${
@@ -85,7 +87,12 @@ export default class TasksComponentView {
     const viewSettingsContainer = document.getElementById(
       `viewSettingsContainer-${id}`
     );
-    viewSettingsContainer.classList.toggle("hidden");
+    if (viewSettingsContainer.style.display === "flex") {
+      viewSettingsContainer.style.display = "none";
+    } else {
+      viewSettingsContainer.style.display = "flex";
+    }
+    return viewSettingsContainer;
   }
 
   renderViewMenu(view) {
@@ -94,7 +101,6 @@ export default class TasksComponentView {
   }
 
   renderCards(parentEl, tasks) {
-    // parentEl.innerHTML = "";
     tasks.forEach((task) => {
       task.view.render(parentEl, task.model.cardState);
       task.eventListeners();
@@ -186,6 +192,14 @@ export default class TasksComponentView {
         optionOrderEnergy.selected = true;
         break;
     }
+  }
+
+  addModalBackground() {
+    const body = document.querySelector("body");
+    const background = document.createElement("div");
+    background.classList.add("background-modal");
+    body.prepend(background);
+    return background;
   }
 
   render(parentEl, view, id) {

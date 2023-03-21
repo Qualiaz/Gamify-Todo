@@ -34,14 +34,25 @@ export default class TasksComponentController {
   eventListeners(parentEl) {
     document.addEventListener("click", (e) => {
       const clickedId = e.target.id;
-      if (clickedId === `addTaskBtn-${this.id}`) {
+      if (
+        clickedId === `addTaskBtn-${this.id}` ||
+        clickedId === `addTaskImgBtn-${this.id}`
+      ) {
         const taskSettingsController = new TaskSettingsController();
         taskSettingsController.init();
       }
       // CHANGE VIEW
-      if (clickedId === `tmComponentViewSettings-${this.id}`) {
-        this.view.renderViewSettings(this.id);
+      if (
+        clickedId === `tmComponentViewSettingsBtn-${this.id}` ||
+        clickedId === `tmComponentViewSettingsImgBtn-${this.id}`
+      ) {
         this.curView.isTaskSettings = true;
+        const taskSettingsView = this.view.renderViewSettings(this.id);
+        const backgroundEl = this.view.addModalBackground();
+        backgroundEl.addEventListener("click", () => {
+          backgroundEl.remove();
+          taskSettingsView.style.display = "none";
+        });
       }
       /////////////// FILTER ////////////
       // TODAY

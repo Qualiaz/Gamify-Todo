@@ -62,13 +62,13 @@ export default class TaskSettingsView {
             <span id="taskSettingsRepeatCheckFail" class="task-settings__repeat-error hidden">Field can't be empty</span>
             <select name="repetition" class="task-settings__repeat-selection" id="taskSettingsRepeatSelect">
                <option ${
-                 repeat && repeat.type === "no-repeat" ? "selected" : null
+                 repeat?.type === "no-repeat" ? "selected" : null
                } id="taskSettingsOptionRepeatNoRepeat" class="task-settings__repeat-option-no-repeat" value="no-repeat">No Repeat</option>
                <option ${
-                 repeat && repeat.type === "every-other-day" ? "selected" : null
+                 repeat?.type === "every-other-day" ? "selected" : null
                } id="taskSettingsOptionRepeatEveryOtherDay" class="task-settings__repeat-option-every-other-day" value="every-other-day">Every Other Day</option>
                <option ${
-                 repeat && repeat.type === "weekly" ? "selected" : null
+                 repeat?.type === "weekly" ? "selected" : null
                } id="taskSettingsOptionRepeatEveryWeek" class="task-settings__repeat-option-every-week" value="weekly">Every Week</option>
             </select>
          </div>

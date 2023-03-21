@@ -35,14 +35,16 @@ export function addTasksWeekDaysFilter(weekDays, task) {
 
   const todayName = format(today, "EEE");
   const tomorrowName = format(tomorrow, "EEE");
-  weekDays.forEach((day) => {
-    if (day === todayName) {
+
+  for (const day in weekDays) {
+    if (weekDays[day] === "true" && day === todayName) {
       if (isAfter(today, startDate)) curTasksToday.push(task);
     }
-    if (day === tomorrowName) {
+    if (weekDays[day] === "true" && day === tomorrowName) {
       if (isAfter(tomorrow, startDate)) curTasksTomorrow.push(task);
     }
-  });
+  }
+
   if (isThisWeek(startDate)) curTasksThisWeek.push(task);
 }
 

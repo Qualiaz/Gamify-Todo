@@ -2,12 +2,11 @@
   &__container {
     display: flex;
     justify-content: stretch;
-    // width: 70rem;
-    // width: 100%;
+    width: 100%;
     border: none;
     overflow: hidden;
     border-radius: 1rem;
-    margin: 1rem;
+    margin-top: 1rem;
     box-shadow: 2px 2px 2px $secondary;
     min-height: 5rem;
 
@@ -19,10 +18,6 @@
   &__checkbox {
     &__container {
       padding: 1rem;
-      // display: flex;
-      // justify-content: center;
-      // align-items: center;
-      // margin-top: 0.2rem;
       width: 5rem;
       background-color: var(--difficultyColor, $primary);
       position: relative;
@@ -31,6 +26,7 @@
     &--unfinished {
       width: 2rem;
       height: 2rem;
+      margin-top: 0.2rem;
       background-color: #edecee;
       position: absolute;
       top: 1.2rem;
@@ -44,6 +40,7 @@
       position: absolute;
       top: 1.2rem;
       left: 1.5rem;
+      margin-top: 0.2rem;
       border-radius: 0.4rem;
       &::before {
         content: "";
@@ -74,7 +71,6 @@
       padding: 1rem 1rem;
       flex: 1;
       background-color: #272727;
-      // background-color: rgb(253, 253, 253);
     }
   }
 
@@ -125,7 +121,6 @@
       display: flex;
       flex-direction: column;
       padding: 0 2rem;
-      // margin-bottom: 2rem;
     }
   }
 
@@ -144,7 +139,6 @@
     &--unfinished {
       width: 1.6rem;
       height: 1.6rem;
-      // background-color: $secondary;
 
       border: 2px solid var(--difficultyColor, $primary);
       position: absolute;
@@ -155,7 +149,6 @@
     &--finished {
       width: 1.6rem;
       height: 1.6rem;
-      // background-color: $secondary;
       border: 2px solid var(--difficultyColor, $primary);
       position: absolute;
       margin: 0 auto;
@@ -168,7 +161,6 @@
         width: 80%;
         height: 80%;
         background-color: var(--difficultyColor, $primary);
-        // background-color: red;
         transform: translate(0.1rem, -0.6rem);
         border-radius: 0.2rem;
       }

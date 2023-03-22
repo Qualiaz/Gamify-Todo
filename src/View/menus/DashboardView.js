@@ -7,7 +7,7 @@ export default class DashboardMenuView {
     <section id="dashboardMenu">
        <section id="dashboardTasks"></section>
        <section id="dashboardHabits"></section>
-       <section id="dashboardYIP"></section>
+       <section id="dashboardYip"></section>
     </section>
 `;
   }
@@ -15,9 +15,9 @@ export default class DashboardMenuView {
   getElems() {
     const dashboardTasks = document.getElementById("dashboardTasks");
     const dashboardHabits = document.getElementById("dashboardHabits");
-    const dashboardYIP = document.getElementById("dashboardYIP");
+    const dashboardYip = document.getElementById("dashboardYip");
 
-    return { dashboardTasks, dashboardHabits, dashboardYIP };
+    return { dashboardTasks, dashboardHabits, dashboardYip };
   }
 
   render() {

@@ -1,39 +1,26 @@
 #dashboardMenu {
   display: flex;
   flex-direction: row;
+  justify-content: stretch;
   gap: 3rem;
   // border: 2px solid pink;
   height: 100%;
   width: 100%;
-  margin-left: 28rem;
+  padding: 3rem;
 }
 
 #dashboardTasks {
-    // width: 33%;
-  outline: 2px solid red;
-  height: 100%;
-  margin-left: 3rem;
+  flex: 1;
 }
 
 #dashboardHabits {
-    outline: 2px solid green;
-    display: flex;
-    justify-content: strech;
-    padding: 0 1rem;
-
-    & > :first-child {
-      margin-top: 4rem;
-    }
+  flex: 1;
 }
 
-#dashboardYIP {
-    // width: 33%;
-    // outline: 2px solid blue;
-  margin-right: 3rem;
+#dashboardYip {
+  flex: 1;
 }
 
 .low-opacity {
-  //   opacity: 90%;
-  //   border: 1px solid red;
   background: rgba(240, 248, 255, 0.1);
 }

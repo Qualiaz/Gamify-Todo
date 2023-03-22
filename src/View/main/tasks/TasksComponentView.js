@@ -9,9 +9,9 @@ export default class TasksComponentView {
       <section class="TM__component">
         <div class="TM__component__header">
           <div class="TM__component__header__title-wrapper">
-            <h3 id="tmComponentName-${id}" data-filterName="${
+            <span id="tmComponentName-${id}" data-filterName="${
       view.filter
-    }"></h3>
+    }"></span>
           </div>
           <div class="TM__component__header__addTaskBtn-wrapper">
             <button class="TM__component__addTaskBtn" id="addTaskBtn-${id}"><img class="TM__component__addTaskImgBtn" id="addTaskImgBtn-${id}" src=${addImgBtn} alt="add task button"></button>
@@ -19,9 +19,7 @@ export default class TasksComponentView {
           <div class="TM__component__header__filterBtn-wrapper">
             <button class="TM__component__filterBtn" id="tmComponentViewSettingsBtn-${id}"><img class="TM__component__filterImgBtn" id="tmComponentViewSettingsImgBtn-${id}" src=${viewSettingsImgBtn} alt="view filter settings" /></button>  
             
-            <div id="viewSettingsContainer-${id}" class="view-settings__container ${
-      view.isTaskSettings ? "" : ""
-    }">
+            <div id="viewSettingsContainer-${id}" class="view-settings__container">
 
             <div  class="view-settings__filter__container ${
               view.menu === "dashboard" ? "hidden" : ""
@@ -131,6 +129,7 @@ export default class TasksComponentView {
     const optionOrderEnergy = document.getElementById(
       `orderSelectionEnergy-${id}`
     );
+    const filterSelections = document.getElementById(`filterSelections-${id}`);
 
     return {
       tmComponent,
@@ -143,6 +142,7 @@ export default class TasksComponentView {
       optionOrderTimeCreated,
       optionOrderDifficulty,
       optionOrderEnergy,
+      filterSelections,
     };
   }
 

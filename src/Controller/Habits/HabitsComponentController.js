@@ -14,7 +14,7 @@ export default class HabitsComponentController {
     );
     habitsComponentEl.addEventListener("click", (e) => {
       const clickedId = e.target.id;
-      if (clickedId === "addHabitBtn") {
+      if (clickedId === "addHabitBtn" || clickedId === "addHabitBtnImg") {
         const habitSettingsController = new HabitSettingsController();
         habitSettingsController.initAddHabit();
       }
@@ -22,14 +22,9 @@ export default class HabitsComponentController {
   }
 
   renderHabits() {
-    const compEl = document.querySelector("habits-component__container");
-    // HabitCardController.render()
     allHabits.forEach((habit) => {
-      console.log(habit);
       habit.init();
-      // habit.render(compEl);
     });
-    // take all habitCardController and render
   }
 
   init(parentEl) {

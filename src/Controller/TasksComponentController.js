@@ -32,6 +32,19 @@ export default class TasksComponentController {
   }
 
   eventListeners(parentEl) {
+    const { filterSelections } = this.view.getElems(this.id);
+    console.log(filterSelections);
+    filterSelections.addEventListener("change", (e) => {
+      e.preventDefault();
+    });
+
+    // if (clickedId === `filterSelectionToday-${this.id}`) {
+    //   let tasksToday = removeDuplicateTasks(curTasksToday);
+    //   this.curView.tasks = tasksToday;
+    //   this.curView.filter = "today";
+    //   this.render(parentEl);
+    // }
+
     document.addEventListener("click", (e) => {
       const clickedId = e.target.id;
       if (
@@ -56,12 +69,6 @@ export default class TasksComponentController {
       }
       /////////////// FILTER ////////////
       // TODAY
-      if (clickedId === `filterSelectionToday-${this.id}`) {
-        let tasksToday = removeDuplicateTasks(curTasksToday);
-        this.curView.tasks = tasksToday;
-        this.curView.filter = "today";
-        this.render(parentEl);
-      }
 
       // TOMORROW
       if (clickedId === `filterSelectionTomorrow-${this.id}`) {
@@ -155,13 +162,13 @@ export default class TasksComponentController {
   }
 
   init(parentEl) {
+    this.render(parentEl);
     this.curView.tasks = this.orderTasks(
       this.curView.tasks,
       "timeCreated",
       "descending"
     );
     this.eventListeners(parentEl);
-    this.render(parentEl);
   }
 
   render(parentEl, view = this.curView, id = this.id) {

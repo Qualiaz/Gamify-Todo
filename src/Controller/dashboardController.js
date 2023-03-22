@@ -2,33 +2,40 @@ import { curTasksToday } from "../Model/main/TaskModel";
 import DashboardMenuView from "../View/menus/DashboardView";
 import TasksComponentController from "./TasksComponentController";
 import HabitsComponentController from "./Habits/HabitsComponentController";
+import YipComponentController from "./YipComponentController";
 
 class DashboardMenuController {
   constructor() {
     this.view = new DashboardMenuView();
   }
 
-  initTasks(){
-    const {dashboardTasks} = this.view.getElems()
-    const dashboardTasksComponentController = new TasksComponentController(curTasksToday, "dashboard", "today")
-    dashboardTasksComponentController.init(dashboardTasks)
+  initTasks() {
+    const { dashboardTasks } = this.view.getElems();
+    const dashboardTasksComponentController = new TasksComponentController(
+      curTasksToday,
+      "dashboard",
+      "today"
+    );
+    dashboardTasksComponentController.init(dashboardTasks);
   }
 
-  initHabits(){
-      const {dashboardHabits} = this.view.getElems()  
-      const habitsComponentController = new HabitsComponentController()    
-      habitsComponentController.init(dashboardHabits)                  
+  initHabits() {
+    const { dashboardHabits } = this.view.getElems();
+    const habitsComponentController = new HabitsComponentController();
+    habitsComponentController.init(dashboardHabits);
   }
 
-  initYIP(){
-    const {dashboardYIP} = this.view.getElems()
-    // const yipComponentController = new YIPComponentController()
+  initYip() {
+    const { dashboardYip } = this.view.getElems();
+    const yipComponentController = new YipComponentController();
+    yipComponentController.init(dashboardYip);
   }
 
   init() {
     this.view.render();
-    this.initTasks()
-    this.initHabits()
+    this.initTasks();
+    this.initHabits();
+    this.initYip();
   }
 }
 

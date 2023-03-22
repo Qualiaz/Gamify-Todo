@@ -1,27 +1,27 @@
 #tasksMenu {
   height: 100%;
-  margin-left: 28rem;
+  // margin-left: 28rem;
 }
 
 .TM__component {
-  margin-top: 4rem;
+  // margin-top: 4rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: end;
-
+  background-color: rgb(32, 34, 34);
+  padding: 1.5rem;
+  border-radius: 1rem;
   &__tasks {
     &--tasksMenu {
       width: 40vw;
+      // width: 100%;
     }
     &--dashboardMenu {
-      width: 20vw;
+      // width: 100%;
+      width: 100%;
+      min-width: 30rem;
     }
   }
 
-  h3 {
-    color: white;
-  }
   &__addTaskBtn,
   &__filterBtn {
     // width: 5rem;
@@ -45,8 +45,12 @@
     display: flex;
     justify-content: flex-end;
     // gap: 2rem;
-    padding: 0 1rem;
-
+    // padding: 0 1rem;
+    span {
+      color: white;
+      font-weight: bold;
+      font-size: 2rem;
+    }
     &__title-wrapper {
       font-size: 1.8rem;
       flex: 1;
@@ -69,10 +73,6 @@
   color: white;
   border: none;
   border-radius: 0.3rem;
-}
-
-span {
-  color: white;
 }
 
 .view-settings__container {

@@ -30,7 +30,7 @@ export default class HabitCardView {
           <div id="habitCardMainInfoContainer-${id}" class="habit-card__main__info__container hidden">
             <hr id="habitCardLineBreak1-${id}" class="habit-card__main__line-break" />
             <div id="habitCardNotes-${id}" class="habit-card__main__notes">
-            ${marked.parse(notes)}
+            ${notes ? marked.parse(notes) : ""}
             </div>
             <hr id="habitCardLineBreak2-${id}" class="habit-card__main__line-break" />
             <div class="habit-card__main__additional-info">
@@ -196,15 +196,15 @@ export default class HabitCardView {
     }
   }
 
-  render(habitComponent, habitData, cardState) {
+  render(habitComponent, cardState) {
     habitComponent.insertAdjacentHTML(
       "beforeend",
-      this._generateMarkup(habitData)
+      this._generateMarkup(cardState)
     );
-    this.renderColorBasedOnDifficulty(habitData);
+    this.renderColorBasedOnDifficulty(cardState);
 
-    this.toggleLineBreaks(habitData.id);
-    this.renderState(habitData.id, cardState);
+    this.toggleLineBreaks(cardState.id);
+    this.renderState(cardState);
   }
 
   toggleLineBreaks(id) {
@@ -216,11 +216,13 @@ export default class HabitCardView {
     }
   }
 
-  renderState(id, cardState) {
-    this.toggleCard(id, cardState.isHabitCardToggled);
+  renderState(cardState) {
+    console.log(cardState);
+    this.toggleCard(cardState.id, cardState.isCardToggle);
   }
 
   toggleCard(id, isToggled) {
+    console.log(isToggled);
     const { habitCardMainInfoContainer, habitCardToggleImgBtn } =
       this._getElems(id);
     if (isToggled) {
@@ -230,9 +232,5 @@ export default class HabitCardView {
       habitCardMainInfoContainer.classList.add("hidden");
       habitCardToggleImgBtn.style.transform = `rotateZ(180deg)`;
     }
-
-    // if (habitCardToggleImgBtn.style.transform === "rotateZ(0deg)") {
-    //   habitCardToggleImgBtn.style.transform = `rotateZ(180deg)`;
-    // } else habitCardToggleImgBtn.style.transform = `rotateZ(0deg)`;
   }
 }

@@ -28,7 +28,6 @@ export default async function Controller() {
       switch (btn.id) {
         case "dashboard":
           dashboardMenuController.init();
-          console.log("das");
           break;
         case "tasks":
           tasksMenuController.init();

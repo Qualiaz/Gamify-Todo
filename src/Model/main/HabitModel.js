@@ -15,28 +15,22 @@ export default class HabitModel {
   habitData;
   isCardCreated;
   localStorageObj;
-  isCardToggle = false;
 
-  setIsCardToggleLocalStorage() {
-    if (this.localStorageObj.isHabitCardToggled) {
-      this.localStorageObj.isHabitCardToggled = false;
-      localStorage.setItem(
-        `habitCard-${this.habitData.id}`,
-        JSON.stringify(this.localStorageObj)
-      );
-    } else {
-      this.localStorageObj.isHabitCardToggled = true;
-      localStorage.setItem(
-        `habitCard-${this.habitData.id}`,
-        JSON.stringify(this.localStorageObj)
-      );
-    }
+  setLocalStorage() {
+    localStorage.setItem(
+      `habitCard-${this.habitData.id}`,
+      JSON.stringify(this.habitData)
+    );
   }
 
-  getLocalStorageParsedObj() {
-    const lsItem = localStorage.getItem(`habitCard-${this.habitData.id}`);
-    this.localStorageObj = JSON.parse(lsItem);
-    return this.localStorageObj;
+  getLocalStorage() {
+    const lsItem = localStorage.getItem(
+      `habitCard-${this.habitData.id}`,
+      this.habitData
+    );
+
+    console.log(JSON.parse(lsItem));
+    return JSON.parse(lsItem);
   }
 
   deleteHabitDb() {
@@ -71,8 +65,8 @@ export default class HabitModel {
       notes: notes,
       streakPositive: 0,
       streakNegative: 0,
+      isCardToggle: true,
     };
-    // allHabits.push(this.habitData);
     return this.habitData;
   }
 
@@ -101,21 +95,7 @@ export default class HabitModel {
     const habitCard = this.addHabitLocal();
     const docId = await this.addHabitDb(habitCard.model.habitData);
     habitCard.model.habitData.id = docId;
-    this.createLocalStorageObj(docId);
     return habitCard;
-  }
-
-  createLocalStorageObj(id) {
-    const localStorageObj = {
-      id: id,
-      isHabitCardToggled: false,
-    };
-    this.localStorageObj = localStorageObj;
-    localStorage.setItem(
-      `habitCard-${id}`,
-      JSON.stringify(this.localStorageObj)
-    );
-    return this.localStorageObj;
   }
 
   updateHabitDb(habitData = this.habitData) {

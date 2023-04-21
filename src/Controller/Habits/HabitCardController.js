@@ -21,24 +21,26 @@ export default class HabitCardController {
       }
 
       if (e.target.id === `habitCardToggleImgBtn-${id}`) {
-        this.model.setIsCardToggleLocalStorage();
-        const lsCardState = this.model.getLocalStorageParsedObj();
-        this.view.toggleCard(id, lsCardState.isHabitCardToggled);
-        console.log(this.model.localStorageObj);
-        console.log(this.model);
+        this.model.habitData.isCardToggle = !this.model.habitData.isCardToggle;
+        this.view.toggleCard(id, this.model.habitData.isCardToggle);
+        this.model.setLocalStorage();
       }
     });
   }
 
   render() {
     const container = document.querySelector(".habits-component__container");
-    const lsCard = this.model.getLocalStorageParsedObj();
-    this.view.render(container, this.model.habitData, lsCard);
-    // this.view.renderState(lsParsedObj)
+    const cardState = this.model.getLocalStorage();
+    if (!!cardState) {
+      this.view.render(container, cardState);
+    } else {
+      this.view.render(container, this.model.habitData);
+    }
   }
 
   init() {
     this.render();
     this.eventListeners();
+    console.log(this.model.habitData);
   }
 }

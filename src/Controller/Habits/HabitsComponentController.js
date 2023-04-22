@@ -12,6 +12,7 @@ export default class HabitsComponentController {
     const habitsComponentEl = document.querySelector(
       ".habits-component__container"
     );
+    console.log("HEY");
     habitsComponentEl.addEventListener("click", (e) => {
       const clickedId = e.target.id;
       if (clickedId === "addHabitBtn" || clickedId === "addHabitBtnImg") {
@@ -28,6 +29,7 @@ export default class HabitsComponentController {
   }
 
   init(parentEl) {
+    console.log("asdasd");
     this.view.render(parentEl);
     this.renderHabits();
     this.eventListeners();

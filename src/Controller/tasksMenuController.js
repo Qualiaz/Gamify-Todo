@@ -2,9 +2,11 @@ import { curTasks } from "../Model/main/TaskModel";
 import TasksMenuView from "../View/menus/TasksMenuView";
 import TasksComponentController from "./TasksComponentController";
 
-export default class TasksMenuController {
+class TasksMenuController {
+  isInit = false;
+
   constructor() {
-    this.tasksMenuView = new TasksMenuView();
+    this.view = new TasksMenuView();
     this.tasksComponentController = new TasksComponentController(
       curTasks,
       "tasks",
@@ -13,7 +15,7 @@ export default class TasksMenuController {
   }
 
   init() {
-    this.tasksMenuView.render();
+    this.view.render();
     const tasksMenu = document.getElementById("tasksMenu");
     this.tasksComponentController.init(tasksMenu);
   }

@@ -19,7 +19,10 @@ export default async function Controller() {
   const main = document.getElementById("main");
   const nav = document.getElementById("nav");
   const menuBtns = nav.querySelectorAll("a");
-  const menuTasksBtn = document.getElementById("navTasksBtn");
+  // const menuTasksBtn = document.getElementById("navTasksBtn");
+  // tasksMenuController.init();
+  let tasksMenuInitialized = false;
+  console.log(main.children);
 
   menuBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -31,6 +34,12 @@ export default async function Controller() {
           break;
         case "tasks":
           tasksMenuController.init();
+          // if (!tasksMenuInitialized) {
+
+          //   tasksMenuInitialized = true;
+          // } else {
+          //   console.log(main);
+          // }
           break;
         case "habits":
           habitsMenuController();

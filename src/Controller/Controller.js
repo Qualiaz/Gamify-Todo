@@ -32,14 +32,8 @@ export default async function Controller() {
         case "tasks":
           tasksMenuController.init();
           break;
-        case "projects":
-          main.innerHTML = projectsMarkup;
-          break;
         case "habits":
           habitsMenuController();
-          break;
-        case "calendar":
-          main.innerHTML = calendarMarkup;
           break;
         case "yearInPixels":
           main.innerHTML = yearInPixelsMarkup;

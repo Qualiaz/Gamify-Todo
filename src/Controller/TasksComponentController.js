@@ -20,7 +20,7 @@ export default class TasksComponentController {
     this.id = (((1 + Math.random()) * 0x10000) | 0).toString(4).substring(1);
 
     this.curView = {
-      isTaskSettings: false,
+      isTaskViewOpen: false,
       menu: menu,
       filter: filter,
       order: {
@@ -31,21 +31,102 @@ export default class TasksComponentController {
     };
   }
 
+  toggleViewSettings() {
+    const viewSettingsBtn = document.getElementById(
+      `tmComponentViewSettingsBtn-${this.id}`
+    );
+
+    viewSettingsBtn.addEventListener("click", () => {
+      const backgroundEl = this.view.addModalBackground();
+      this.curView.isTaskViewOpen = true;
+      this.view.renderViewSettings(this.id, this.curView.isTaskViewOpen);
+
+      backgroundEl.addEventListener("click", () => {
+        this.curView.isTaskViewOpen = false;
+        backgroundEl.remove();
+        this.view.renderViewSettings(this.id, this.curView.isTaskViewOpen);
+      });
+    });
+  }
+
   eventListeners(parentEl) {
-    const { filterSelections } = this.view.getElems(this.id);
-    console.log(filterSelections);
+    const {
+      filterSelections,
+      orderSelections,
+      optionOrderDirectionAscending,
+      optionOrderDirectionDescending,
+    } = this.view.getElems(this.id);
+
     filterSelections.addEventListener("change", (e) => {
       e.preventDefault();
+      const backgroundEl = document.querySelector(".background-modal");
+      const optionEl = e.target.options[e.target.selectedIndex].value;
+      console.log(optionEl);
+      if (optionEl === "tomorrow") {
+        let tasksTomorrow = removeDuplicateTasks(curTasksTomorrow);
+        this.curView.tasks = tasksTomorrow;
+        this.curView.filter = "tomorrow";
+      }
+      if (optionEl === "today") {
+        let tasksToday = removeDuplicateTasks(curTasksToday);
+        this.curView.tasks = tasksToday;
+        this.curView.filter = "today";
+        // this.init(parentEl);
+      }
+      if (optionEl === "nextWeek") {
+      }
+      if (optionEl === "thisWeek") {
+        let tasksThisWeek = removeDuplicateTasks(curTasksThisWeek);
+        this.curView.tasks = tasksThisWeek;
+        this.curView.filter = "thisWeek";
+        // this.init(parentEl);
+      }
+      if (optionEl === "whenever") {
+        let tasksWhenever = removeDuplicateTasks(curTasksWhenever);
+        this.curView.tasks = tasksWhenever;
+        this.curView.filter = "whenever";
+        // this.init(parentEl);
+      }
+      if (optionEl === "all") {
+        let tasksAll = removeDuplicateTasks(curTasks);
+        this.curView.tasks = tasksAll;
+        this.curView.filter = "all";
+        // this.init(parentEl);
+      }
+      // backgroundEl.remove();
+      this.init(parentEl);
     });
 
-    // if (clickedId === `filterSelectionToday-${this.id}`) {
-    //   let tasksToday = removeDuplicateTasks(curTasksToday);
-    //   this.curView.tasks = tasksToday;
-    //   this.curView.filter = "today";
-    //   this.render(parentEl);
-    // }
+    orderSelections.addEventListener("change", (e) => {
+      const backgroundEl = document.querySelector(".background-modal");
+      const option = e.target.options[e.target.selectedIndex].value;
+      if (option === "difficulty") {
+        this.curView.order.name = "energy";
+        this.init(parentEl);
+      }
+      if (option === "energy") {
+        this.curView.order.name = "difficulty";
+        this.init(parentEl);
+      }
+      if (option === "timeCreated") {
+        this.curView.order.name = "timeCreated";
+        this.init(parentEl);
+      }
+      // backgroundEl.remove();
+    });
+
+    optionOrderDirectionAscending.addEventListener("click", () => {
+      this.curView.order.direction = "ascending";
+      this.init(parentEl);
+    });
+
+    optionOrderDirectionDescending.addEventListener("click", () => {
+      this.curView.order.direction = "descending";
+      this.init(parentEl);
+    });
 
     document.addEventListener("click", (e) => {
+      e.preventDefault();
       const clickedId = e.target.id;
       if (
         clickedId === `addTaskBtn-${this.id}` ||
@@ -53,76 +134,6 @@ export default class TasksComponentController {
       ) {
         const taskSettingsController = new TaskSettingsController();
         taskSettingsController.init();
-      }
-      // CHANGE VIEW
-      if (
-        clickedId === `tmComponentViewSettingsBtn-${this.id}` ||
-        clickedId === `tmComponentViewSettingsImgBtn-${this.id}`
-      ) {
-        this.curView.isTaskSettings = true;
-        const taskSettingsView = this.view.renderViewSettings(this.id);
-        const backgroundEl = this.view.addModalBackground();
-        backgroundEl.addEventListener("click", () => {
-          backgroundEl.remove();
-          taskSettingsView.style.display = "none";
-        });
-      }
-      /////////////// FILTER ////////////
-      // TODAY
-
-      // TOMORROW
-      if (clickedId === `filterSelectionTomorrow-${this.id}`) {
-        let tasksTomorrow = removeDuplicateTasks(curTasksTomorrow);
-        this.curView.tasks = tasksTomorrow;
-        this.curView.filter = "tomorrow";
-        this.render(parentEl);
-      }
-      // THIS WEEK
-      if (clickedId === `filterSelectionThisWeek-${this.id}`) {
-        let tasksThisWeek = removeDuplicateTasks(curTasksThisWeek);
-        this.curView.tasks = tasksThisWeek;
-        this.curView.filter = "thisWeek";
-        this.render(parentEl);
-      }
-      // ALL
-      if (clickedId === `filterSelectionAll-${this.id}`) {
-        let tasksAll = removeDuplicateTasks(curTasks);
-        this.curView.tasks = tasksAll;
-        this.curView.filter = "all";
-        this.render(parentEl);
-      }
-      // WHENEVER
-      if (clickedId === `filterSelectionWhenever-${this.id}`) {
-        let tasksWhenever = removeDuplicateTasks(curTasksWhenever);
-        this.curView.tasks = tasksWhenever;
-        this.curView.filter = "whenever";
-        this.render(parentEl);
-      }
-      /////////////// ORDER ////////////
-      // TYPE //
-      if (clickedId === `orderSelectionTimeCreated-${this.id}`) {
-        this.curView.order.name = "timeCreated";
-        this.render(parentEl);
-      }
-      if (clickedId === `orderSelectionDifficulty-${this.id}`) {
-        this.curView.order.name = "difficulty";
-        this.render(parentEl);
-      }
-      if (clickedId === `orderSelectionEnergy-${this.id}`) {
-        this.curView.order.name = "energy";
-        this.render(parentEl);
-      }
-
-      // DIRECTION //
-      if (clickedId === `taskSettingsAscBtn-${this.id}`) {
-        this.curView.order.direction = "ascending";
-        this.curView.tasks = this.orderTasks();
-        this.render(parentEl);
-      }
-      if (clickedId === `taskSettingsDescBtn-${this.id}`) {
-        this.curView.order.direction = "descending";
-        this.curView.tasks = this.orderTasks();
-        this.render(parentEl);
       }
 
       // RESET ALL //
@@ -132,8 +143,7 @@ export default class TasksComponentController {
         this.curView.order.direction = "descending";
         this.curView.order.name = "timeCreated";
         this.curView.tasks = curTasks;
-        this.orderTasks();
-        this.render(parentEl);
+        this.init(parentEl);
       }
     });
   }
@@ -143,8 +153,6 @@ export default class TasksComponentController {
     orderType = this.curView.order.name,
     orderDirection = this.curView.order.direction
   ) {
-    // this.curView.order.direction = orderDirection;
-    console.log(orderDirection);
     const tasksOrderInst = new OrderTask(tasks);
 
     if (orderType === "difficulty") {
@@ -163,12 +171,10 @@ export default class TasksComponentController {
 
   init(parentEl) {
     this.render(parentEl);
-    this.curView.tasks = this.orderTasks(
-      this.curView.tasks,
-      "timeCreated",
-      "descending"
-    );
+    this.curView.tasks = this.orderTasks();
+    this.toggleViewSettings();
     this.eventListeners(parentEl);
+    this.view.renderViewSettings(this.id, this.curView.isTaskViewOpen);
   }
 
   render(parentEl, view = this.curView, id = this.id) {

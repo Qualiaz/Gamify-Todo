@@ -16,6 +16,9 @@
   z-index: 100;
   overflow: scroll;
   padding: 2rem;
+  span {
+    color: white;
+  }
   // pointer-events: none;
 
   &__container {
@@ -184,6 +187,7 @@
 
       span {
         margin-top: 0.7rem;
+        color: #fff;
       }
     }
     input {

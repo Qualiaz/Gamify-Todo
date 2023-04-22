@@ -1,7 +1,6 @@
 #nav {
   ul {
     display: flex;
-    // margin-top: 3rem;
     gap: 1rem;
 
     flex-direction: column;
@@ -39,9 +38,13 @@
     display: block;
     position: relative;
     padding: 0.5rem 0;
-    // margin-right: 2rem;
+    width: 100%;
     font-size: 2rem;
     overflow: hidden;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 }
 
@@ -109,6 +112,17 @@
     img {
       transform: translateY(0.5rem);
       margin-right: 0.5rem;
+    }
+  }
+
+  &__sign-out-button {
+    color: red;
+    background: none;
+    font-size: 1.8rem;
+    border: none;
+
+    &:hover {
+      cursor: pointer;
     }
   }
 }

@@ -45,9 +45,9 @@ export default class TasksComponentView {
               <div class="view-settings__filter-name__wrapper">
                  <span>Order</span>
               </div>
-              <select class="view-settings__selections">
-              <option id="orderSelectionTimeCreated-${id}" value="timeCreated">Time created</option>
-              <option id="orderSelectionDifficulty-${id}" value="difficulty">Difficulty</option>
+              <select id="orderSelections-${id}" class="view-settings__selections">
+                <option id="orderSelectionTimeCreated-${id}" value="timeCreated">Time created</option>
+                <option id="orderSelectionDifficulty-${id}" value="difficulty">Difficulty</option>
                 <option id="orderSelectionEnergy-${id}" value="energy">Energy</option>
               </select>       
             </div>
@@ -81,15 +81,17 @@ export default class TasksComponentView {
   `;
   }
 
-  renderViewSettings(id) {
+  renderViewSettings(id, isOpen) {
     const viewSettingsContainer = document.getElementById(
       `viewSettingsContainer-${id}`
     );
-    if (viewSettingsContainer.style.display === "flex") {
-      viewSettingsContainer.style.display = "none";
-    } else {
+
+    if (isOpen) {
       viewSettingsContainer.style.display = "flex";
+    } else {
+      viewSettingsContainer.style.display = "none";
     }
+
     return viewSettingsContainer;
   }
 
@@ -129,7 +131,16 @@ export default class TasksComponentView {
     const optionOrderEnergy = document.getElementById(
       `orderSelectionEnergy-${id}`
     );
+
+    const optionOrderDirectionAscending = document.getElementById(
+      `taskSettingsAscBtn-${id}`
+    );
+    const optionOrderDirectionDescending = document.getElementById(
+      `taskSettingsDescBtn-${id}`
+    );
+
     const filterSelections = document.getElementById(`filterSelections-${id}`);
+    const orderSelections = document.getElementById(`orderSelections-${id}`);
 
     return {
       tmComponent,
@@ -143,6 +154,9 @@ export default class TasksComponentView {
       optionOrderDifficulty,
       optionOrderEnergy,
       filterSelections,
+      orderSelections,
+      optionOrderDirectionAscending,
+      optionOrderDirectionDescending,
     };
   }
 

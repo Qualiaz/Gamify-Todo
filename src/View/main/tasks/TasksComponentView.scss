@@ -13,10 +13,8 @@
   &__tasks {
     &--tasksMenu {
       width: 40vw;
-      // width: 100%;
     }
     &--dashboardMenu {
-      // width: 100%;
       width: 100%;
       min-width: 30rem;
     }
@@ -70,9 +68,12 @@
 .view-settings__selections {
   padding: 1rem;
   background-color: rgb(37, 37, 37);
-  color: white;
   border: none;
   border-radius: 0.3rem;
+  color: white;
+  * {
+    color: white;
+  }
 }
 
 .view-settings__container {

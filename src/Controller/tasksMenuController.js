@@ -18,6 +18,7 @@ class TasksMenuController {
     this.view.render();
     const tasksMenu = document.getElementById("tasksMenu");
     this.tasksComponentController.init(tasksMenu);
+    this.tasksComponentController.curView.menu = "tasks";
   }
 }
 

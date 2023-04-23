@@ -15,7 +15,6 @@ export let tasksComponentView;
 export let curFilter = {};
 
 export default class TasksComponentController {
-  #isInit = false;
   constructor(tasks, menu, filter) {
     this.view = new TasksComponentView();
     this.id = (((1 + Math.random()) * 0x10000) | 0).toString(4).substring(1);
@@ -48,7 +47,7 @@ export default class TasksComponentController {
     const resetViewBtn = document.getElementById("resetAllViewBtn");
 
     viewSettingsBtn.addEventListener("click", () => {
-      const backgroundEl = this.view.addModalBackground();
+      const backgroundEl = this.view.addModalBackground("10px");
       this.curView.isTaskViewOpen = true;
       this.view.renderViewSettings(this.id, this.curView.isTaskViewOpen);
 
@@ -61,7 +60,6 @@ export default class TasksComponentController {
 
     filterSelections.addEventListener("change", (e) => {
       e.preventDefault();
-      const backgroundEl = document.querySelector(".background-modal");
       const optionEl = e.target.options[e.target.selectedIndex].value;
       console.log(optionEl);
       if (optionEl === "tomorrow") {
@@ -73,7 +71,6 @@ export default class TasksComponentController {
         let tasksToday = removeDuplicateTasks(curTasksToday);
         this.curView.tasks = tasksToday;
         this.curView.filter = "today";
-        // this.init(parentEl);
       }
       if (optionEl === "nextWeek") {
         let tasksNextWeek = removeDuplicateTasks(curTasksNextWeek);
@@ -84,21 +81,17 @@ export default class TasksComponentController {
         let tasksThisWeek = removeDuplicateTasks(curTasksThisWeek);
         this.curView.tasks = tasksThisWeek;
         this.curView.filter = "thisWeek";
-        // this.init(parentEl);
       }
       if (optionEl === "whenever") {
         let tasksWhenever = removeDuplicateTasks(curTasksWhenever);
         this.curView.tasks = tasksWhenever;
         this.curView.filter = "whenever";
-        // this.init(parentEl);
       }
       if (optionEl === "all") {
         let tasksAll = removeDuplicateTasks(curTasks);
         this.curView.tasks = tasksAll;
         this.curView.filter = "all";
-        // this.init(parentEl);
       }
-      // backgroundEl.remove();
       this.init(parentEl);
     });
 
@@ -131,12 +124,23 @@ export default class TasksComponentController {
     });
 
     resetViewBtn.addEventListener("click", () => {
-      this.curView.filter = "all";
-      this.curView.name = "timeCreated";
-      this.curView.order.direction = "descending";
-      this.curView.order.name = "timeCreated";
-      this.curView.tasks = curTasks;
-      this.init(parentEl);
+      if (this.curView.menu === "tasks") {
+        this.curView.filter = "all";
+        this.curView.name = "timeCreated";
+        this.curView.order.direction = "descending";
+        this.curView.order.name = "timeCreated";
+        this.curView.tasks = curTasks;
+        this.init(parentEl);
+      }
+      if (this.curView.menu === "dashboard") {
+        console.log("daashboard reset");
+        this.curView.filter = "today";
+        this.curView.name = "timeCreated";
+        this.curView.order.direction = "descending";
+        this.curView.order.name = "timeCreated";
+        this.curView.tasks = curTasksToday;
+        this.init(parentEl);
+      }
     });
 
     addTaskBtn.addEventListener("click", () => {

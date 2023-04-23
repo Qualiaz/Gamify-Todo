@@ -63,7 +63,6 @@ export class TaskSettingsModel {
 
     const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
     taskDataDb.then((data) => {
-      console.log('RENDER TASK')
       taskCardController.model.cardState.id = data.id
       taskCardController.view.render(tasksComponentTasksMenu, data)
       taskCardController.view.render(tasksComponentDashboardMenu, data)  
@@ -71,8 +70,6 @@ export class TaskSettingsModel {
     })
 
     this.state.curCpId = 1
-    root.removeChild(root.children[0]);
-     
     return taskCardController
   }
 
@@ -108,6 +105,7 @@ export class TaskSettingsModel {
         setEnergyValues(1, 6);
         break;
       case "easy":
+        console.log("EASY");
         setEnergyValues(7, 19);
         break;
       case "medium":
@@ -202,12 +200,10 @@ export default class TaskCardModel {
       this.addCpDataCardState(cp);
     });
     this.cardState.createdTime = new Date().getTime();
-    console.log(this.cardState);
     return this.cardState;
   }
 
   addCpDataCardState = (name) => {
-    console.log(this.cardState.checkpoints);
     this.cardState.checkpoints.push({
       checked: false,
       name: name,
@@ -215,7 +211,6 @@ export default class TaskCardModel {
   };
 
   setCardState(data) {
-    console.log(data);
     this.cardState.name = data.name;
     this.cardState.notes = data.notes;
     this.cardState.repeat.type = data.repeat;

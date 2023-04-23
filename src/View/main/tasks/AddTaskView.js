@@ -446,6 +446,7 @@ export default class TaskSettingsView {
 
   renderRepeatEveryOtherDay() {
     const { repeatWeekContainer, repeatEveryOtherDayWrapper } = this.getElems();
+    console.log("render every other day");
     repeatEveryOtherDayWrapper.classList.remove("hidden");
     repeatWeekContainer.classList.add("hidden");
   }
@@ -595,7 +596,11 @@ export default class TaskSettingsView {
   }
 
   closeSettings() {
-    root.removeChild(root.children[0]);
+    const body = document.querySelector("body");
+    const root = document.getElementById("root");
+    body.removeChild(body.children[0]);
+    root.style.filter = "blur(0px)";
+    this.makeScrollable(false);
   }
 
   isOnlyOneCp(cpsCont) {
@@ -604,10 +609,12 @@ export default class TaskSettingsView {
 
   dragIcons(targetIcon) {
     const container = document.querySelector(".task-settings__checkpoints");
-    // const containers = document.getElementsByClassName(
-    //   ".task-settings__checkpoint"
-    // );
     swapElems(container, "task-settings__checkpoint-icon-drag");
+  }
+
+  blurRoot(blur) {
+    const root = document.querySelector("#root");
+    root.style.filter = `blur(${blur})`;
   }
 
   deleteCp(deleteIconBtn) {
@@ -617,12 +624,25 @@ export default class TaskSettingsView {
       deleteIconBtn.closest(".task-settings__checkpoint").remove();
   }
 
+  makeScrollable(isTrue = true) {
+    const root = document.getElementById("root");
+    // let originalOverflowY = window.getComputedStyle(root).overflowY;
+    if (isTrue) {
+      root.style.overflowY = "hidden";
+    }
+    if (!isTrue) {
+      root.style.overflowY = "visible";
+    }
+  }
+
   render(parentEl, state) {
     parentEl.insertAdjacentHTML(
       "afterbegin",
       this._generateMarkup(state ? state : {})
     );
-    console.log(state);
+
+    this.makeScrollable();
+
     if (state) {
       this.setSelectedRepeatOption(state.repeat);
       this.setSelectedDifficultyOption(state.difficulty);

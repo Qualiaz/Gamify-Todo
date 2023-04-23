@@ -1,12 +1,22 @@
 //////////////////
 //////////////////
 //////////////////
+@mixin slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2.4rem;
+  width: 2rem;
+  border: none;
+  border-radius: 0.2rem;
+  background-color: orange;
+}
+
 .task-settings {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
-  background-color: rgba(77, 145, 145, 0.3);
+  border-radius: 1rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -14,22 +24,36 @@
   align-items: center;
   padding: 1rem;
   z-index: 100;
-  overflow: scroll;
-  padding: 2rem;
+  overflow-y: auto;
+
+  // margin-bottom: 10rem;
+
+  animation-name: moveIn;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+
+  h3 {
+    color: rgb(243, 243, 243);
+  }
   span {
+    color: white;
+  }
+  option {
     color: white;
   }
   // pointer-events: none;
 
   &__container {
     position: absolute;
-    top: 2rem;
-    // bottom: 2rem;
+    top: 10rem;
+    border-radius: 1rem;
+    padding-bottom: 10rem;
     display: flex;
     flex-direction: column;
     margin-left: 28rem;
+    margin-bottom: 10rem;
     border-radius: 0.5rem;
-    // overflow: scroll;
+    overflow: hidden;
   }
 
   &-header {
@@ -96,11 +120,18 @@
     background-color: rgb(49, 49, 49);
     overflow: hidden;
     z-index: 11;
+    font-weight: bold;
+    span {
+      margin-bottom: 0.5rem;
+      font-size: 1.6rem;
+      margin-top: 0.5rem;
+    }
   }
 
   label {
     font-size: 1.6rem;
     margin-top: 1rem;
+    margin-bottom: 0.5rem;
     font-weight: bold;
     color: white;
   }
@@ -193,28 +224,26 @@
     input {
       -webkit-appearance: none;
       appearance: none;
-      background: transparent !important;
+      // background: transparent !important;
+      background-color: #5e5e5e;
+      color: blue;
+      height: 2.4rem;
       &:focus {
         outline: none !important;
       }
 
-      &::-webkit-slider-runnable-trackm,
-      &::-moz-range-track {
-        background-color: orange;
-        background-color: rgb(66, 65, 65);
-        height: 2rem;
-      }
+      // &::-webkit-slider-runnable-trackm,
+      // &::-moz-range-track {
+      //   background-color: orange;
+      //   background-color: rgb(66, 65, 65);
+      //   height: 2rem;
+      // }
 
-      &::-moz-range-thumb,
       &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 2.4rem;
-        width: 2rem;
-        border: none;
-        border-radius: 0.2rem;
-
-        background-color: orange;
+        @include slider;
+      }
+      &::-moz-range-thumb {
+        @include slider;
       }
     }
   }
@@ -224,6 +253,7 @@
     justify-content: stretch;
     margin-bottom: 1rem;
     // position: relative;
+    font-weight: bold;
 
     .task-settings__checkpoint {
       position: relative;
@@ -376,4 +406,18 @@
 
 .helper-mouse-down {
   cursor: grab !important;
+}
+
+@keyframes moveIn {
+  0% {
+    transform: translateY(-5%);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

@@ -3,7 +3,8 @@ import { turnElemsCursorInto } from "../../helpers/set-cursor";
 import { TaskSettingsModel } from "../../Model/main/TaskModel";
 import TaskSettingsView from "../../View/main/tasks/AddTaskView";
 
-const root = document.getElementById("root");
+// const root = document.getElementById("root");
+const body = document.querySelector("body");
 
 export default class TaskSettingsController {
   curTaskCard;
@@ -18,35 +19,30 @@ export default class TaskSettingsController {
       cpsCont,
       difficultySelect,
       energyValueDisplay,
-      repeatOptionEveryWeek,
-      repeatOptionNoRepeat,
-      repeatOptionEveryOtherDay,
+      repeatSelect,
+      // repeatOptionEveryWeek,
+      // repeatOptionNoRepeat,
+      // repeatOptionEveryOtherDay,
       repeatWeekContainer,
       closeBtn,
       doneBtn,
       deleteBtn,
       inputValues,
     } = this.view.getElems();
-    console.log(deleteBtn);
     // console.log(doneBtn);
     doneBtn.addEventListener("click", (e) => {
-      // const taskSettingsValues = this.view.getElems()
-      // console.log(values());
-      // if task exists
-
-      // console.log(inputValues());
       if (this.curTaskCard) {
         const cardState = this.curTaskCard.model.setCardState(inputValues());
         this.curTaskCard.view.setCardData(cardState);
         this.model.state = cardState;
         this.model.updateTaskDb(cardState);
         this.curTaskCard.view.setCardData(cardState);
-        root.removeChild(root.children[0]);
+        this.view.closeSettings();
       }
-      // if task doesn't exist
+      // if task is new
       else {
-        console.log(inputValues());
         const taskCardController = this.model.addTask(inputValues());
+        this.view.closeSettings();
         taskCardController.then((controller) => {
           controller.model.taskSettingsController = this;
           this.curTaskCard = controller;
@@ -75,20 +71,15 @@ export default class TaskSettingsController {
     ///////////////////////////////////
     ////////////// REPEAT /////////////
     ///////////////////////////////////
-    repeatOptionNoRepeat.addEventListener("click", () => {
-      this.view.renderNoRepeat();
-    });
+    repeatSelect.addEventListener("change", (e) => {
+      if (e.target.value === "no-repeat") this.view.renderNoRepeat();
+      if (e.target.value === "every-other-day")
+        this.view.renderRepeatEveryOtherDay();
 
-    repeatOptionEveryOtherDay.addEventListener("click", () => {
-      this.view.renderRepeatEveryOtherDay();
-    });
-
-    repeatOptionEveryWeek.addEventListener("click", () => {
-      this.view.renderRepeatEveryWeek();
+      if (e.target.value === "weekly") this.view.renderRepeatEveryWeek();
     });
 
     repeatWeekContainer.addEventListener("click", (e) => {
-      console.log(e.target.dataset.selected);
       this.view.toggleDayOfWeek(e.target);
     });
 
@@ -97,10 +88,8 @@ export default class TaskSettingsController {
     ///////////////////////////////////
 
     // Set energy range based on difficulty
-    Array.from(difficultySelect.children).forEach((diffEl) => {
-      diffEl.addEventListener("click", () => {
-        this.model.setEnergyRange(difficultySelect, energy, energyValueDisplay);
-      });
+    difficultySelect.addEventListener("change", (e) => {
+      this.model.setEnergyRange(difficultySelect, energy, energyValueDisplay);
     });
 
     // Set energy value within range
@@ -153,11 +142,12 @@ export default class TaskSettingsController {
 
   init(state) {
     if (state) {
-      console.log(state);
-      this.view.render(root, state);
+      this.view.render(body, state);
+      this.view.blurRoot("4px");
       this.view.renderExistingCardSettings();
     } else {
-      this.view.render(root);
+      this.view.render(body);
+      this.view.blurRoot("4px");
     }
     this.eventListeners();
   }

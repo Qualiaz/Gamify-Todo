@@ -17,6 +17,7 @@ class DashboardMenuController {
       "today"
     );
     dashboardTasksComponentController.init(dashboardTasks);
+    dashboardTasksComponentController.curView.menu = "dashboard";
   }
 
   initHabits() {

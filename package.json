@@ -27,6 +27,7 @@
     "easytimer.js": "^4.5.4",
     "firebase": "^9.15.0",
     "jsdom": "^20.0.3",
-    "marked": "^4.2.12"
+    "marked": "^4.2.12",
+    "spin.js": "^4.1.1"
   }
 }

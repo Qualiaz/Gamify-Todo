@@ -3,9 +3,9 @@ import Controller from "./Controller/Controller";
 class App {
   constructor() {}
 
-  init() {
+  async init() {
     // init controller
-    Controller();
+    await Controller();
     // init view
   }
 }

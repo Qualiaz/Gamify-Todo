@@ -36,6 +36,9 @@ window.onload = async () => {
         case "#/yearinpixels":
           console.log("invoke year in pixels function");
           break;
+
+        default:
+          dashboardMenuController.init();
       }
       break;
 

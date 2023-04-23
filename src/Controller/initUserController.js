@@ -17,12 +17,11 @@ export default function initUser() {
       const userDocRef = doc(db, "users", user.uid);
       (async () => {
         const doc = await getDoc(userDocRef);
-        // if user is New
+        // if user is new
         if (!doc.exists()) {
           createUserDoc(user.uid, user.email, user.displayName);
         }
       })();
-      // userHeaderView(userDocRef);
     } else {
       window.location.href = "/auth.html";
     }

@@ -52,21 +52,24 @@ export class TaskSettingsModel {
     console.log( repeatEveryWeek)
     if (!this.validFormCheck(name, repeatEveryOtherDay).ok) return
     // TO BE MOVED
-    const tasksComponent = document.querySelector('.TM__component__tasks--tasksMenu')
+    const tasksComponentTasksMenu = document.querySelector('.TM__component__tasks--tasksMenu')
+    const tasksComponentDashboardMenu = document.querySelector('.TM__component__tasks--dashboardMenu')
     //  
     const taskCardController = new TaskCardController();
     taskCardController.model.addTaskDataCardState({name, notes, startDate, repeat,repeatEveryOtherDay,repeatEveryWeek, difficulty, energy, cps})
 
     this.state = taskCardController.model.cardState
-    console.log(this.state)
     const taskData = Object.assign({}, taskCardController.model.cardState)
-    console.log(taskData)
+
     const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
     taskDataDb.then((data) => {
+      console.log('RENDER TASK')
       taskCardController.model.cardState.id = data.id
-      taskCardController.view.render(tasksComponent, data)
+      taskCardController.view.render(tasksComponentTasksMenu, data)
+      taskCardController.view.render(tasksComponentDashboardMenu, data)  
       taskCardController.eventListeners()
     })
+
     this.state.curCpId = 1
     root.removeChild(root.children[0]);
      

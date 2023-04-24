@@ -10,24 +10,31 @@ import habitsMenuController from "./Menus/habitsMenuController";
 import Model from "../Model/main/Model";
 import { Spinner } from "spin.js";
 import { spinnerOpts } from "../helpers/spinnerOpts";
+import { setLocalHabitsFromDb } from "../Model/main/HabitModel";
+import View from "../View/View";
+
 export default async function Controller() {
+  const model = new Model();
+  const view = new View();
+  view.render();
+
   const main = document.getElementById("main");
   const spinner = new Spinner(spinnerOpts).spin(main);
 
   initUser();
-  const model = new Model();
+
   await createTasksFromDb();
-  await model.setLocalHabitsFromDb();
+  await setLocalHabitsFromDb();
   await model.setLocalEnergy();
   await model.setDbEnergy();
 
   const energyNav = document.getElementById("energyNav");
-  model.getDbEnergy().then((energy) => (energyNav.innerText = energy));
+  model.getDbEnergy().then((energy) => view.renderEnergy(energy));
+
   spinner.stop();
 
   const nav = document.getElementById("nav");
   const menuBtns = nav.querySelectorAll("a");
-  console.log(main.children);
 
   menuBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -46,7 +53,6 @@ export default async function Controller() {
           window.location.href = "/#/projects";
           console.log("projects page");
           break;
-
         case "habits":
           habitsMenuController();
           window.location.href = "/#/habits";
@@ -58,7 +64,7 @@ export default async function Controller() {
       }
     });
   });
-  //
+
   // SIGN OUT
   const signoutBtn = document.getElementById("signoutBtn");
   signoutBtn.addEventListener("click", (e) => {

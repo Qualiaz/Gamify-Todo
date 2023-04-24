@@ -1,5 +1,4 @@
 import "./Dashboard.scss";
-const main = document.getElementById("main");
 
 export default class DashboardMenuView {
   _generateMarkup() {
@@ -21,6 +20,7 @@ export default class DashboardMenuView {
   }
 
   render() {
+    const main = document.getElementById("main");
     main.insertAdjacentHTML("beforeend", this._generateMarkup());
   }
 }

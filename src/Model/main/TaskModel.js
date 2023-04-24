@@ -9,11 +9,13 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
+
 import TaskCardController, {
   getTask,
 } from "../../Controller/TaskCardController";
 import { auth, db } from "../../firebase/config";
 import TaskSettingsController from "../../Controller/Tasks/AddTaskController";
+import Model from "./Model";
 
 export const curTasks = [];
 export const curTasksToday = [];
@@ -170,7 +172,7 @@ export class TaskSettingsModel {
   }
 }
 
-export default class TaskCardModel {
+export default class TaskCardModel extends Model {
   #stopwatch = new Timer();
   cardState = {
     checked: false,
@@ -247,22 +249,16 @@ export default class TaskCardModel {
 
   checkCheckpoint(clickedId, isChecked) {
     if (isChecked) {
-      // console.log(this.cardState);
       this.cardState.checkpoints.forEach((cp) => {
-        // if (cp.id === clickedId.replace("Unfinished", "")) {
-        console.log(cp);
         cp.checked = true;
         this.sendToDb.updateIsCpChecked(true, clickedId, this.cardState.id);
-        // }
       });
     }
     //
     else {
       this.cardState.checkpoints.forEach((cp) => {
-        // if (cp.id === clickedId.replace("Finished", "")) {
         cp.checked = false;
         this.sendToDb.updateIsCpChecked(false, clickedId, this.cardState.id);
-        // }
       });
     }
   }
@@ -280,10 +276,10 @@ export default class TaskCardModel {
     return taskIndex;
   }
 
-  checkTask(isChecked, id = this.cardState.id) {
+  async checkTask(isChecked, id = this.cardState.id) {
     this.cardState.checked = isChecked;
     this.sendToDb.updateChecked(isChecked, id);
-    console.log(this.cardState.energy);
+    await this.initEnergy();
   }
 
   openTaskSettings() {

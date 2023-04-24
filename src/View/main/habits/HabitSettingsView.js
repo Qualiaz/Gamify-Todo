@@ -1,5 +1,3 @@
-const root = document.getElementById("root");
-
 export default class HabitSettingsView {
   _generateMarkup({ id }) {
     return `
@@ -234,6 +232,7 @@ export default class HabitSettingsView {
   }
 
   render(habitData = null) {
+    const root = document.getElementById("root");
     root.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(habitData ? habitData : {})

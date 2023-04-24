@@ -5,32 +5,13 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import HabitCardController from "../../Controller/Habits/HabitCardController";
-import HabitSettingsController from "../../Controller/Habits/HabitSettingsController";
 import { auth, db } from "../../firebase/config";
-import HabitModel, { allHabits } from "./HabitModel";
 
 export const state = {
   totalEnergy: 0,
 };
 
 export default class Model {
-  async setLocalHabitsFromDb() {
-    const docUserRef = doc(db, "users", auth.currentUser.uid);
-    const colHabitsRef = collection(docUserRef, "habits");
-    await getDocs(colHabitsRef).then((snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        const habitCardController = new HabitCardController();
-        const habitData = habitCardController.model.createHabitData(doc.data());
-        habitCardController.model.habitData.id = doc.id;
-        habitCardController.settingsController.model.habitData = habitData;
-        habitCardController.settingsController.model.isCardCreated = true;
-        allHabits.push(habitCardController);
-        console.log(habitCardController.model);
-      });
-    });
-  }
-
   async getEnergyTasks() {
     let totalEnergyFromTasks;
     const energyArr = [];
@@ -98,6 +79,7 @@ export default class Model {
   async initEnergy() {
     await this.getEnergyHabits();
     await this.setLocalEnergy();
+    await this.getEnergyTasks();
     this.setDbEnergy();
   }
 }

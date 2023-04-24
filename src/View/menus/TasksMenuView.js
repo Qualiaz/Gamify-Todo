@@ -1,4 +1,3 @@
-const main = document.getElementById("main");
 export default class TasksMenuView {
   _generateMarkup() {
     return `
@@ -9,6 +8,7 @@ export default class TasksMenuView {
   }
 
   render() {
+    const main = document.getElementById("main");
     main.insertAdjacentHTML("beforeend", this._generateMarkup());
   }
 }

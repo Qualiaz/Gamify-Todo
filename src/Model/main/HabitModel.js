@@ -3,15 +3,17 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDocs,
   updateDoc,
 } from "firebase/firestore";
 import HabitCardController from "../../Controller/Habits/HabitCardController";
 import HabitSettingsController from "../../Controller/Habits/HabitSettingsController";
 import { auth, db } from "../../firebase/config";
 import { state } from "./Model";
-export const allHabits = [];
+
 import Model from "./Model";
 
+export const allHabits = [];
 export default class HabitModel extends Model {
   habitData;
   isCardCreated;
@@ -232,4 +234,20 @@ export default class HabitModel extends Model {
     const colHabitsRef = collection(docUserRef, "habits");
     return colHabitsRef;
   }
+}
+
+export async function setLocalHabitsFromDb() {
+  const docUserRef = doc(db, "users", auth.currentUser.uid);
+  const colHabitsRef = collection(docUserRef, "habits");
+  await getDocs(colHabitsRef).then((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      const habitCardController = new HabitCardController();
+      const habitData = habitCardController.model.createHabitData(doc.data());
+      habitCardController.model.habitData.id = doc.id;
+      habitCardController.settingsController.model.habitData = habitData;
+      habitCardController.settingsController.model.isCardCreated = true;
+      allHabits.push(habitCardController);
+      console.log(habitCardController.model);
+    });
+  });
 }

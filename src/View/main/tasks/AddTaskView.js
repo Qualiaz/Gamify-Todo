@@ -3,7 +3,8 @@ import iconDrag from "./assets/icon-drag.svg";
 import iconEnergy from "./assets/energy-icon.svg";
 import { swapElems } from "../../../helpers/drag";
 import { formatStartDate } from "../../../helpers/date";
-export default class TaskSettingsView {
+import View from "../../View";
+export default class TaskSettingsView extends View {
   _generateMarkup({
     name,
     notes,
@@ -608,8 +609,7 @@ export default class TaskSettingsView {
     const body = document.querySelector("body");
     const root = document.getElementById("root");
     body.removeChild(body.children[0]);
-    root.style.filter = "blur(0px)";
-    // this.makeScrollable(false);
+    root.style.filter = "none";
   }
 
   isOnlyOneCp(cpsCont) {

@@ -28,10 +28,20 @@ export default class TaskCardController {
       if (clickedId === `taskCheckboxUnfinished-${id}`) {
         this.model.checkTask(true);
         this.view.renderToggleCheckTask(id);
+        this.model.initEnergy().then(() => {
+          this.model
+            .getDbEnergy()
+            .then((energy) => this.view.renderEnergy(energy));
+        });
       }
       if (clickedId === `taskCheckboxFinished-${id}`) {
         this.model.checkTask(false);
         this.view.renderToggleCheckTask(id);
+        this.model.initEnergy().then(() => {
+          this.model
+            .getDbEnergy()
+            .then((energy) => this.view.renderEnergy(energy));
+        });
       }
       if (clickedId === `cardToggleIcon-${id}`) {
         this.model.toggleInfo();

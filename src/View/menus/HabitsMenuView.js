@@ -1,5 +1,3 @@
-const main = document.getElementById("main");
-
 class HabitsMenuView {
   _generateMarkup() {
     return `<section id="habitsMenu">
@@ -8,6 +6,7 @@ class HabitsMenuView {
   }
 
   render() {
+    const main = document.getElementById("main");
     main.insertAdjacentHTML("beforeend", this._generateMarkup());
   }
 }

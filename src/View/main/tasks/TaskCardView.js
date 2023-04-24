@@ -5,8 +5,8 @@ import energyIcon from "./assets/energy-icon.svg";
 import pauseTimerIcon from "./assets/pauseTimer-icon.svg";
 import playTimerIcon from "./assets/playTimer-icon.svg";
 import { marked } from "marked";
-
-export default class TaskCardView {
+import View from "../../View";
+export default class TaskCardView extends View {
   //prettier-ignore
   _generateMarkup({name,difficulty,checked,repeat,date,energy,id,isInfoToggled,isTimerToggled,timeTracked,notes,}) {
     return `

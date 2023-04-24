@@ -3,7 +3,6 @@ import App from "../App";
 import { dashboardMenuController } from "../Controller/dashboardController";
 import { tasksMenuController } from "../Controller/tasksMenuController";
 import habitsMenuController from "../Controller/Menus/habitsMenuController";
-// document.getElementById("root").style.backgroundColor = "red";
 
 document.addEventListener("DOMContentLoaded", () => {
   const rootEl = document.getElementById("root");

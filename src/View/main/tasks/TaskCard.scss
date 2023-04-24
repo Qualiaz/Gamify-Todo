@@ -79,11 +79,24 @@
       display: flex;
       justify-content: space-between;
       flex: 1;
+      &:hover {
+        cursor: pointer;
+      }
     }
+    span {
+      &:hover {
+        cursor: default;
+      }
+    }
+
     &__btns {
       display: flex;
       justify-content: center;
       align-items: center;
+
+      &:hover {
+        cursor: default;
+      }
 
       & > :first-child {
         margin-right: 1rem;

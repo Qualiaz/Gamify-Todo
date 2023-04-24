@@ -29,7 +29,7 @@ export default class TaskSettingsController {
       deleteBtn,
       inputValues,
     } = this.view.getElems();
-    // console.log(doneBtn);
+
     doneBtn.addEventListener("click", (e) => {
       if (this.curTaskCard) {
         const cardState = this.curTaskCard.model.setCardState(inputValues());
@@ -104,11 +104,8 @@ export default class TaskSettingsController {
     // Add checkpoint
     cpsCont.addEventListener("keypress", (e) => {
       if (e.key === "Enter") {
-        console.log(e.target);
-        console.log(this.model.state.curCpId);
         if (this.model.isCpElemFocusedLast(e.target)) {
-          const cpId = this.model.incrementCurCpId();
-          this.view.renderNewCheckpoint(cpId);
+          this.view.renderNewCheckpoint(this.model.getCurCpId());
         }
       }
     });
@@ -143,12 +140,11 @@ export default class TaskSettingsController {
   init(state) {
     if (state) {
       this.view.render(body, state);
-      this.view.blurRoot("4px");
-      this.view.renderExistingCardSettings();
+      this.view.renderExistingCardSettings(state.createdTime);
     } else {
       this.view.render(body);
-      this.view.blurRoot("4px");
     }
+    this.view.blurRoot("4px");
     this.eventListeners();
   }
 }

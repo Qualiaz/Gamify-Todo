@@ -2,7 +2,7 @@ import iconDelete from "./assets/delete-icon.svg";
 import iconDrag from "./assets/icon-drag.svg";
 import iconEnergy from "./assets/energy-icon.svg";
 import { swapElems } from "../../../helpers/drag";
-
+import { formatStartDate } from "../../../helpers/date";
 export default class TaskSettingsView {
   _generateMarkup({
     name,
@@ -21,7 +21,9 @@ export default class TaskSettingsView {
      <div id="taskSettingsContainer" class="task-settings__container">
     <div id="taskSettingsHeader" class="task-settings__header task-settings-header">
       <div id="taskSettingsHeaderNameWrapper" class="task-settings-header__name-wrapper">
-        <h3 id="taskSettingsHeaderName" class="task-settings-header__name">Add Task</h3>
+        <h3 id="taskSettingsHeaderName" class="task-settings-header__name">${
+          name ? "Change Task" : "Add Task"
+        }</h3>
       </div>
       <div id="taskSettingsHeaderBtnsContainer" class="task-settings-header__btns-container">
         <div id="taskSettingsHeaderBtnCancelWrapper" class="task-settings-header__btn-cancel-wrapper">
@@ -48,7 +50,7 @@ export default class TaskSettingsView {
       </div>
       <div id="taskSettingsDateWrapper" class="task-settings__date task-settings__el-container">
          <label id="taskSettingsStartDateLabel" for="taskSettingsStartDate">Start Date</label>
-         <input id="taskSettingsStartDate" type="date" name="date" min=${
+         <input id="taskSettingsStartDate" class="task-settings__start-date" type="date" name="date" min=${
            new Date().toISOString().split("T")[0]
          } value="${
       startDate ? startDate.replace("/", "-").replace("/", "-") : ""
@@ -217,10 +219,14 @@ export default class TaskSettingsView {
       `;
   }
 
-  _generateExistingCardMarkup() {
+  _generateExistingCardMarkup(createdTime) {
+    let date = new Date(createdTime);
     return `
-      <div>
-        <button type="button" id="taskSettingsBtnDelete">Delete</button>
+      <div class="task-settings__footer">
+        <button type="button" class="task-settings__delete-btn" id="taskSettingsBtnDelete">Delete</button>
+        <span>${date.getDate()} / ${
+      date.getMonth() + 1
+    } / ${date.getFullYear()}</span>
       </div>
   `;
   }
@@ -236,7 +242,7 @@ export default class TaskSettingsView {
     const mainButtonsCont = document.getElementById(
       `taskSettingsButtonsContainer`
     );
-    console.log(mainButtonsCont);
+
     const name = document.getElementById("taskSettingsName");
     const notes = document.getElementById("taskSettingsNotes");
     const startDate = document.getElementById("taskSettingsStartDate");
@@ -395,9 +401,12 @@ export default class TaskSettingsView {
     };
   }
 
-  renderExistingCardSettings(id) {
+  renderExistingCardSettings(createdTime) {
     const { cpsCont } = this.getElems();
-    cpsCont.insertAdjacentHTML("afterend", this._generateExistingCardMarkup());
+    cpsCont.insertAdjacentHTML(
+      "afterend",
+      this._generateExistingCardMarkup(createdTime)
+    );
 
     const { deleteBtn } = this.getElems();
     console.log(deleteBtn);
@@ -600,7 +609,7 @@ export default class TaskSettingsView {
     const root = document.getElementById("root");
     body.removeChild(body.children[0]);
     root.style.filter = "blur(0px)";
-    this.makeScrollable(false);
+    // this.makeScrollable(false);
   }
 
   isOnlyOneCp(cpsCont) {
@@ -624,24 +633,11 @@ export default class TaskSettingsView {
       deleteIconBtn.closest(".task-settings__checkpoint").remove();
   }
 
-  makeScrollable(isTrue = true) {
-    const root = document.getElementById("root");
-    // let originalOverflowY = window.getComputedStyle(root).overflowY;
-    if (isTrue) {
-      root.style.overflowY = "hidden";
-    }
-    if (!isTrue) {
-      root.style.overflowY = "visible";
-    }
-  }
-
   render(parentEl, state) {
     parentEl.insertAdjacentHTML(
       "afterbegin",
       this._generateMarkup(state ? state : {})
     );
-
-    this.makeScrollable();
 
     if (state) {
       this.setSelectedRepeatOption(state.repeat);

@@ -20,20 +20,26 @@ export const curTasksToday = [];
 export const curTasksTomorrow = [];
 export const curTasksThisWeek = [];
 export const curTasksWhenever = [];
-const root = document.getElementById("root");
 
 export class TaskSettingsModel {
-  state = {
-    curCpId: 1,
-  };
+  // state = {
+  //   curCpId: 1,
+  // };
 
-  incrementCurCpId() {
-    return ++this.state.curCpId;
-  }
+  // incrementCurCpId() {
+  //   return ++this.state.curCpId;
+  // }
 
   isCpElemFocusedLast(cpEl) {
     const curCpCont = cpEl.closest(".task-settings__checkpoint");
     return curCpCont.nextElementSibling ? false : true;
+  }
+
+  getCurCpId() {
+    const cpsContainer = document.getElementById(
+      "taskSettingsCheckpointsContainer"
+    );
+    return ++cpsContainer.lastElementChild.id.split("-")[1];
   }
 
   getTasksCol() {
@@ -64,8 +70,10 @@ export class TaskSettingsModel {
     const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
     taskDataDb.then((data) => {
       taskCardController.model.cardState.id = data.id
-      taskCardController.view.render(tasksComponentTasksMenu, data)
-      taskCardController.view.render(tasksComponentDashboardMenu, data)  
+      if (tasksComponentTasksMenu)
+        taskCardController.view.render(tasksComponentTasksMenu, data)
+      if (tasksComponentDashboardMenu)
+        taskCardController.view.render(tasksComponentDashboardMenu, data)  
       taskCardController.eventListeners()
     })
 
@@ -105,7 +113,6 @@ export class TaskSettingsModel {
         setEnergyValues(1, 6);
         break;
       case "easy":
-        console.log("EASY");
         setEnergyValues(7, 19);
         break;
       case "medium":
@@ -276,6 +283,7 @@ export default class TaskCardModel {
   checkTask(isChecked, id = this.cardState.id) {
     this.cardState.checked = isChecked;
     this.sendToDb.updateChecked(isChecked, id);
+    console.log(this.cardState.energy);
   }
 
   openTaskSettings() {

@@ -232,13 +232,6 @@
         outline: none !important;
       }
 
-      // &::-webkit-slider-runnable-trackm,
-      // &::-moz-range-track {
-      //   background-color: orange;
-      //   background-color: rgb(66, 65, 65);
-      //   height: 2rem;
-      // }
-
       &::-webkit-slider-thumb {
         @include slider;
       }
@@ -248,19 +241,31 @@
     }
   }
 
+  &__start-date {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__start-date::-webkit-calendar-picker-indicator {
+    display: block;
+    top: 0;
+    left: 0;
+    position: absolute;
+    transform: scale(12);
+    width: 100%;
+  }
+
   &__checkpoints {
     display: flex;
     justify-content: stretch;
-    margin-bottom: 1rem;
+    margin-bottom: 0.3rem;
     // position: relative;
     font-weight: bold;
 
     .task-settings__checkpoint {
       position: relative;
-      input {
-        // width: 100%;
+      input:not(:last-child) {
         margin-bottom: 1rem;
-        // outline: 1px solid red;
       }
 
       &-icons-container {
@@ -303,8 +308,8 @@
     }
   }
 
-  // Not valid form
-  &__name {
+  &__start &__name {
+    // Not valid form
     position: relative;
     &-error {
       color: red;
@@ -326,6 +331,23 @@
       right: 0;
       font-size: 1.4rem;
     }
+  }
+
+  &__delete-btn {
+    background: none;
+    color: rgb(189, 1, 1);
+    font-weight: bold;
+    font-size: 1.8rem;
+    border: none;
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
   }
 }
 

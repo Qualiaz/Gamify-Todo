@@ -52,11 +52,13 @@ export default class TasksComponentView {
               </select>       
             </div>
             <div class="view-settings__order-type">
+              
               <button class="${
                 view.order.direction === "ascending"
                   ? "view-settings__order-btn__active"
                   : ""
               }" id="taskSettingsAscBtn-${id}">Ascending</button>
+              
               <button class="${
                 view.order.direction === "descending"
                   ? "view-settings__order-btn__active"
@@ -209,10 +211,10 @@ export default class TasksComponentView {
   }
 
   addModalBackground() {
-    const body = document.querySelector("body");
+    const body = document.querySelector("#root");
     const background = document.createElement("div");
     background.classList.add("background-modal");
-    body.prepend(background);
+    body.append(background);
     return background;
   }
 

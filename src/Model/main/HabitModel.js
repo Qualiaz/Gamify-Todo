@@ -8,10 +8,11 @@ import {
 import HabitCardController from "../../Controller/Habits/HabitCardController";
 import HabitSettingsController from "../../Controller/Habits/HabitSettingsController";
 import { auth, db } from "../../firebase/config";
-
+import { state } from "./Model";
 export const allHabits = [];
+import Model from "./Model";
 
-export default class HabitModel {
+export default class HabitModel extends Model {
   habitData;
   isCardCreated;
   localStorageObj;

@@ -18,8 +18,11 @@ export default async function Controller() {
   const model = new Model();
   await createTasksFromDb();
   await model.setLocalHabitsFromDb();
-  await model.setEnergy();
+  await model.setLocalEnergy();
+  await model.setDbEnergy();
 
+  const energyNav = document.getElementById("energyNav");
+  model.getDbEnergy().then((energy) => (energyNav.innerText = energy));
   spinner.stop();
 
   const nav = document.getElementById("nav");

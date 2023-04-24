@@ -27,9 +27,15 @@ export default class HabitCardController {
     );
 
     habitCardPositiveBtn.addEventListener("click", (e) => {
+      const energyNav = document.getElementById("energyNav");
       habitCardPositiveStreak.innerText = `+ ${++this.model.habitData
         .streakPositive}`;
       this.model.updateHabitDb();
+      this.model.initEnergy().then(() => {
+        this.model
+          .getDbEnergy()
+          .then((energy) => (energyNav.innerText = energy));
+      });
     });
 
     habitCardNegativeBtn.addEventListener("click", (e) => {

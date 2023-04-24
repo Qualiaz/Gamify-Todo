@@ -197,6 +197,7 @@ export default class HabitCardView {
   }
 
   render(habitComponent, cardState) {
+    console.log(cardState);
     habitComponent.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(cardState)
@@ -217,7 +218,6 @@ export default class HabitCardView {
   }
 
   renderState(cardState) {
-    console.log(cardState);
     this.toggleCard(cardState.id, cardState.isCardToggle);
   }
 

@@ -23,13 +23,13 @@ export default class HabitsComponentController {
   }
 
   renderHabits() {
+    console.log(allHabits);
     allHabits.forEach((habit) => {
       habit.init();
     });
   }
 
   init(parentEl) {
-    console.log("asdasd");
     this.view.render(parentEl);
     this.renderHabits();
     this.eventListeners();

@@ -18,11 +18,10 @@ export default async function Controller() {
   const model = new Model();
   await createTasksFromDb();
   await model.setLocalHabitsFromDb();
+  await model.setEnergy();
 
   spinner.stop();
 
-  // dashboardMenuController.init();
-  console.log("doneController");
   const nav = document.getElementById("nav");
   const menuBtns = nav.querySelectorAll("a");
   console.log(main.children);

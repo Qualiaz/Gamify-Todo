@@ -57,15 +57,24 @@ export default class HabitModel {
     return (this.elems = elems);
   }
 
-  createHabitData({ name, difficulty, energy, notes }) {
+  createHabitData({
+    name,
+    difficulty,
+    energy,
+    notes,
+    id,
+    streakNegative,
+    streakPositive,
+  }) {
     this.habitData = {
       name: name,
       difficulty: difficulty,
       energy: Number(energy),
       notes: notes,
-      streakPositive: 0,
-      streakNegative: 0,
+      streakPositive: streakPositive,
+      streakNegative: streakNegative,
       isCardToggle: true,
+      id: id,
     };
     return this.habitData;
   }

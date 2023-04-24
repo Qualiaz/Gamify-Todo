@@ -33,6 +33,55 @@ export default class View {
       </sidebar>`;
   }
 
+  _generatePopupEnergyMarkup(energy, type = "positive") {
+    return `
+        <div class="energy-popup__container energy-popup__container--${type}">
+           <span>${type === "positive" ? "Gained" : "Lost"} ${energy}</span>
+           <img id="popupEnergyIcon" src="./energy-icon.svg" alt="e" />
+        </div>   
+  `;
+  }
+
+  createEnergyPopupsContainer() {
+    const popupsContainer = document.createElement("div");
+    popupsContainer.id = "popupsEnergyContainer";
+    popupsContainer.classList.add("energy-popups__container");
+    const root = document.getElementById("root");
+    root.appendChild(popupsContainer);
+  }
+
+  addPopupEnergyToContainer(energy, type = "positive") {
+    const popupsContainer = document.getElementById("popupsEnergyContainer");
+
+    popupsContainer.insertAdjacentHTML(
+      "beforeend",
+      this._generatePopupEnergyMarkup(energy, type)
+    );
+  }
+
+  removePopupEnergyFromContainer() {
+    const container = document.querySelector(".energy-popups__container");
+    const popups = document.querySelectorAll(".energy-popup__container");
+
+    popups.forEach((popup) => {
+      popup.addEventListener("animationend", () => {
+        popup.remove();
+        if (container.children.length === 0) {
+          container.remove();
+        }
+      });
+    });
+  }
+
+  initEnergyPopup(energy, type = "positive") {
+    const popupsEnergyContainer = document.getElementById(
+      "popupsEnergyContainer"
+    );
+    if (!popupsEnergyContainer) this.createEnergyPopupsContainer();
+    this.addPopupEnergyToContainer(energy, type);
+    this.removePopupEnergyFromContainer();
+  }
+
   renderEnergy(energy) {
     const energyNav = document.getElementById("energyNav");
     energyNav.innerText = energy;

@@ -2,8 +2,9 @@ import "./assets/habit-plus.svg";
 import "./assets/habit-minus.svg";
 import "./assets/toggle.svg";
 import { marked } from "marked";
+import View from "../../View";
 
-export default class HabitCardView {
+export default class HabitCardView extends View {
   _generateMarkup({ id, name, notes, energy, streakPositive, streakNegative }) {
     return `
     <div id="habitCard-${id}">
@@ -222,7 +223,6 @@ export default class HabitCardView {
   }
 
   toggleCard(id, isToggled) {
-    console.log(isToggled);
     const { habitCardMainInfoContainer, habitCardToggleImgBtn } =
       this._getElems(id);
     if (isToggled) {

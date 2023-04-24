@@ -32,9 +32,10 @@ export default class HabitCardController {
         .streakPositive}`;
       this.model.updateHabitDb();
       this.model.initEnergy().then(() => {
-        this.model
-          .getDbEnergy()
-          .then((energy) => (energyNav.innerText = energy));
+        this.model.getDbEnergy().then((energy) => {
+          this.view.initEnergyPopup(this.model.habitData.energy);
+          energyNav.innerText = energy;
+        });
       });
     });
 

@@ -7,8 +7,7 @@
 @import "./style/layout/root";
 @import "./style/layout/sidebar";
 @import "./style/layout/main";
-
-// tasks
+@import "./style/popup/energy-popup"; // tasks
 @import "./View/menus/TasksMenu";
 @import "./View/main/tasks/TaskCard";
 @import "./View/main/tasks/taskSettings";

@@ -1,0 +1,62 @@
+// background-color: rgb(5, 87, 46); -- positive
+// background-color: rgb(151, 29, 29); -- negative
+
+.energy-popups__container {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  padding: 1rem;
+  bottom: 3rem;
+  right: 3rem;
+  //   outline: 2px solid red;
+  gap: 1rem;
+  transition: all 1s ease;
+}
+
+.energy-popup__container {
+  background-color: rgb(151, 29, 29);
+  border-radius: 1rem;
+  box-shadow: 0px 4px 9px rgba(5, 5, 5, 0.9);
+  z-index: 99999;
+  padding: 1.5rem;
+
+  display: flex;
+  gap: 0.3rem;
+  justify-content: center;
+  align-items: center;
+
+  transition: all 1s ease;
+  animation-name: fadeInUp;
+  animation-duration: 4.5s;
+
+  span {
+    font-weight: bold;
+    color: rgb(233, 231, 231);
+    &:hover {
+      cursor: default;
+    }
+  }
+
+  &--positive {
+    background-color: rgb(5, 87, 46);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}

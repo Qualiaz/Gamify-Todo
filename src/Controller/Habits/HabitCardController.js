@@ -15,9 +15,11 @@ export default class HabitCardController {
     const habitCardPositiveBtn = document.getElementById(
       `habitCardPositiveBtn-${id}`
     );
+
     const habitCardNegativeBtn = document.getElementById(
       `habitCardNegativeBtn-${id}`
     );
+
     const habitCardPositiveStreak = document.getElementById(
       `habitCardPositiveStreak-${id}`
     );
@@ -57,6 +59,7 @@ export default class HabitCardController {
         this.model.habitData.isCardToggle = !this.model.habitData.isCardToggle;
         this.view.toggleCard(id, this.model.habitData.isCardToggle);
         this.model.setLocalStorage();
+        this.model.updateHabitDb();
       }
     });
   }
@@ -64,7 +67,7 @@ export default class HabitCardController {
   render() {
     const container = document.querySelector(".habits-component__container");
     // const cardState = this.model.getLocalStorage();
-    console.log(this.model.habitData);
+    // console.log(this.model.habitData);
     // if (!!cardState) {
     //   this.view.render(container, cardState);
     // } else {

@@ -12,6 +12,7 @@ import { Spinner } from "spin.js";
 import { spinnerOpts } from "../helpers/spinnerOpts";
 import { setLocalHabitsFromDb } from "../Model/main/HabitModel";
 import View from "../View/View";
+import { yipMenuController } from "./Menus/YipMenuController";
 
 export default async function Controller() {
   const model = new Model();
@@ -27,8 +28,6 @@ export default async function Controller() {
   await setLocalHabitsFromDb();
   await model.setLocalEnergy();
   await model.setDbEnergy();
-
-  const energyNav = document.getElementById("energyNav");
   model.getDbEnergy().then((energy) => view.renderEnergy(energy));
 
   spinner.stop();
@@ -60,6 +59,7 @@ export default async function Controller() {
         case "yearInPixels":
           window.location.href = "/#/yearinpixels";
           console.log("year in pixels page");
+          yipMenuController.init();
           break;
       }
     });

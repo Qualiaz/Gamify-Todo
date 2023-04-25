@@ -68,6 +68,7 @@ export default class HabitModel extends Model {
     id,
     streakNegative,
     streakPositive,
+    isCardToggle,
   }) {
     this.habitData = {
       name: name,
@@ -76,7 +77,7 @@ export default class HabitModel extends Model {
       notes: notes,
       streakPositive: streakPositive,
       streakNegative: streakNegative,
-      isCardToggle: true,
+      isCardToggle: isCardToggle,
       id: id,
     };
     return this.habitData;
@@ -121,6 +122,7 @@ export default class HabitModel extends Model {
       notes: habitData.notes,
       streakPositive: habitData.streakPositive,
       streakNegative: habitData.streakNegative,
+      isCardToggle: habitData.isCardToggle,
     });
   }
 
@@ -242,12 +244,13 @@ export async function setLocalHabitsFromDb() {
   await getDocs(colHabitsRef).then((snapshot) => {
     snapshot.docs.forEach((doc) => {
       const habitCardController = new HabitCardController();
+      console.log(doc.data());
       const habitData = habitCardController.model.createHabitData(doc.data());
+      console.log(habitData);
       habitCardController.model.habitData.id = doc.id;
       habitCardController.settingsController.model.habitData = habitData;
       habitCardController.settingsController.model.isCardCreated = true;
       allHabits.push(habitCardController);
-      console.log(habitCardController.model);
     });
   });
 }

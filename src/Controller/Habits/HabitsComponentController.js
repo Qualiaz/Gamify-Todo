@@ -23,7 +23,6 @@ export default class HabitsComponentController {
   }
 
   renderHabits() {
-    console.log(allHabits);
     allHabits.forEach((habit) => {
       habit.init();
     });

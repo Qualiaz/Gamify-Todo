@@ -22,7 +22,7 @@ export default class Model {
         const energy = Number(doc.data().energy);
         const isChecked = doc.data().checked;
         if (isChecked) {
-          // TODO - ONCE ADDED RESET ON TIME ADD STREAK COUNTER AND MULTIPLY BY ENERGY
+          // TODO - ONCE ADDED RESET ON TIME ADD STREAK COUNTER
           energyArr.push(energy);
         }
       });

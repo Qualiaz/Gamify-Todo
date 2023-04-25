@@ -3,7 +3,7 @@ import App from "../App";
 import { dashboardMenuController } from "../Controller/dashboardController";
 import { tasksMenuController } from "../Controller/tasksMenuController";
 import habitsMenuController from "../Controller/Menus/habitsMenuController";
-
+import { yipMenuController } from "../Controller/Menus/YipMenuController";
 document.addEventListener("DOMContentLoaded", () => {
   const rootEl = document.getElementById("root");
   const authPageEl = document.getElementById("authPage");
@@ -33,7 +33,7 @@ window.onload = async () => {
           break;
 
         case "#/yearinpixels":
-          console.log("invoke year in pixels function");
+          yipMenuController.init();
           break;
 
         default:

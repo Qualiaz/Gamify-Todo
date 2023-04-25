@@ -6,6 +6,7 @@ import pauseTimerIcon from "./assets/pauseTimer-icon.svg";
 import playTimerIcon from "./assets/playTimer-icon.svg";
 import { marked } from "marked";
 import View from "../../View";
+
 export default class TaskCardView extends View {
   //prettier-ignore
   _generateMarkup({name,difficulty,checked,repeat,date,energy,id,isInfoToggled,isTimerToggled,timeTracked,notes,}) {

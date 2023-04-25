@@ -3,8 +3,6 @@ import TasksMenuView from "../View/menus/TasksMenuView";
 import TasksComponentController from "./TasksComponentController";
 
 class TasksMenuController {
-  isInit = false;
-
   constructor() {
     this.view = new TasksMenuView();
     this.tasksComponentController = new TasksComponentController(

@@ -7,7 +7,9 @@
 @import "./style/layout/root";
 @import "./style/layout/sidebar";
 @import "./style/layout/main";
-@import "./style/popup/energy-popup"; // tasks
+@import "./style/popup/energy-popup";
+
+// tasks
 @import "./View/menus/TasksMenu";
 @import "./View/main/tasks/TaskCard";
 @import "./View/main/tasks/taskSettings";
@@ -20,4 +22,6 @@
 @import "./View/main/habits/HabitCard";
 
 // yip
+@import "./View/menus/YipMenu";
+@import "./View/main/yip/YipCalendar";
 @import "./View/main/yip/YipComponent";

@@ -8,11 +8,11 @@ export default class YipDayController {
   }
 
   eventListeners() {
-    this.model.id;
-    document.getElementById("");
+    const id = this.model.state.id;
 
-    const textarea = document.querySelector(".yip-component__edit-textarea");
-    console.log(textarea);
+    let textarea = document.getElementById(`yipLogEditModeTextarea-${id}`);
+    const viewBtn = document.getElementById(`yipViewBtn-${id}`);
+    const editBtn = document.getElementById(`yipEditBtn-${id}`);
 
     textarea.addEventListener("keydown", (e) =>
       this.model.handler.tabIndent(e)
@@ -20,6 +20,19 @@ export default class YipDayController {
     textarea.addEventListener("keydown", (e) =>
       this.model.handler.keepBulletPointOnNewLine(e)
     );
+
+    textarea.addEventListener("input", () => {
+      this.model.changeLog(textarea.value);
+    });
+
+    viewBtn.addEventListener("click", () => {
+      this.view.renderView(this.model.state.log, id);
+    });
+
+    editBtn.addEventListener("click", () => {
+      this.view.renderEdit(this.model.state.log, id);
+      this.eventListeners();
+    });
   }
 
   init(parentEl, state = this.model.state) {

@@ -5,7 +5,7 @@ export default class YipDayModel {
     this.state.date = "Today pixel";
     this.state.viewMode = "edit";
     this.state.logTitle = "Today title";
-    this.state.log = "What have you been up to?";
+    this.state.log = "";
     this.state.moodColor = "#42BFDD";
     this.state.id = String(new Date().getTime());
   }

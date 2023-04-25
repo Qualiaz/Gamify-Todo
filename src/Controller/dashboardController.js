@@ -2,7 +2,7 @@ import { curTasksToday } from "../Model/main/TaskModel";
 import DashboardMenuView from "../View/menus/DashboardView";
 import TasksComponentController from "./TasksComponentController";
 import HabitsComponentController from "./Habits/HabitsComponentController";
-import YipComponentController from "./YipComponentController";
+import YipComponentController from "./YipDayController";
 
 class DashboardMenuController {
   constructor() {

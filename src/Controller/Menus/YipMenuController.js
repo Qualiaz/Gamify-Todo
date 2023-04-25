@@ -1,6 +1,6 @@
 import YipMenuView from "../../View/menus/YipMenuView";
 import YipCalendarController from "../YipCalendarController";
-import YipComponentController from "../YipComponentController";
+import YipComponentController from "../YipDayController";
 
 class YipMenuController {
   constructor() {
@@ -9,11 +9,14 @@ class YipMenuController {
     this.yipCalendarController = new YipCalendarController();
   }
 
+  eventListeners() {}
+
   init() {
     this.view.render();
     const yipMenu = document.getElementById("yipMenu");
     this.yipComponentController.init(yipMenu);
     this.yipCalendarController.init();
+    this.eventListeners();
   }
 }
 

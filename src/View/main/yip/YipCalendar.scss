@@ -43,7 +43,7 @@
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-auto-rows: minmax(20px, auto);
-    gap: 2px;
+    gap: 3px;
     width: 100%;
     height: 100%;
     padding: 2rem;
@@ -52,12 +52,12 @@
       display: grid;
       grid-template-rows: repeat(31, 1fr);
       align-content: start;
-      gap: 2px;
+      gap: 3px;
 
       & > * {
         height: 100%;
         // height: 20px;
-        border-radius: 0.2rem;
+        border-radius: 0.1rem;
         background-color: teal;
 
         &:hover {

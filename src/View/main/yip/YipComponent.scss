@@ -18,7 +18,10 @@
     box-shadow: 2px 2px 2px $secondary;
     background-color: #272727;
     height: 100%;
+    outline: 1px solid red;
     border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
     p,
     h3 {
       color: white;
@@ -28,6 +31,27 @@
       text-decoration: underline;
     }
   }
+
+  &__edit-mode {
+    height: 100%;
+  }
+
+  &__edit-textarea {
+    color: black;
+    background: none;
+    width: 100%;
+    padding: 2rem;
+    height: 100%;
+    border: 2px solid red;
+    font-size: 1.8rem;
+    text-align: start;
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
   &__footer {
     display: flex;
     justify-content: end;

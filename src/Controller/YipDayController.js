@@ -7,9 +7,23 @@ export default class YipDayController {
     this.model = new YipDayModel();
   }
 
-  eventListeners() {}
+  eventListeners() {
+    this.model.id;
+    document.getElementById("");
+
+    const textarea = document.querySelector(".yip-component__edit-textarea");
+    console.log(textarea);
+
+    textarea.addEventListener("keydown", (e) =>
+      this.model.handler.tabIndent(e)
+    );
+    textarea.addEventListener("keydown", (e) =>
+      this.model.handler.keepBulletPointOnNewLine(e)
+    );
+  }
 
   init(parentEl, state = this.model.state) {
     this.view.render(parentEl, state);
+    this.eventListeners();
   }
 }

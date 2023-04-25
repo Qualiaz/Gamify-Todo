@@ -2,30 +2,32 @@ import yipEditIcon from "../../../assets/images/edit-yip.svg";
 import yipViewIcon from "../../../assets/images/view-yip.svg";
 
 export default class YipDayView {
-  _generateMarkup({ date, viewMode, logTitle, log }) {
+  _generateMarkup({ date, viewMode, logTitle, log, id }) {
     return `
       <section class="yip-component">
           <div class="yip-component__header">
-            <div class="yip-header__title">Today pixels</div>
+            <div id="yipDate-${id}" class="yip-header__title">${
+      date ? date : "Today pixel"
+    }</div>
             <div class="yip-header__edit-btn-wrapper">
-              <button><img class="yip-header__edit-btn-img" src="${yipEditIcon}" alt=""></button>
+              <button id="yipEditBtn"><img class="yip-header__edit-btn-img" src="${yipEditIcon}" alt=""></button>
             </div>
             <div class="yip-header__view-btn-wrapper">
-              <button><img class="yip-header__view-btn-img" src="${yipViewIcon}" alt=""></button>
+              <button id="yipViewBtn"><img class="yip-header__view-btn-img" src="${yipViewIcon}" alt=""></button>
             </div>
           </div>
           <div class="yip-component__main">
-            <h3>${logTitle ? logTitle : "Title"}</h3>
+            <h3 id="yipLogTitle-${id}">${logTitle ? logTitle : "Title"}</h3>
             <br>
             ${
               viewMode === "edit"
-                ? this.generateEditMarkup(log)
-                : this.generateViewMarkup(log)
+                ? this.generateEditMarkup(log, id)
+                : this.generateViewMarkup(log, id)
             }           
           </div>
           <div class="yip-component__footer">
             <div class="yip-footer__color-btn-wrapper">
-              <button id="yipMoodColorBtn" class="yip-footer_color-btn"></button>
+              <button id="yipMoodColorBtn-${id}" class="yip-footer_color-btn"></button>
             </div>
           </div>
       </section>
@@ -33,28 +35,27 @@ export default class YipDayView {
   }
 
   render(parentEl, state) {
-    console.log(state);
     parentEl.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(state ? state : {})
     );
     if (state) {
-      this.setMoodColor(state.moodColor);
+      this.setMoodColor(state.moodColor, state.id);
     }
   }
 
-  generateViewMarkup(log) {
+  generateViewMarkup(log, id) {
     return `
-      <section>
+      <section id="yipLogViewMode-${id}">
         ${log}
       </section>
     `;
   }
 
-  generateEditMarkup(log) {
+  generateEditMarkup(log, id) {
     return `
-    <section>
-      ${log}
+    <section class="yip-component__edit-mode" id="yipLogEditMode-${id}">
+      <textarea class="yip-component__edit-textarea" id="yipLogEditModeInput-${id}">${log}</textarea>
     </section>
   `;
   }
@@ -63,8 +64,8 @@ export default class YipDayView {
     document.querySelector(".yip-component").remove();
   }
 
-  setMoodColor(color) {
-    const moodColorBtn = document.getElementById("yipMoodColorBtn");
+  setMoodColor(color, id) {
+    const moodColorBtn = document.getElementById(`yipMoodColorBtn-${id}`);
     moodColorBtn.style.backgroundColor = color;
   }
 }

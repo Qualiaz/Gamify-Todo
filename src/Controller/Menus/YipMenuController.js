@@ -9,7 +9,9 @@ class YipMenuController {
     this.yipCalendarController = new YipCalendarController();
   }
 
-  eventListeners() {}
+  eventListeners() {
+    // this.yipCalendarController
+  }
 
   init() {
     this.view.render();

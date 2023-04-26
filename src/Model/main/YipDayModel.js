@@ -1,5 +1,8 @@
 export default class YipDayModel {
   state = {};
+  #privateState = {
+    curMoodColorIndex: 0,
+  };
 
   constructor() {
     this.state.date = "Today pixel";
@@ -7,8 +10,19 @@ export default class YipDayModel {
     this.state.logTitle = "Today title";
     this.state.log = "";
     this.state.moodColor = "#42BFDD";
-    this.state.id = String(new Date().getTime());
+    // this.state.id = String(new Date().getTime());
+    this.observers = [];
   }
+
+  obs = {
+    add: (observer) => {
+      this.observers.push(observer);
+    },
+    remove: (observer) => {
+      this.observers = this.observers.filter((obs) => obs !== observer);
+    },
+    notify: () => this.observers.forEach((obs) => obs.update(this)),
+  };
 
   changeDate(date) {
     this.state.date = date + " pixel";
@@ -30,26 +44,25 @@ export default class YipDayModel {
     this.state.log = log;
   }
 
-  changeMoodColor(color) {
-    this.state.moodColor = color;
+  nextMoodColor() {
+    const moodColors = ["awful", "sad", "good", "ok", "amazing"];
+    this.#privateState.curMoodColorIndex =
+      (this.#privateState.curMoodColorIndex + 1) % moodColors.length;
+
+    this.state.moodColor = this.getMoodColor(
+      moodColors[this.#privateState.curMoodColorIndex]
+    );
   }
 
   getMoodColor(color) {
-    if (color === "awful") {
-      return "#181116";
-    }
-    if (color === "sad") {
-      return "#891A29";
-    }
-    if (color === "good") {
-      return "#5B9A63";
-    }
-    if (color === "ok") {
-      return "#42BFDD";
-    }
-    if (color === "amazing") {
-      return "#F9B624";
-    }
+    const moodColorMap = {
+      awful: "#181116",
+      sad: "#891A29",
+      good: "#5B9A63",
+      ok: "#42BFDD",
+      amazing: "#F9B624",
+    };
+    return moodColorMap[color];
   }
 
   handler = {

@@ -46,6 +46,20 @@ export default class YipCalendarView {
     }
   }
 
+  renderCurHoveredDay(id) {
+    const hoveredDayElem = document.querySelector(".yip-calendar__hovered-day");
+    const monthDay = id.replace("yipCalendar", "");
+    const month = monthDay.replace(/[0-9]/g, "");
+    const day = monthDay.replace(/\D/g, "");
+    const formattedDate = `${month} ${day}`;
+    hoveredDayElem.textContent = formattedDate;
+  }
+
+  clearRenderCurDay() {
+    const hoveredDayElem = document.querySelector(".yip-calendar__hovered-day");
+    hoveredDayElem.textContent = "";
+  }
+
   render() {
     const yipMenu = document.getElementById("yipMenu");
     yipMenu.insertAdjacentHTML("afterbegin", this._generateMarkup());

@@ -13,10 +13,12 @@ export default class YipDayController {
     let textarea = document.getElementById(`yipLogEditModeTextarea-${id}`);
     const viewBtn = document.getElementById(`yipViewBtn-${id}`);
     const editBtn = document.getElementById(`yipEditBtn-${id}`);
+    const moodColorBtn = document.getElementById(`yipMoodColorBtn-${id}`);
 
     textarea.addEventListener("keydown", (e) =>
       this.model.handler.tabIndent(e)
     );
+
     textarea.addEventListener("keydown", (e) =>
       this.model.handler.keepBulletPointOnNewLine(e)
     );
@@ -31,7 +33,14 @@ export default class YipDayController {
 
     editBtn.addEventListener("click", () => {
       this.view.renderEdit(this.model.state.log, id);
+      // init listeners again to reselect textarea
       this.eventListeners();
+    });
+
+    moodColorBtn.addEventListener("click", () => {
+      this.model.nextMoodColor();
+      this.view.setMoodColor(this.model.state.moodColor, this.model.state.id);
+      this.model.obs.notify();
     });
   }
 

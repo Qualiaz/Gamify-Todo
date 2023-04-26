@@ -1,6 +1,6 @@
 import YipCalendarView from "../View/main/yip/YipCalendarView";
 import YipCalendarModel from "../Model/main/YipCalendarModel";
-import YipDayController from "./YipDayController";
+import { state } from "../Model/main/Model";
 
 export default class YipCalendarController {
   constructor() {
@@ -12,9 +12,14 @@ export default class YipCalendarController {
     const gridItems = document.querySelectorAll(".grid-item");
 
     gridItems.forEach((gridItem) => {
-      gridItem.addEventListener("click", (e) =>
-        this.model.handler.initYipDayController(e)
-      );
+      gridItem.addEventListener("click", (e) => {
+        this.model.handler.initYipDayController(e);
+        if (this.model.selectedDay) {
+          this.view.clearOutline(this.model.selectedDay);
+        }
+        this.model.selectedDay = e.target.id;
+        this.view.outlineSelectedDay(this.model.selectedDay);
+      });
       gridItem.addEventListener("mouseover", () =>
         this.view.renderCurHoveredDay(gridItem.id)
       );
@@ -23,6 +28,11 @@ export default class YipCalendarController {
       );
     });
   };
+
+  setMoodColors() {
+    const daysMoodColors = this.model.getDaysMoodColors();
+    this.view.setMoodColors(daysMoodColors);
+  }
 
   init() {
     this.view.render();

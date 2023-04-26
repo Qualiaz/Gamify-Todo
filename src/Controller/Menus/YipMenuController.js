@@ -1,6 +1,5 @@
 import YipMenuView from "../../View/menus/YipMenuView";
 import YipCalendarController from "../YipCalendarController";
-import YipDayController from "../YipDayController";
 import { state } from "../../Model/main/Model";
 
 class YipMenuController {
@@ -18,6 +17,8 @@ class YipMenuController {
     const yipMenu = document.getElementById("yipMenu");
     this.yipCalendarController.init();
     state.initYipDayController.init(yipMenu);
+    state.initYipDayController.model.obs.add(this.yipCalendarController.model);
+    this.yipCalendarController.setMoodColors();
   }
 }
 

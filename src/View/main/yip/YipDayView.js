@@ -49,7 +49,6 @@ export default class YipDayView {
   }
 
   generateEditMarkup(log, logTitle, id) {
-    console.log(log, logTitle, id);
     return `
     <section class="yip-component__edit-mode" id="yipLogEditMode-${id}">
       <input placeholder="Title of the day" class="yip-component__edit-title-input" id="yipLogEditTitle-${id}" value="${
@@ -99,7 +98,6 @@ export default class YipDayView {
   }
 
   render(parentEl, state) {
-    console.log(state);
     parentEl.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(state ? state : {})

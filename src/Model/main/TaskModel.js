@@ -24,14 +24,6 @@ export const curTasksThisWeek = [];
 export const curTasksWhenever = [];
 
 export class TaskSettingsModel {
-  // state = {
-  //   curCpId: 1,
-  // };
-
-  // incrementCurCpId() {
-  //   return ++this.state.curCpId;
-  // }
-
   isCpElemFocusedLast(cpEl) {
     const curCpCont = cpEl.closest(".task-settings__checkpoint");
     return curCpCont.nextElementSibling ? false : true;
@@ -355,7 +347,6 @@ export default class TaskCardModel extends Model {
     },
     updateIsInfoToggled(isToggled, id) {
       const docTaskRef = getTask(id);
-      console.log(docTaskRef);
       updateDoc(docTaskRef, {
         isInfoToggled: isToggled,
       });
@@ -376,7 +367,6 @@ export default class TaskCardModel extends Model {
       const cpData = cpsData[clickedNumId];
       cpData.checked = isChecked;
       cpsData.splice(clickedNumId, 1, cpData);
-      console.log(cpsData);
       updateDoc(docTaskRef, {
         checkpoints: cpsData,
       });

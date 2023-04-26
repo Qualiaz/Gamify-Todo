@@ -1,3 +1,5 @@
+import { formatYipCalendarId } from "../../../helpers/formatYipCalendarId";
+
 export default class YipCalendarView {
   _generateMarkup() {
     return `
@@ -58,6 +60,24 @@ export default class YipCalendarView {
   clearRenderCurDay() {
     const hoveredDayElem = document.querySelector(".yip-calendar__hovered-day");
     hoveredDayElem.textContent = "";
+  }
+
+  clearOutline(id) {
+    const day = document.getElementById(id);
+    day.style.outline = "none";
+  }
+
+  outlineSelectedDay(id) {
+    const selectedDay = document.getElementById(id);
+    selectedDay.style.outline = "2px solid white";
+  }
+
+  setMoodColors(daysColors) {
+    // {April2: '#fff'}
+    for (let key in daysColors) {
+      const x = document.getElementById(`yipCalendar${key}`);
+      x.style.backgroundColor = daysColors[key];
+    }
   }
 
   render() {

@@ -43,6 +43,7 @@ export default class YipDayController {
     });
 
     moodColorBtn.addEventListener("click", () => {
+      console.log("mood");
       this.model.nextMoodColor();
       this.view.setMoodColor(this.model.state.moodColor, id);
       this.model.obs.notify();
@@ -55,9 +56,6 @@ export default class YipDayController {
 
   init(parentEl, state = this.model.state) {
     this.view.render(parentEl, state);
-    // this.model.initYipCalendarDay();
-
     this.eventListeners();
-    console.log(this.model.state.id);
   }
 }

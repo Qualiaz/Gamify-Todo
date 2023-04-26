@@ -63,6 +63,7 @@ export default class YipCalendarView {
   render() {
     const yipMenu = document.getElementById("yipMenu");
     yipMenu.insertAdjacentHTML("afterbegin", this._generateMarkup());
+    console.log("BAG PL IN MA-TA");
     this.createDaysElems();
   }
 }

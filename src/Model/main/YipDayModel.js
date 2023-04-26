@@ -7,10 +7,10 @@ export default class YipDayModel {
   constructor() {
     this.state.date = "Today pixel";
     this.state.viewMode = "edit";
-    this.state.logTitle = "Today title";
-    this.state.log = "";
+    this.state.logTitle = null;
+    this.state.log = null;
     this.state.moodColor = "#42BFDD";
-    // this.state.id = String(new Date().getTime());
+    this.state.id = String(new Date().getTime());
     this.observers = [];
   }
 
@@ -38,6 +38,7 @@ export default class YipDayModel {
 
   changeLogTitle(title) {
     this.state.logTitle = title;
+    console.log(this.state.logTitle);
   }
 
   changeLog(log) {

@@ -37,6 +37,7 @@ export default class YipCalendarModel {
         yipDayController.model.state.id = this.#formatYipCalendarId(
           e.target.id
         );
+        console.log(yipDayController.model.state.id);
         yipDayController.model.obs.add(this);
         yipDayController.view.remove();
         yipDayController.init(yipMenu);

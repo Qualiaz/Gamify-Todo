@@ -10,7 +10,8 @@ export default class YipDayController {
   eventListeners() {
     const id = this.model.state.id;
 
-    let textarea = document.getElementById(`yipLogEditModeTextarea-${id}`);
+    let textarea = document.getElementById(`yipLogEditTextarea-${id}`);
+    let titleInput = document.getElementById(`yipLogEditTitle-${id}`);
     const viewBtn = document.getElementById(`yipViewBtn-${id}`);
     const editBtn = document.getElementById(`yipEditBtn-${id}`);
     const moodColorBtn = document.getElementById(`yipMoodColorBtn-${id}`);
@@ -27,19 +28,23 @@ export default class YipDayController {
       this.model.changeLog(textarea.value);
     });
 
+    titleInput.addEventListener("input", () => {
+      this.model.changeLogTitle(titleInput.value);
+    });
+
     viewBtn.addEventListener("click", () => {
-      this.view.renderView(this.model.state.log, id);
+      this.view.renderView(this.model.state.log, this.model.state.logTitle, id);
     });
 
     editBtn.addEventListener("click", () => {
-      this.view.renderEdit(this.model.state.log, id);
-      // init listeners again to reselect textarea
+      this.view.renderEdit(this.model.state.log, this.model.state.logTitle, id);
+      // init listeners again to reselect elements
       this.eventListeners();
     });
 
     moodColorBtn.addEventListener("click", () => {
       this.model.nextMoodColor();
-      this.view.setMoodColor(this.model.state.moodColor, this.model.state.id);
+      this.view.setMoodColor(this.model.state.moodColor, id);
       this.model.obs.notify();
     });
   }
@@ -47,5 +52,6 @@ export default class YipDayController {
   init(parentEl, state = this.model.state) {
     this.view.render(parentEl, state);
     this.eventListeners();
+    console.log(this.model.state.id);
   }
 }

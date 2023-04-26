@@ -11,12 +11,6 @@ export default class YipCalendarController {
   eventListeners = () => {
     const gridItems = document.querySelectorAll(".grid-item");
 
-    // gridItems.forEach((gridItem) => {
-    //   gridItem.addEventListener("click", (e) => {
-    //     this.model.handler.initYipDayController(e);
-    //   });
-    // });
-
     gridItems.forEach((gridItem) => {
       gridItem.addEventListener("click", (e) =>
         this.model.handler.initYipDayController(e)

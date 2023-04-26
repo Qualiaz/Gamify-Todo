@@ -17,12 +17,10 @@ export default class YipDayView {
             </div>
           </div>
           <div id="yipDayMainContainer-${id}" class="yip-component__main">
-            <h3 id="yipLogTitle-${id}">${logTitle ? logTitle : "Title"}</h3>
-            <br>
             ${
               viewMode === "edit"
-                ? this.generateEditMarkup(log, id)
-                : this.generateViewMarkup(log, id)
+                ? this.generateEditMarkup(log, logTitle, id)
+                : this.generateViewMarkup(log, logTitle, id)
             }           
           </div>
           <div class="yip-component__footer">
@@ -34,46 +32,60 @@ export default class YipDayView {
    `;
   }
 
-  generateViewMarkup(log, id) {
+  generateViewMarkup(log, logTitle, id) {
+    console.log(logTitle);
     return `
-      <section id="yipLogViewMode-${id}">
+      <section class="yip-component__view-mode" id="yipLogViewMode-${id}">
+        <span class="yip-component__view-title" id="yipLogTitle-${id}">${
+      logTitle ? logTitle : "Title"
+    }
+      <hr class="yip-component__view-hr">
+    </span>
+        <div class="yip-component__view-content">
         ${log}
+        </div>
       </section>
     `;
   }
 
-  generateEditMarkup(log, id) {
+  generateEditMarkup(log, logTitle, id) {
+    console.log(log, logTitle, id);
     return `
     <section class="yip-component__edit-mode" id="yipLogEditMode-${id}">
-      <textarea placeholder="What have you been up to?" class="yip-component__edit-textarea" id="yipLogEditModeTextarea-${id}">${log}</textarea>
+      <input placeholder="Title of the day" class="yip-component__edit-title-input" id="yipLogEditTitle-${id}" value="${
+      logTitle ? logTitle : ""
+    }" />
+      <br>
+      <textarea placeholder="What have you been up to?" class="yip-component__edit-textarea" id="yipLogEditTextarea-${id}">${
+      log ? log : ""
+    }</textarea>
     </section>
   `;
   }
 
-  #removeMainSection(id) {
+  #emptyMainContainer(id) {
     const yipDayMainContainer = document.getElementById(
       `yipDayMainContainer-${id}`
     );
-    const section = yipDayMainContainer.querySelector("section");
-    section.remove();
+    yipDayMainContainer.innerText = "";
     return yipDayMainContainer;
   }
 
-  renderView(log, id) {
-    const yipDayMainContainer = this.#removeMainSection(id);
+  renderView(log, logTitle, id) {
+    const yipDayMainContainer = this.#emptyMainContainer(id);
 
     yipDayMainContainer.insertAdjacentHTML(
       "beforeend",
-      this.generateViewMarkup(marked.parse(log), id)
+      this.generateViewMarkup(log ? marked.parse(log) : "", logTitle, id)
     );
   }
 
-  renderEdit(log, id) {
-    const yipDayMainContainer = this.#removeMainSection(id);
+  renderEdit(log, logTitle, id) {
+    const yipDayMainContainer = this.#emptyMainContainer(id);
 
     yipDayMainContainer.insertAdjacentHTML(
       "beforeend",
-      this.generateEditMarkup(log, id)
+      this.generateEditMarkup(log, logTitle, id)
     );
   }
 
@@ -87,12 +99,13 @@ export default class YipDayView {
   }
 
   render(parentEl, state) {
+    console.log(state);
     parentEl.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(state ? state : {})
     );
-    if (state) {
-      this.setMoodColor(state.moodColor, state.id);
-    }
+    this.setMoodColor(state.moodColor, state.id);
+    // if (state) {
+    // }
   }
 }

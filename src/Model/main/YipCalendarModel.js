@@ -1,9 +1,17 @@
 import YipDayController from "../../Controller/YipDayController";
+import Model from "./Model";
+import { state } from "./Model";
 
 export default class YipCalendarModel {
   state = {
     yipDays: {},
   };
+
+  initCurYipDayController() {
+    const initYipDayController = state.initYipDayController;
+    const id = initYipDayController.model.state.id;
+    this.state.yipDays[id] = initYipDayController;
+  }
 
   update(yipDayModel) {
     const setMoodColor = () => {
@@ -23,6 +31,14 @@ export default class YipCalendarModel {
     return `${formattedMonth}${day}`;
   }
 
+  getCurrentDay() {
+    // format ex "4 July"
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.toLocaleString("default", { month: "long" });
+    return `${month} ${day}`;
+  }
+
   handler = {
     initYipDayController: (e) => {
       const yipMenu = document.getElementById("yipMenu");
@@ -34,10 +50,8 @@ export default class YipCalendarModel {
       } else {
         // YipComponentController object doesn't exist for this day element
         const yipDayController = new YipDayController();
-        yipDayController.model.state.id = this.#formatYipCalendarId(
-          e.target.id
-        );
-        console.log(yipDayController.model.state.id);
+        yipDayController.model.state.id = id;
+
         yipDayController.model.obs.add(this);
         yipDayController.view.remove();
         yipDayController.init(yipMenu);

@@ -1,11 +1,11 @@
 import YipMenuView from "../../View/menus/YipMenuView";
 import YipCalendarController from "../YipCalendarController";
 import YipDayController from "../YipDayController";
+import { state } from "../../Model/main/Model";
 
 class YipMenuController {
   constructor() {
     this.view = new YipMenuView();
-    this.yipDayController = new YipDayController();
     this.yipCalendarController = new YipCalendarController();
   }
 
@@ -16,9 +16,8 @@ class YipMenuController {
   init() {
     this.view.render();
     const yipMenu = document.getElementById("yipMenu");
-    this.yipDayController.init(yipMenu);
     this.yipCalendarController.init();
-    this.eventListeners();
+    state.initYipDayController.init(yipMenu);
   }
 }
 

@@ -12,6 +12,10 @@ export const state = {
 };
 
 export default class Model {
+  state = {
+    initYipDayController: null,
+  };
+
   async getEnergyTasks() {
     let totalEnergyFromTasks;
     const energyArr = [];

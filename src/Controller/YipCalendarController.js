@@ -26,6 +26,8 @@ export default class YipCalendarController {
 
   init() {
     this.view.render();
+    this.model.initCurYipDayController();
     this.eventListeners();
+    return this;
   }
 }

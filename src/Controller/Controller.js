@@ -13,7 +13,7 @@ import { spinnerOpts } from "../helpers/spinnerOpts";
 import { setLocalHabitsFromDb } from "../Model/main/HabitModel";
 import View from "../View/View";
 import { yipMenuController } from "./Menus/YipMenuController";
-
+import YipDayController from "./YipDayController";
 export default async function Controller() {
   const model = new Model();
   const view = new View();
@@ -29,6 +29,8 @@ export default async function Controller() {
   await model.setLocalEnergy();
   await model.setDbEnergy();
   model.getDbEnergy().then((energy) => view.renderEnergy(energy));
+
+  new YipDayController().setToGlobalState();
 
   spinner.stop();
 

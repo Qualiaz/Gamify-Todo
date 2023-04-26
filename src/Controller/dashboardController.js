@@ -2,7 +2,8 @@ import { curTasksToday } from "../Model/main/TaskModel";
 import DashboardMenuView from "../View/menus/DashboardView";
 import TasksComponentController from "./TasksComponentController";
 import HabitsComponentController from "./Habits/HabitsComponentController";
-import YipComponentController from "./YipDayController";
+import YipDayController from "./YipDayController";
+import { state } from "../Model/main/Model";
 
 class DashboardMenuController {
   constructor() {
@@ -28,8 +29,11 @@ class DashboardMenuController {
 
   initYip() {
     const { dashboardYip } = this.view.getElems();
-    const yipComponentController = new YipComponentController();
-    yipComponentController.init(dashboardYip);
+    const yipDayController = state.initYipDayController;
+    // state.initYipDayController = yipDayController;
+    // console.log(state);
+    console.log(yipDayController);
+    yipDayController.init(dashboardYip);
   }
 
   init() {

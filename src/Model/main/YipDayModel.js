@@ -10,8 +10,16 @@ export default class YipDayModel {
     this.state.logTitle = null;
     this.state.log = null;
     this.state.moodColor = "#42BFDD";
-    this.state.id = String(new Date().getTime());
+    this.state.id = this.getCurrentDay();
     this.observers = [];
+  }
+
+  getCurrentDay() {
+    // format ex "4 July"
+    let date = new Date();
+    let day = date.getDate();
+    let month = date.toLocaleString("default", { month: "long" });
+    return `${month}${day}`;
   }
 
   obs = {
@@ -38,7 +46,6 @@ export default class YipDayModel {
 
   changeLogTitle(title) {
     this.state.logTitle = title;
-    console.log(this.state.logTitle);
   }
 
   changeLog(log) {

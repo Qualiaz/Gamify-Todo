@@ -2,7 +2,8 @@ import Controller from "./Controller/Controller";
 
 class App {
   async init() {
-    await Controller();
+    const model = await Controller();
+    return model;
   }
 }
 

@@ -1,6 +1,6 @@
 import YipDayView from "../View/main/yip/YipDayView";
 import YipDayModel from "../Model/main/YipDayModel";
-
+import { state } from "../Model/main/Model";
 export default class YipDayController {
   constructor() {
     this.view = new YipDayView();
@@ -49,8 +49,14 @@ export default class YipDayController {
     });
   }
 
+  setToGlobalState() {
+    state.initYipDayController = this;
+  }
+
   init(parentEl, state = this.model.state) {
     this.view.render(parentEl, state);
+    // this.model.initYipCalendarDay();
+
     this.eventListeners();
     console.log(this.model.state.id);
   }

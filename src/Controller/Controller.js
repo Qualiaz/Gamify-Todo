@@ -14,6 +14,8 @@ import { setLocalHabitsFromDb } from "../Model/main/HabitModel";
 import View from "../View/View";
 import { yipMenuController } from "./Menus/YipMenuController";
 import YipDayController from "./YipDayController";
+import { state } from "../Model/main/Model";
+
 export default async function Controller() {
   const model = new Model();
   const view = new View();
@@ -28,9 +30,10 @@ export default async function Controller() {
   await setLocalHabitsFromDb();
   await model.setLocalEnergy();
   await model.setDbEnergy();
-  model.getDbEnergy().then((energy) => view.renderEnergy(energy));
+  await model.getAllYipDays();
+  await model.addYipToday();
 
-  new YipDayController().setToGlobalState();
+  model.getDbEnergy().then((energy) => view.renderEnergy(energy));
 
   spinner.stop();
 

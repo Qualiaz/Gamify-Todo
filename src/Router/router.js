@@ -33,7 +33,6 @@ window.onload = async () => {
           break;
 
         case "#/yearinpixels":
-          console.log("BA CE PLM");
           yipMenuController.init();
           break;
 

@@ -1,3 +1,6 @@
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase/config";
+import { getCurrentDay } from "../../helpers/date";
 export default class YipDayModel {
   state = {};
   #privateState = {
@@ -10,16 +13,8 @@ export default class YipDayModel {
     this.state.logTitle = null;
     this.state.log = null;
     this.state.moodColor = "#42BFDD";
-    this.state.id = this.getCurrentDay();
+    this.state.id = getCurrentDay();
     this.observers = [];
-  }
-
-  getCurrentDay() {
-    // format ex "4 July"
-    let date = new Date();
-    let day = date.getDate();
-    let month = date.toLocaleString("default", { month: "long" });
-    return `${month}${day}`;
   }
 
   obs = {
@@ -51,6 +46,47 @@ export default class YipDayModel {
   changeLog(log) {
     this.state.log = log;
   }
+
+  initState(data) {
+    this.state.date = data.date;
+    this.state.id = data.id;
+    this.state.log = data.log;
+    this.state.logTitle = data.logTitle;
+    this.state.moodColor = data.moodColor;
+    this.state.viewMode = data.viewMode;
+  }
+
+  db = {
+    getColYipRef: () => {
+      return collection(db, "users", auth.currentUser.uid, "yip");
+    },
+
+    add: async () => {
+      try {
+        const docRef = await addDoc(this.db.getColYipRef(), this.state);
+        this.state.dbId = docRef.id;
+      } catch (e) {
+        console.error("error adding doc:", e);
+      }
+    },
+
+    update: async () => {
+      try {
+        const docRef = doc(this.db.getColYipRef(), this.state.dbId);
+        await updateDoc(docRef, this.state);
+      } catch (e) {
+        console.error("error updating doc:", e);
+      }
+    },
+
+    initDoc: async () => {
+      if (this.state.dbId) {
+        await this.db.update();
+      } else {
+        await this.db.add();
+      }
+    },
+  };
 
   nextMoodColor() {
     const moodColors = ["awful", "sad", "good", "ok", "amazing"];

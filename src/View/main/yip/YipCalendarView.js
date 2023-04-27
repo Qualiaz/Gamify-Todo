@@ -1,5 +1,3 @@
-import { formatYipCalendarId } from "../../../helpers/formatYipCalendarId";
-
 export default class YipCalendarView {
   _generateMarkup() {
     return `
@@ -73,7 +71,6 @@ export default class YipCalendarView {
   }
 
   setMoodColors(daysColors) {
-    // {April2: '#fff'}
     for (let key in daysColors) {
       const x = document.getElementById(`yipCalendar${key}`);
       x.style.backgroundColor = daysColors[key];

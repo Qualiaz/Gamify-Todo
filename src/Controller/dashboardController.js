@@ -29,11 +29,9 @@ class DashboardMenuController {
 
   initYip() {
     const { dashboardYip } = this.view.getElems();
-    const yipDayController = state.initYipDayController;
-    // state.initYipDayController = yipDayController;
-    // console.log(state);
-    console.log(yipDayController);
-    yipDayController.init(dashboardYip);
+    // const yipDayController = state.initYipDayController;
+    // console.log(yipDayController);
+    state.initYipDayController.init(dashboardYip);
   }
 
   init() {

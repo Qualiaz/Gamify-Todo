@@ -3,12 +3,17 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
+import YipDayController from "../../Controller/YipDayController";
+import { getCurrentDay } from "../../helpers/date";
 
 export const state = {
   totalEnergy: 0,
+  yipDays: {},
 };
 
 export default class Model {
@@ -81,5 +86,37 @@ export default class Model {
     await this.setLocalEnergy();
     await this.getEnergyTasks();
     this.setDbEnergy();
+  }
+
+  async getAllYipDays() {
+    const colRef = collection(db, "users", auth.currentUser.uid, "yip");
+    const querySnapshot = await getDocs(colRef);
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      // data.id refers to the internal id like 'April6'
+      state.yipDays[data.id] = data;
+      return state.yipDays;
+    });
+  }
+
+  async addYipToday() {
+    const day = getCurrentDay();
+    const yipDayController = new YipDayController();
+
+    if (!state.yipDays[day]) {
+      await yipDayController.model.db.initDoc();
+      state.yipDays[day] = yipDayController;
+      state.initYipDayController = state.yipDays[day];
+    }
+    // if day exists
+    else {
+      const yipColRef = collection(db, "users", auth.currentUser.uid, "yip");
+      const q = query(yipColRef, where("id", "==", day));
+      const querySnapshot = await getDocs(q);
+      const doc = querySnapshot.docs[0]; // day state
+      yipDayController.model.initState(doc.data());
+      yipDayController.model.state.dbId = doc.id;
+      state.initYipDayController = yipDayController;
+    }
   }
 }

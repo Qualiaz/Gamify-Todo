@@ -34,6 +34,8 @@ export default class YipDayController {
 
     viewBtn.addEventListener("click", () => {
       this.view.renderView(this.model.state.log, this.model.state.logTitle, id);
+
+      this.model.db.initDoc();
     });
 
     editBtn.addEventListener("click", () => {

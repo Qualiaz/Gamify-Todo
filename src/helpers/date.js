@@ -12,3 +12,11 @@ export function formatStartDate(startDate) {
   const d = Number(date[2]);
   return [y, m - 1, d];
 }
+
+export function getCurrentDay() {
+  // format ex "4 July"
+  let date = new Date();
+  let day = date.getDate();
+  let month = date.toLocaleString("default", { month: "long" });
+  return `${month}${day}`;
+}

@@ -3,10 +3,6 @@ import { state } from "./Model";
 import { formatYipCalendarId } from "../../helpers/formatYipCalendarId";
 
 export default class YipCalendarModel {
-  state = {
-    selectedDay: null,
-  };
-
   getDaysMoodColors() {
     //
     let daysColors = {};
@@ -34,6 +30,7 @@ export default class YipCalendarModel {
         const yipDayController = state.yipDays[id];
         // yipDayController.view.remove();
         yipDayController.init(yipMenu);
+        state.selectedDay = yipDayController;
       } else {
         // YipComponentController object doesn't exist for this day element
         const yipDayController = new YipDayController();
@@ -43,6 +40,7 @@ export default class YipCalendarModel {
         // yipDayController.view.remove();
         yipDayController.init(yipMenu);
         state.yipDays[id] = yipDayController;
+        state.selectedDay = yipDayController;
       }
     },
   };

@@ -14,6 +14,8 @@ import { getCurrentDay } from "../../helpers/date";
 export const state = {
   totalEnergy: 0,
   yipDays: {},
+  selectedDay: null,
+  initYipDayController: null,
 };
 
 export default class Model {
@@ -110,6 +112,7 @@ export default class Model {
       yipDayController.model.state.dbId = doc.id;
       state.yipDays[day] = yipDayController;
       state.initYipDayController = state.yipDays[day];
+      state.selectedDay = state.initYipDayController;
       // state.initYipDayController = state.yipDays[day];
     }
     // if day exists
@@ -121,6 +124,7 @@ export default class Model {
       yipDayController.model.initState(doc.data());
       yipDayController.model.state.dbId = doc.id;
       state.initYipDayController = yipDayController;
+      state.selectedDay = state.initYipDayController;
     }
   }
 }

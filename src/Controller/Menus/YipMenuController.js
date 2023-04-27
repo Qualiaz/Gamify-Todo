@@ -20,8 +20,12 @@ class YipMenuController {
     state.initYipDayController.init(yipMenu);
     state.initYipDayController.model.obs.add(this.yipCalendarController.model);
     this.yipCalendarController.model.update(state.initYipDayController.model);
-
-    console.log(this.yipCalendarController.model.state.selectedDay);
+    this.yipCalendarController.view.renderDayText(
+      state.selectedDay.model.state.id
+    );
+    this.yipCalendarController.view.outlineSelectedDay(
+      state.selectedDay.model.state.id
+    );
   }
 }
 

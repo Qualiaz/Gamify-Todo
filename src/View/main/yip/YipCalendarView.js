@@ -46,23 +46,28 @@ export default class YipCalendarView {
     }
   }
 
-  renderCurHoveredDay(id) {
-    const hoveredDayElem = document.querySelector(".yip-calendar__hovered-day");
-    const monthDay = id.replace("yipCalendar", "");
+  #formatDayText(id) {
+    let monthDay = id;
+    if (id.includes("yipCalendar")) {
+      monthDay = id.replace("yipCalendar", "");
+    }
     const month = monthDay.replace(/[0-9]/g, "");
     const day = monthDay.replace(/\D/g, "");
     const formattedDate = `${month} ${day}`;
-    hoveredDayElem.textContent = formattedDate;
+    return formattedDate;
   }
 
-  clearRenderCurDay() {
+  renderDayText(id) {
     const hoveredDayElem = document.querySelector(".yip-calendar__hovered-day");
-    hoveredDayElem.textContent = "";
+    const dayText = this.#formatDayText(id);
+    hoveredDayElem.textContent = dayText;
   }
 
-  clearOutline(id) {
-    const day = document.getElementById(`yipCalendar${id}`);
-    day.style.outline = "none";
+  clearOutlines() {
+    const day = document.querySelectorAll(`.grid-item`);
+    day.forEach((day) => {
+      day.style.outline = "none";
+    });
   }
 
   outlineSelectedDay(id) {
@@ -80,7 +85,6 @@ export default class YipCalendarView {
   render() {
     const yipMenu = document.getElementById("yipMenu");
     yipMenu.insertAdjacentHTML("afterbegin", this._generateMarkup());
-    console.log("BAG PL IN MA-TA");
     this.createDaysElems();
   }
 }

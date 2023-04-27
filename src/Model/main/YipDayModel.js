@@ -11,7 +11,7 @@ export default class YipDayModel {
 
   constructor() {
     this.state.date = "Today pixel";
-    this.state.viewMode = "edit";
+    this.state.viewMode = "view";
     this.state.logTitle = null;
     this.state.log = null;
     this.state.moodColor = "#42BFDD";
@@ -34,13 +34,10 @@ export default class YipDayModel {
     this.updateGlobalState();
   }
 
-  changeViewMode() {
-    if (this.state.viewMode === "view") {
-      this.state.viewMode === "edit";
-    } else {
-      this.state.viewMode === "view";
-    }
+  changeViewMode(mode) {
+    this.state.viewMode = mode;
     this.updateGlobalState();
+    // console.log(this.state.view.mode);
   }
 
   changeLogTitle(title) {

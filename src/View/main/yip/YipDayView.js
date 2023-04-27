@@ -2,12 +2,12 @@ import yipEditIcon from "../../../assets/images/edit-yip.svg";
 import yipViewIcon from "../../../assets/images/view-yip.svg";
 import { marked } from "marked";
 export default class YipDayView {
-  _generateMarkup({ date, viewMode, logTitle, log, id }) {
+  _generateMarkup({ viewMode, logTitle, log, id }) {
     return `
       <section class="yip-component">
           <div class="yip-component__header">
             <div id="yipDate-${id}" class="yip-header__title">${
-      date ? date : "Today pixel"
+      id ? this.renderDaysPassed(id) : "Today pixel"
     }</div>
             <div class="yip-header__edit-btn-wrapper">
               <button id="yipEditBtn-${id}"><img class="yip-header__edit-btn-img" src="${yipEditIcon}" alt=""></button>
@@ -30,6 +30,28 @@ export default class YipDayView {
           </div>
       </section>
    `;
+  }
+
+  renderDaysPassed(day) {
+    const date = new Date();
+    const year = date.getFullYear();
+    //prettier-ignore
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthName = day.match(/[a-zA-Z]+/g)[0];
+    const month = monthNames.indexOf(monthName);
+    const dayOfMonth = parseInt(day.match(/\d+/g)[0]);
+    const inputDate = new Date(year, month, dayOfMonth);
+    const today = new Date(year, date.getMonth(), date.getDate());
+    const timeDiff = today - inputDate;
+    const daysDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (daysDiff === 0) {
+      return "Today pixel";
+    } else if (daysDiff === 1) {
+      return "Yesterday pixel";
+    } else {
+      return `${daysDiff}d ago pixel`;
+    }
   }
 
   generateViewMarkup(log, logTitle, id) {
@@ -86,6 +108,8 @@ export default class YipDayView {
       this.generateEditMarkup(log, logTitle, id)
     );
   }
+
+  getElems(id) {}
 
   remove() {
     const section = document.getElementById("yipMenu").querySelector("section");

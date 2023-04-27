@@ -1,13 +1,14 @@
 import YipDayView from "../View/main/yip/YipDayView";
 import YipDayModel from "../Model/main/YipDayModel";
 import { state } from "../Model/main/Model";
+
 export default class YipDayController {
   constructor() {
     this.view = new YipDayView();
     this.model = new YipDayModel();
   }
 
-  eventListeners() {
+  eventListeners(menu) {
     const id = this.model.state.id;
 
     let textarea = document.getElementById(`yipLogEditTextarea-${id}`);
@@ -34,7 +35,6 @@ export default class YipDayController {
 
     viewBtn.addEventListener("click", () => {
       this.view.renderView(this.model.state.log, this.model.state.logTitle, id);
-
       this.model.db.initDoc();
     });
 
@@ -45,19 +45,18 @@ export default class YipDayController {
     });
 
     moodColorBtn.addEventListener("click", () => {
-      console.log("mood");
       this.model.nextMoodColor();
       this.view.setMoodColor(this.model.state.moodColor, id);
-      this.model.obs.notify();
+      if (arguments[0].id === "yipMenu") {
+        this.model.obs.notify();
+      }
     });
   }
 
-  setToGlobalState() {
-    state.initYipDayController = this;
-  }
-
-  init(parentEl, state = this.model.state) {
-    this.view.render(parentEl, state);
-    this.eventListeners();
+  init(parentEl) {
+    this.view.render(parentEl, this.model.state);
+    this.eventListeners(parentEl);
+    // console.log(state);
+    console.log(parentEl);
   }
 }

@@ -94,7 +94,9 @@ export default class Model {
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       // data.id refers to the internal id like 'April6'
-      state.yipDays[data.id] = data;
+      const yipDayController = new YipDayController();
+      yipDayController.model.initState(data);
+      state.yipDays[data.id] = yipDayController;
       return state.yipDays;
     });
   }
@@ -105,8 +107,10 @@ export default class Model {
 
     if (!state.yipDays[day]) {
       await yipDayController.model.db.initDoc();
+      yipDayController.model.state.dbId = doc.id;
       state.yipDays[day] = yipDayController;
       state.initYipDayController = state.yipDays[day];
+      // state.initYipDayController = state.yipDays[day];
     }
     // if day exists
     else {

@@ -16,9 +16,12 @@ class YipMenuController {
     this.view.render();
     const yipMenu = document.getElementById("yipMenu");
     this.yipCalendarController.init();
+
     state.initYipDayController.init(yipMenu);
     state.initYipDayController.model.obs.add(this.yipCalendarController.model);
-    this.yipCalendarController.setMoodColors();
+    this.yipCalendarController.model.update(state.initYipDayController.model);
+
+    console.log(this.yipCalendarController.model.state.selectedDay);
   }
 }
 

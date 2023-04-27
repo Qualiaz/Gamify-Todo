@@ -33,7 +33,6 @@ export default class YipDayView {
   }
 
   generateViewMarkup(log, logTitle, id) {
-    console.log(logTitle);
     return `
       <section class="yip-component__view-mode" id="yipLogViewMode-${id}">
         <span class="yip-component__view-title" id="yipLogTitle-${id}">${
@@ -89,7 +88,10 @@ export default class YipDayView {
   }
 
   remove() {
-    document.querySelector(".yip-component").remove();
+    const section = document.getElementById("yipMenu").querySelector("section");
+    if (section) {
+      section.remove();
+    }
   }
 
   setMoodColor(color, id) {
@@ -98,6 +100,10 @@ export default class YipDayView {
   }
 
   render(parentEl, state) {
+    if (arguments[0].id === "yipMenu") {
+      this.remove();
+    }
+    console.log(arguments[0]);
     parentEl.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(state ? state : {})

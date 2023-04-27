@@ -61,12 +61,12 @@ export default class YipCalendarView {
   }
 
   clearOutline(id) {
-    const day = document.getElementById(id);
+    const day = document.getElementById(`yipCalendar${id}`);
     day.style.outline = "none";
   }
 
   outlineSelectedDay(id) {
-    const selectedDay = document.getElementById(id);
+    const selectedDay = document.getElementById(`yipCalendar${id}`);
     selectedDay.style.outline = "2px solid white";
   }
 

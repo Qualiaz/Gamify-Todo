@@ -1,6 +1,8 @@
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { getCurrentDay } from "../../helpers/date";
+import { state } from "./Model";
+
 export default class YipDayModel {
   state = {};
   #privateState = {
@@ -29,6 +31,7 @@ export default class YipDayModel {
 
   changeDate(date) {
     this.state.date = date + " pixel";
+    this.updateGlobalState();
   }
 
   changeViewMode() {
@@ -37,14 +40,17 @@ export default class YipDayModel {
     } else {
       this.state.viewMode === "view";
     }
+    this.updateGlobalState();
   }
 
   changeLogTitle(title) {
     this.state.logTitle = title;
+    this.updateGlobalState();
   }
 
   changeLog(log) {
     this.state.log = log;
+    this.updateGlobalState();
   }
 
   initState(data) {
@@ -54,11 +60,19 @@ export default class YipDayModel {
     this.state.logTitle = data.logTitle;
     this.state.moodColor = data.moodColor;
     this.state.viewMode = data.viewMode;
+    this.state.dbId = data.id;
   }
 
   db = {
     getColYipRef: () => {
       return collection(db, "users", auth.currentUser.uid, "yip");
+    },
+
+    isDayInDb: async (day) => {
+      const q = query(yipColRef, where("id", "==", day));
+      const querySnapshot = await getDocs(q);
+      const doc = querySnapshot.docs[0];
+      return !!doc.data();
     },
 
     add: async () => {
@@ -96,6 +110,12 @@ export default class YipDayModel {
     this.state.moodColor = this.getMoodColor(
       moodColors[this.#privateState.curMoodColorIndex]
     );
+    this.updateGlobalState();
+  }
+
+  updateGlobalState() {
+    const globalYipDayController = state.yipDays[this.state.id];
+    globalYipDayController.model.state = this.state;
   }
 
   getMoodColor(color) {

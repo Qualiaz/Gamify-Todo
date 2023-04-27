@@ -12,15 +12,15 @@ export default class YipDayController {
     const id = this.model.state.id;
     let textarea;
     let titleInput;
-    if (this.model.viewMode === "edit") {
+    if (this.model.state.viewMode === "edit") {
       textarea = document.getElementById(`yipLogEditTextarea-${id}`);
       titleInput = document.getElementById(`yipLogEditTitle-${id}`);
     }
     const viewBtn = document.getElementById(`yipViewBtn-${id}`);
     const editBtn = document.getElementById(`yipEditBtn-${id}`);
     const moodColorBtn = document.getElementById(`yipMoodColorBtn-${id}`);
-
-    if (this.model.viewMode === "edit") {
+    console.log(this.model.state);
+    if (this.model.state.viewMode === "edit") {
       textarea.addEventListener("keydown", (e) =>
         this.model.handler.tabIndent(e)
       );
@@ -31,6 +31,7 @@ export default class YipDayController {
 
       textarea.addEventListener("input", () => {
         this.model.changeLog(textarea.value);
+        console.log("asd");
       });
 
       titleInput.addEventListener("input", () => {
@@ -40,6 +41,7 @@ export default class YipDayController {
 
     viewBtn.addEventListener("click", () => {
       this.view.renderView(this.model.state.log, this.model.state.logTitle, id);
+      console.log(this.model.state);
       this.model.changeViewMode("view");
       this.model.db.initDoc();
     });
@@ -48,6 +50,7 @@ export default class YipDayController {
       this.view.renderEdit(this.model.state.log, this.model.state.logTitle, id);
       // init listeners again to reselect elements
       this.model.changeViewMode("edit");
+      this.model.db.initDoc();
       this.eventListeners();
     });
 

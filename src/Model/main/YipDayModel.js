@@ -10,10 +10,9 @@ export default class YipDayModel {
   };
 
   constructor() {
-    this.state.date = "Today pixel";
-    this.state.viewMode = "view";
-    this.state.logTitle = null;
-    this.state.log = null;
+    this.state.viewMode = "edit";
+    this.state.logTitle = "";
+    this.state.log = "";
     this.state.moodColor = "#42BFDD";
     this.state.id = getCurrentDay();
     this.observers = [];
@@ -51,7 +50,7 @@ export default class YipDayModel {
   }
 
   initState(data) {
-    this.state.date = data.date;
+    // this.state.date = data.date;
     this.state.id = data.id;
     this.state.log = data.log;
     this.state.logTitle = data.logTitle;
@@ -75,6 +74,7 @@ export default class YipDayModel {
     add: async () => {
       try {
         const docRef = await addDoc(this.db.getColYipRef(), this.state);
+        console.log(docRef.id);
         this.state.dbId = docRef.id;
       } catch (e) {
         console.error("error adding doc:", e);
@@ -119,8 +119,8 @@ export default class YipDayModel {
     const moodColorMap = {
       awful: "#181116",
       sad: "#891A29",
-      good: "#5B9A63",
       ok: "#42BFDD",
+      good: "#5B9A63",
       amazing: "#F9B624",
     };
     return moodColorMap[color];

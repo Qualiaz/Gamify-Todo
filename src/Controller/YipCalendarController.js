@@ -10,7 +10,7 @@ export default class YipCalendarController {
   }
 
   eventListeners = () => {
-    const gridItems = document.querySelectorAll(".grid-item");
+    const gridItems = document.querySelectorAll(".grid-item--selectable");
     const yipCalendarMain = document.querySelector(".yip-calendar__main");
 
     gridItems.forEach((gridItem) => {

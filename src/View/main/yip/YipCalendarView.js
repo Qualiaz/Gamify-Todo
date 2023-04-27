@@ -23,24 +23,30 @@ export default class YipCalendarView {
         </div>
         `;
   }
-
   createDaysElems() {
     const date = new Date();
     const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
     const isLeapYear = year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0);
     //prettier-ignore
     const daysInMonth = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     //prettier-ignore
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    for (let month = 0; month < daysInMonth.length; month++) {
+    for (let m = 0; m < daysInMonth.length; m++) {
       const monthContainer = document.querySelector(
-        `.yip-calendar__${monthNames[month].toLowerCase()}`
+        `.yip-calendar__${monthNames[m].toLowerCase()}`
       );
-      for (let day = 1; day <= daysInMonth[month]; day++) {
+      for (let d = 1; d <= daysInMonth[m]; d++) {
         const gridItem = document.createElement("div");
         gridItem.classList.add("grid-item");
-        gridItem.id = `yipCalendar${monthNames[month]}${day}`;
+        if (m < month || (m === month && d <= day)) {
+          gridItem.classList.add("grid-item--selectable");
+        } else {
+          gridItem.classList.add("grid-item--not-selectable");
+        }
+        gridItem.id = `yipCalendar${monthNames[m]}${d}`;
         monthContainer.appendChild(gridItem);
       }
     }

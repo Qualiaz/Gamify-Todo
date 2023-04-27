@@ -93,7 +93,7 @@ export default class YipDayView {
 
   renderView(log, logTitle, id) {
     const yipDayMainContainer = this.#emptyMainContainer(id);
-
+    console.log(log);
     yipDayMainContainer.insertAdjacentHTML(
       "beforeend",
       this.generateViewMarkup(log ? marked.parse(log) : "", logTitle, id)
@@ -132,6 +132,9 @@ export default class YipDayView {
       "beforeend",
       this._generateMarkup(state ? state : {})
     );
+    if (state.viewMode === "view") {
+      this.renderView(state.log, state.logTitle, state.id);
+    }
     this.setMoodColor(state.moodColor, state.id);
     // if (state) {
     // }

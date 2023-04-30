@@ -25,15 +25,12 @@ export default class TasksComponentController {
     this.model.arrangeTasksInArrays();
     this.model.setFilterState(this.model.state.filter);
     this.model.orderTasks();
-    // console.log(curTasks);
   }
 
   update() {
     this.model.arrangeTasksInArrays();
     this.model.setFilterState(this.model.state.filter);
-    console.log(curTasksToday);
-    console.log(curTasksTomorrow);
-    console.log(this.model.state.tasks);
+    console.log("IM UPDATED");
     if (this.model.state.menu === "dashboard") {
       console.log("do i init dashboard?");
       this.init(document.getElementById("dashboardTasks"));
@@ -77,6 +74,9 @@ export default class TasksComponentController {
       const optionEl = e.target.options[e.target.selectedIndex].value;
       this.model.setFilterState(optionEl);
       this.model.arrangeTasksInArrays();
+      console.log(this.model.state.tasks);
+      console.log(curTasksTomorrow);
+
       this.init(parentEl);
     });
 

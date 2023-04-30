@@ -14,6 +14,7 @@ export function addTasksNoRepeatFilter(task) {
 }
 
 export function addTasksOtherDayFilter(otherDay, task) {
+  console.log(otherDay, task);
   const daysArr = everyOtherDay(otherDay, task);
   daysArr.forEach((day) => {
     const formatFullDate = format(new Date(day), "yyyy/MM/dd");
@@ -54,10 +55,11 @@ function everyOtherDay(otherDay, task) {
   let result = [];
   const eachDay = eachDayOfInterval({
     start: new Date(y, m, d),
-    end: new Date(2023, 3, 23),
+    end: new Date(2025, 5, 23),
   });
   for (let i = 0; i < eachDay.length; i += otherDay) {
     result.push(eachDay[i]);
   }
+  console.log(result);
   return result;
 }

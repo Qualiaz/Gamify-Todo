@@ -61,9 +61,11 @@ export default class Model {
   }
 
   filterTask(taskCard) {
+    console.log(taskCard.model.cardState);
     if (taskCard.model.cardState.startDate) {
-      if (taskCard.model.cardState.repeat.type === "daily") {
+      if (taskCard.model.cardState.repeat.type === "every-other-day") {
         const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
+        console.log(everyOtherDay);
         addTasksOtherDayFilter(everyOtherDay, taskCard);
         return;
       }

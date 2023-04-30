@@ -4,6 +4,9 @@ import { dashboardMenuController } from "../Controller/dashboardController";
 import { tasksMenuController } from "../Controller/tasksMenuController";
 import habitsMenuController from "../Controller/Menus/habitsMenuController";
 import { yipMenuController } from "../Controller/Menus/YipMenuController";
+import { curTasks } from "../Model/main/TaskModel";
+import TasksMenuController from "../Controller/tasksMenuController";
+
 document.addEventListener("DOMContentLoaded", () => {
   const rootEl = document.getElementById("root");
   const authPageEl = document.getElementById("authPage");
@@ -15,13 +18,15 @@ window.onload = async () => {
   switch (window.location.pathname) {
     case "/":
       await App.init();
+      console.log(curTasks);
       switch (window.location.hash) {
         case "#/dashboard":
           dashboardMenuController.init();
           break;
 
         case "#/tasks":
-          tasksMenuController.init();
+          new TasksMenuController().init();
+          // tasksMenuController.init();
           break;
 
         case "#/projects":

@@ -10,6 +10,19 @@ import {
 import { auth, db } from "../../firebase/config";
 import YipDayController from "../../Controller/YipDayController";
 import { getCurrentDay } from "../../helpers/date";
+import TaskCardController from "../../Controller/TaskCardController";
+import {
+  curTasks,
+  curTasksThisWeek,
+  curTasksToday,
+  curTasksTomorrow,
+  curTasksWhenever,
+} from "./TaskModel";
+import {
+  addTasksNoRepeatFilter,
+  addTasksOtherDayFilter,
+  addTasksWeekDaysFilter,
+} from "../../helpers/filters";
 
 export const state = {
   totalEnergy: 0,
@@ -19,6 +32,53 @@ export const state = {
 };
 
 export default class Model {
+  constructor() {
+    this.observers = [];
+  }
+
+  async createTasksFromDb() {
+    const docUserRef = doc(db, "users", localStorage.getItem("user"));
+    const colTaskRef = collection(docUserRef, "tasks");
+    const tasksDocs = await getDocs(colTaskRef);
+
+    tasksDocs.forEach((doc) => {
+      const taskCard = new TaskCardController();
+      taskCard.model.cardState = doc.data();
+      taskCard.model.cardState.id = doc.id;
+
+      const localTimeTracked = localStorage.getItem(`timeElapsed-${doc.id}`);
+      if (localTimeTracked) {
+        taskCard.model.cardState.timeTracked = localTimeTracked;
+      }
+
+      const taskSettingsController =
+        taskCard.model.createTaskSettingsController();
+      taskSettingsController.curTaskCard = taskCard;
+
+      curTasks.push(taskCard);
+      this.filterTask(taskCard);
+    });
+  }
+
+  filterTask(taskCard) {
+    if (taskCard.model.cardState.startDate) {
+      if (taskCard.model.cardState.repeat.type === "daily") {
+        const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
+        addTasksOtherDayFilter(everyOtherDay, taskCard);
+        return;
+      }
+      if (taskCard.model.cardState.repeat.type === "weekly") {
+        const days = taskCard.model.cardState.repeat.daysOfWeek;
+        addTasksWeekDaysFilter(days, taskCard);
+        return;
+      }
+      addTasksNoRepeatFilter(taskCard);
+    } else {
+      // no selected date
+      curTasksWhenever.push(taskCard);
+    }
+  }
+
   async getEnergyTasks() {
     let totalEnergyFromTasks;
     const energyArr = [];

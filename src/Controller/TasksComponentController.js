@@ -3,7 +3,7 @@ import { auth, db } from "../firebase/config";
 import TasksComponentView from "../View/main/tasks/TasksComponentView";
 import TaskCardController from "./TaskCardController";
 //prettier-ignore
-import {curTasks,curTasksTomorrow,curTasksToday,curTasksThisWeek, curTasksWhenever} from "../Model/main/TaskModel";
+import {curTasks,curTasksTomorrow,curTasksToday,curTasksThisWeek, curTasksWhenever, TasksComponentModel} from "../Model/main/TaskModel";
 //prettier-ignore
 import {addTasksWeekDaysFilter,addTasksOtherDayFilter,addTasksNoRepeatFilter} from "../helpers/filters";
 import { removeDuplicateTasks } from "../helpers/removeDuplicate";
@@ -17,208 +17,130 @@ export let curFilter = {};
 export default class TasksComponentController {
   constructor(tasks, menu, filter) {
     this.view = new TasksComponentView();
-    this.id = (((1 + Math.random()) * 0x10000) | 0).toString(4).substring(1);
+    this.model = new TasksComponentModel(tasks, menu, filter);
 
-    this.curView = {
-      isTaskViewOpen: false,
-      menu: menu,
-      filter: filter,
-      order: {
-        name: "timeCreated",
-        direction: "descending",
-      },
-      tasks: tasks,
-    };
+    curTasks.forEach((taskCard) => {
+      taskCard.model.obs.sub(this);
+    });
+    this.model.arrangeTasksInArrays();
+    this.model.setFilterState(this.model.state.filter);
+    console.log(curTasks);
+  }
+
+  update() {
+    this.model.arrangeTasksInArrays();
+    this.model.setFilterState(this.model.state.filter);
+    console.log(curTasksToday);
+    console.log(curTasksTomorrow);
+    console.log(this.model.state.tasks);
+    if (this.model.state.menu === "dashboard") {
+      console.log("do i init dashboard?");
+      this.init(document.getElementById("dashboadMenu"));
+    }
+    if (this.model.state.menu === "tasks") {
+      console.log("do i init tasks?");
+      this.init(document.getElementById("tasksMenu"));
+    }
   }
 
   eventListeners(parentEl) {
+    const id = this.model.state.id;
     const {
       filterSelections,
       orderSelections,
       optionOrderDirectionAscending,
       optionOrderDirectionDescending,
-    } = this.view.getElems(this.id);
+    } = this.view.getElems(id);
 
     const viewSettingsBtn = document.getElementById(
-      `tmComponentViewSettingsBtn-${this.id}`
+      `tmComponentViewSettingsBtn-${id}`
     );
 
-    const addTaskBtn = document.getElementById(`addTaskBtn-${this.id}`);
+    const addTaskBtn = document.getElementById(`addTaskBtn-${id}`);
     const resetViewBtn = document.getElementById("resetAllViewBtn");
 
     viewSettingsBtn.addEventListener("click", () => {
       const backgroundEl = this.view.addModalBackground("10px");
-      this.curView.isTaskViewOpen = true;
-      this.view.renderViewSettings(this.id, this.curView.isTaskViewOpen);
+      this.model.state.isTaskViewOpen = true;
+      this.view.renderViewSettings(id, this.model.state.isTaskViewOpen);
 
       backgroundEl.addEventListener("click", () => {
-        this.curView.isTaskViewOpen = false;
+        this.model.state.isTaskViewOpen = false;
         backgroundEl.remove();
-        this.view.renderViewSettings(this.id, this.curView.isTaskViewOpen);
+        this.view.renderViewSettings(id, this.model.state.isTaskViewOpen);
       });
     });
 
     filterSelections.addEventListener("change", (e) => {
       e.preventDefault();
       const optionEl = e.target.options[e.target.selectedIndex].value;
-      console.log(optionEl);
-      if (optionEl === "tomorrow") {
-        let tasksTomorrow = removeDuplicateTasks(curTasksTomorrow);
-        this.curView.tasks = tasksTomorrow;
-        this.curView.filter = "tomorrow";
-      }
-      if (optionEl === "today") {
-        let tasksToday = removeDuplicateTasks(curTasksToday);
-        this.curView.tasks = tasksToday;
-        this.curView.filter = "today";
-      }
-      if (optionEl === "nextWeek") {
-        let tasksNextWeek = removeDuplicateTasks(curTasksNextWeek);
-        this.curView.tasks = tasksNextWeek;
-        this.curView.filter = "nextWeek";
-      }
-      if (optionEl === "thisWeek") {
-        let tasksThisWeek = removeDuplicateTasks(curTasksThisWeek);
-        this.curView.tasks = tasksThisWeek;
-        this.curView.filter = "thisWeek";
-      }
-      if (optionEl === "whenever") {
-        let tasksWhenever = removeDuplicateTasks(curTasksWhenever);
-        this.curView.tasks = tasksWhenever;
-        this.curView.filter = "whenever";
-      }
-      if (optionEl === "all") {
-        let tasksAll = removeDuplicateTasks(curTasks);
-        this.curView.tasks = tasksAll;
-        this.curView.filter = "all";
-      }
+      this.model.setFilterState(optionEl);
+      this.model.arrangeTasksInArrays();
       this.init(parentEl);
     });
 
     orderSelections.addEventListener("change", (e) => {
       const backgroundEl = document.querySelector(".background-modal");
       const option = e.target.options[e.target.selectedIndex].value;
-      if (option === "difficulty") {
-        this.curView.order.name = "energy";
-        this.init(parentEl);
-      }
-      if (option === "energy") {
-        this.curView.order.name = "difficulty";
-        this.init(parentEl);
-      }
-      if (option === "timeCreated") {
-        this.curView.order.name = "timeCreated";
-        this.init(parentEl);
-      }
+      this.model.setOrderTasks(option);
+      this.model.orderTasks();
       // backgroundEl.remove();
     });
 
     optionOrderDirectionAscending.addEventListener("click", () => {
-      this.curView.order.direction = "ascending";
+      this.model.state.order.direction = "ascending";
       this.init(parentEl);
     });
 
     optionOrderDirectionDescending.addEventListener("click", () => {
-      this.curView.order.direction = "descending";
+      this.model.state.order.direction = "descending";
       this.init(parentEl);
     });
 
     resetViewBtn.addEventListener("click", () => {
-      if (this.curView.menu === "tasks") {
-        this.curView.filter = "all";
-        this.curView.name = "timeCreated";
-        this.curView.order.direction = "descending";
-        this.curView.order.name = "timeCreated";
-        this.curView.tasks = curTasks;
+      if (this.model.state.menu === "tasks") {
+        this.model.state.filter = "all";
+        this.model.state.name = "timeCreated";
+        this.model.state.order.direction = "descending";
+        this.model.state.order.name = "timeCreated";
+        this.model.state.tasks = curTasks;
         this.init(parentEl);
       }
-      if (this.curView.menu === "dashboard") {
+      if (this.model.state.menu === "dashboard") {
         console.log("daashboard reset");
-        this.curView.filter = "today";
-        this.curView.name = "timeCreated";
-        this.curView.order.direction = "descending";
-        this.curView.order.name = "timeCreated";
-        this.curView.tasks = curTasksToday;
+        this.model.state.filter = "today";
+        this.model.state.name = "timeCreated";
+        this.model.state.order.direction = "descending";
+        this.model.state.order.name = "timeCreated";
+        this.model.state.tasks = curTasksToday;
         this.init(parentEl);
       }
     });
 
     addTaskBtn.addEventListener("click", () => {
-      const taskSettingsController = new TaskSettingsController();
+      const taskSettingsController = new TaskSettingsController(this);
       taskSettingsController.init();
+      // this.model.subToTaskSettingsModel(taskSettingsController.model);
+      // taskSettingsController.model.obs.add(this);
     });
-  }
-
-  orderTasks(
-    tasks = this.curView.tasks,
-    orderType = this.curView.order.name,
-    orderDirection = this.curView.order.direction
-  ) {
-    const tasksOrderInst = new OrderTask(tasks);
-
-    if (orderType === "difficulty") {
-      const orderedTasks = tasksOrderInst.difficulty(orderDirection);
-      return orderedTasks;
-    }
-    if (orderType === "energy") {
-      const orderedTasks = tasksOrderInst.energy(orderDirection);
-      return orderedTasks;
-    }
-    if (orderType === "timeCreated") {
-      const orderedTasks = tasksOrderInst.timeCreated(orderDirection);
-      return orderedTasks;
-    }
   }
 
   init(parentEl) {
     this.render(parentEl);
-    this.curView.tasks = this.orderTasks();
-    this.view.renderViewSettings(this.id, this.curView.isTaskViewOpen);
+
+    this.view.renderViewSettings(
+      this.model.state.id,
+      this.model.state.isTaskViewOpen
+    );
+
     this.eventListeners(parentEl);
   }
 
-  render(parentEl, view = this.curView, id = this.id) {
-    this.view.render(parentEl, view, id);
+  render(parentEl, state = this.model.state, id = this.model.state.id) {
+    console.log("RENDERING");
+    this.view.render(parentEl, state, id);
   }
 }
 
 /////////////////////////////////////////
 /////////////////////////////////////////
-export async function createTasksFromDb() {
-  const docUserRef = doc(db, "users", localStorage.getItem("user"));
-  const colTaskRef = collection(docUserRef, "tasks");
-  const tasksDocs = await getDocs(colTaskRef);
-
-  tasksDocs.forEach((doc) => {
-    const taskCard = new TaskCardController();
-    taskCard.model.cardState = doc.data();
-    taskCard.model.cardState.id = doc.id;
-    console.log(taskCard.model.cardState);
-    const localTimeTracked = localStorage.getItem(`timeElapsed-${doc.id}`);
-    if (localTimeTracked) {
-      taskCard.model.cardState.timeTracked = localTimeTracked;
-    }
-
-    const taskSettingsController =
-      taskCard.model.createTaskSettingsController();
-    taskSettingsController.curTaskCard = taskCard;
-    curTasks.push(taskCard);
-    // filter tasks
-    if (taskCard.model.cardState.startDate) {
-      if (taskCard.model.cardState.repeat.type === "daily") {
-        const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
-        addTasksOtherDayFilter(everyOtherDay, taskCard);
-        return;
-      }
-      if (taskCard.model.cardState.repeat.type === "weekly") {
-        const days = taskCard.model.cardState.repeat.daysOfWeek;
-        addTasksWeekDaysFilter(days, taskCard);
-        return;
-      }
-      addTasksNoRepeatFilter(taskCard);
-    } else {
-      // no selected date
-      curTasksWhenever.push(taskCard);
-    }
-  });
-}

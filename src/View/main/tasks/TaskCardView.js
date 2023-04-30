@@ -245,7 +245,7 @@ export default class TaskCardView extends View {
     const br = document.getElementById(
       `taskCardNotes-${cardData.id}`
     ).lastElementChild;
-    br.remove();
+    br?.remove();
   }
 
   _removeLinebreaks(id) {

@@ -7,10 +7,10 @@ import TaskSettingsView from "../../View/main/tasks/AddTaskView";
 const body = document.querySelector("body");
 
 export default class TaskSettingsController {
-  curTaskCard;
-  constructor() {
+  constructor(tasksComponentController, curTaskCard = null) {
     this.view = new TaskSettingsView();
-    this.model = new TaskSettingsModel();
+    this.model = new TaskSettingsModel(tasksComponentController);
+    this.curTaskCard = curTaskCard;
   }
 
   async eventListeners() {
@@ -20,9 +20,6 @@ export default class TaskSettingsController {
       difficultySelect,
       energyValueDisplay,
       repeatSelect,
-      // repeatOptionEveryWeek,
-      // repeatOptionNoRepeat,
-      // repeatOptionEveryOtherDay,
       repeatWeekContainer,
       closeBtn,
       doneBtn,
@@ -33,14 +30,15 @@ export default class TaskSettingsController {
     doneBtn.addEventListener("click", (e) => {
       if (this.curTaskCard) {
         const cardState = this.curTaskCard.model.setCardState(inputValues());
-        this.curTaskCard.view.setCardData(cardState);
         this.model.state = cardState;
         this.model.updateTaskDb(cardState);
-        this.curTaskCard.view.setCardData(cardState);
+
+        this.curTaskCard.model.obs.notify();
         this.view.closeSettings();
       }
       // if task is new
       else {
+        console.log("HOW MANY");
         const taskCardController = this.model.addTask(inputValues());
         this.view.closeSettings();
         taskCardController.then((controller) => {

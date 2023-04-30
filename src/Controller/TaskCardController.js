@@ -23,7 +23,6 @@ export default class TaskCardController {
       }
       if (clickedId === `taskCardTop-${id}`) {
         this.model.openTaskSettings();
-        this.model.state;
       }
       if (clickedId === `taskCheckboxUnfinished-${id}`) {
         this.model.checkTask(true);
@@ -81,10 +80,8 @@ export default class TaskCardController {
 }
 
 export function getTask(id) {
-  console.log(id);
   const docUserRef = doc(db, "users", auth.currentUser.uid);
   const colTasksRef = collection(docUserRef, "tasks");
   const docTaskRef = doc(colTasksRef, id);
-  console.log(docTaskRef);
   return docTaskRef;
 }

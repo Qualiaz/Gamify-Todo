@@ -12,13 +12,14 @@ class DashboardMenuController {
 
   initTasks() {
     const { dashboardTasks } = this.view.getElems();
-    const dashboardTasksComponentController = new TasksComponentController(
+
+    const tasksComponentController = new TasksComponentController(
       curTasksToday,
       "dashboard",
       "today"
     );
-    dashboardTasksComponentController.init(dashboardTasks);
-    dashboardTasksComponentController.curView.menu = "dashboard";
+    tasksComponentController.init(dashboardTasks);
+    tasksComponentController.model.state.menu = "dashboard";
   }
 
   initHabits() {
@@ -29,8 +30,6 @@ class DashboardMenuController {
 
   initYip() {
     const { dashboardYip } = this.view.getElems();
-    // const yipDayController = state.initYipDayController;
-    // console.log(yipDayController);
     state.initYipDayController.init(dashboardYip);
   }
 

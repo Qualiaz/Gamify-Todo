@@ -9,21 +9,29 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
-
+import OrderTask from "../../helpers/orderTask";
 import TaskCardController, {
   getTask,
 } from "../../Controller/TaskCardController";
 import { auth, db } from "../../firebase/config";
 import TaskSettingsController from "../../Controller/Tasks/AddTaskController";
 import Model from "./Model";
+import { removeDuplicateTasks } from "../../helpers/removeDuplicate";
 
 export const curTasks = [];
-export const curTasksToday = [];
-export const curTasksTomorrow = [];
-export const curTasksThisWeek = [];
-export const curTasksWhenever = [];
+export let curTasksToday = [];
+export let curTasksTomorrow = [];
+export let curTasksThisWeek = [];
+export let curTasksWhenever = [];
 
-export class TaskSettingsModel {
+export class TaskSettingsModel extends Model {
+  state = {};
+  constructor(tasksComponentController) {
+    super();
+    // this.state = state;
+    this.tasksComponentController = tasksComponentController;
+  }
+
   isCpElemFocusedLast(cpEl) {
     const curCpCont = cpEl.closest(".task-settings__checkpoint");
     return curCpCont.nextElementSibling ? false : true;
@@ -49,29 +57,27 @@ export class TaskSettingsModel {
   //prettier-ignore
   async addTask({ name,notes,startDate,difficulty,energy,repeat,repeatEveryOtherDay,repeatEveryWeek,cps}) {
     const colTasksRef = this.getTasksCol()
-    console.log( repeatEveryWeek)
     if (!this.validFormCheck(name, repeatEveryOtherDay).ok) return
-    // TO BE MOVED
-    const tasksComponentTasksMenu = document.querySelector('.TM__component__tasks--tasksMenu')
-    const tasksComponentDashboardMenu = document.querySelector('.TM__component__tasks--dashboardMenu')
     //  
     const taskCardController = new TaskCardController();
+    taskCardController.model.obs.sub(this.tasksComponentController)
     taskCardController.model.addTaskDataCardState({name, notes, startDate, repeat,repeatEveryOtherDay,repeatEveryWeek, difficulty, energy, cps})
 
+    // when you open tasks you set state to the card controller model
     this.state = taskCardController.model.cardState
-    const taskData = Object.assign({}, taskCardController.model.cardState)
 
+    const taskData = Object.assign({}, taskCardController.model.cardState)
     const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
+    
     taskDataDb.then((data) => {
       taskCardController.model.cardState.id = data.id
-      if (tasksComponentTasksMenu)
-        taskCardController.view.render(tasksComponentTasksMenu, data)
-      if (tasksComponentDashboardMenu)
-        taskCardController.view.render(tasksComponentDashboardMenu, data)  
-      taskCardController.eventListeners()
+
+      curTasks.push(taskCardController)      
+      taskCardController.model.obs.notify(taskCardController.model.cardState)
     })
 
     this.state.curCpId = 1
+  
     return taskCardController
   }
 
@@ -79,7 +85,6 @@ export class TaskSettingsModel {
     return addDoc(colTaskRef, taskData).then((doc) => {
       taskCardController.model.cardState.id = doc.id;
       if (document.getElementById(`taskCard-${doc.id}`)) return;
-      curTasks.push(taskCardController);
       return taskCardController.model.cardState;
     });
   }
@@ -166,6 +171,12 @@ export class TaskSettingsModel {
 
 export default class TaskCardModel extends Model {
   #stopwatch = new Timer();
+
+  constructor() {
+    super();
+    this.observers = [];
+  }
+
   cardState = {
     checked: false,
     timeTracked: "00:00:00",
@@ -174,6 +185,19 @@ export default class TaskCardModel extends Model {
     isTimerToggled: false,
     repeat: {
       type: "no-repeat",
+      // every-other-day - weekly:
+    },
+  };
+
+  obs = {
+    sub: (obs) => {
+      this.observers.push(obs);
+    },
+    notify: (data) => {
+      this.observers.forEach((obs) => {
+        console.log(this.observers);
+        obs.update(data);
+      });
     },
   };
 
@@ -201,15 +225,11 @@ export default class TaskCardModel extends Model {
       this.addCpDataCardState(cp);
     });
     this.cardState.createdTime = new Date().getTime();
+
+    this.obs.notify(this.cardState);
+
     return this.cardState;
   }
-
-  addCpDataCardState = (name) => {
-    this.cardState.checkpoints.push({
-      checked: false,
-      name: name,
-    });
-  };
 
   setCardState(data) {
     this.cardState.name = data.name;
@@ -224,6 +244,7 @@ export default class TaskCardModel extends Model {
       this.addCpDataCardState(cpName);
     });
     this.addRepeatDataCardState(data);
+    this.obs.notify();
 
     return this.cardState;
   }
@@ -239,6 +260,14 @@ export default class TaskCardModel extends Model {
     }
   };
 
+  addCpDataCardState = (name) => {
+    this.cardState.checkpoints.push({
+      checked: false,
+      name: name,
+    });
+  };
+
+  /////
   checkCheckpoint(clickedId, isChecked) {
     if (isChecked) {
       this.cardState.checkpoints.forEach((cp) => {
@@ -275,13 +304,11 @@ export default class TaskCardModel extends Model {
   }
 
   openTaskSettings() {
-    const taskSettingsState = this.taskSettingsController.model.state;
-    console.log(taskSettingsState);
-    this.taskSettingsController.init(taskSettingsState);
+    this.taskSettingsController.init(this.taskSettingsController.model.state);
   }
 
   createTaskSettingsController() {
-    this.taskSettingsController = new TaskSettingsController();
+    this.taskSettingsController = new TaskSettingsController(this.cardState);
     this.taskSettingsController.model.state = this.cardState;
     return this.taskSettingsController;
   }
@@ -372,4 +399,102 @@ export default class TaskCardModel extends Model {
       });
     },
   };
+}
+
+export class TasksComponentModel extends Model {
+  state = {};
+  constructor(tasks, menu, filter) {
+    super();
+    //prettier-ignore
+    this.state.id = (((1 + Math.random()) * 0x10000) | 0)
+      .toString(4)
+      .substring(1),
+    //prettier-ignore
+    this.state.tasks = tasks;
+    this.state.menu = menu;
+    this.state.filter = filter;
+    this.state.order = {
+      name: "timeCreated",
+      direction: "descending",
+    };
+    this.state.isTaskViewOpen;
+  }
+
+  //// VIEW CHANGE ////
+  setFilterState(optionEl) {
+    if (optionEl === "tomorrow") {
+      let tasksTomorrow = removeDuplicateTasks(curTasksTomorrow);
+      this.state.tasks = tasksTomorrow;
+      this.state.filter = "tomorrow";
+    }
+    if (optionEl === "today") {
+      let tasksToday = removeDuplicateTasks(curTasksToday);
+      this.state.tasks = tasksToday;
+      this.state.filter = "today";
+    }
+    if (optionEl === "thisWeek") {
+      let tasksThisWeek = removeDuplicateTasks(curTasksThisWeek);
+      this.state.tasks = tasksThisWeek;
+      this.state.filter = "thisWeek";
+    }
+    if (optionEl === "whenever") {
+      let tasksWhenever = removeDuplicateTasks(curTasksWhenever);
+      this.state.tasks = tasksWhenever;
+      this.state.filter = "whenever";
+    }
+    if (optionEl === "all") {
+      let tasksAll = removeDuplicateTasks(curTasks);
+      this.state.tasks = tasksAll;
+      this.state.filter = "all";
+    }
+  }
+
+  arrangeTasksInArrays() {
+    curTasksToday = [];
+    curTasksTomorrow = [];
+    curTasksThisWeek = [];
+    curTasksWhenever = [];
+
+    curTasks.forEach((task) => {
+      this.filterTask(task);
+    });
+
+    console.log(curTasks);
+  }
+
+  setOrderTasks(option) {
+    if (option === "difficulty") {
+      this.state.order.name = "energy";
+      this.init(parentEl);
+    }
+    if (option === "energy") {
+      this.state.order.name = "difficulty";
+      this.init(parentEl);
+    }
+    if (option === "timeCreated") {
+      this.state.order.name = "timeCreated";
+      this.init(parentEl);
+    }
+  }
+
+  orderTasks(
+    tasks = this.state.tasks,
+    orderType = this.state.order.name,
+    orderDirection = this.state.order.direction
+  ) {
+    const tasksOrderInst = new OrderTask(tasks);
+
+    if (orderType === "difficulty") {
+      const orderedTasks = tasksOrderInst.difficulty(orderDirection);
+      return orderedTasks;
+    }
+    if (orderType === "energy") {
+      const orderedTasks = tasksOrderInst.energy(orderDirection);
+      return orderedTasks;
+    }
+    if (orderType === "timeCreated") {
+      const orderedTasks = tasksOrderInst.timeCreated(orderDirection);
+      return orderedTasks;
+    }
+  }
 }

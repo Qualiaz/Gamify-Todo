@@ -102,13 +102,6 @@ export default class TasksComponentView {
     if (view.menu === "dashboard") return "dashboardMenu";
   }
 
-  renderCards(parentEl, tasks) {
-    tasks.forEach((task) => {
-      task.view.render(parentEl, task.model.cardState);
-      task.eventListeners();
-    });
-  }
-
   getElems(id) {
     const tmComponent = document.getElementById(`tmComp-${id}`);
     const tmComponentName = document.getElementById(`tmComponentName-${id}`);
@@ -218,13 +211,20 @@ export default class TasksComponentView {
     return background;
   }
 
-  render(parentEl, view, id) {
+  renderCards(parentEl, tasks) {
+    tasks.forEach((task) => {
+      task.view.render(parentEl, task.model.cardState);
+      task.eventListeners();
+    });
+  }
+
+  render(parentEl, state, id) {
     parentEl.innerHTML = "";
-    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(view, id));
+    parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(state, id));
     const { tmComponent } = this.getElems(id);
 
-    this.switchView(view, id);
-    this.renderCards(tmComponent, view.tasks);
+    this.switchView(state, id);
+    this.renderCards(tmComponent, state.tasks);
     return tmComponent;
   }
 }

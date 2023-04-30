@@ -244,9 +244,7 @@ export async function setLocalHabitsFromDb() {
   await getDocs(colHabitsRef).then((snapshot) => {
     snapshot.docs.forEach((doc) => {
       const habitCardController = new HabitCardController();
-      console.log(doc.data());
       const habitData = habitCardController.model.createHabitData(doc.data());
-      console.log(habitData);
       habitCardController.model.habitData.id = doc.id;
       habitCardController.settingsController.model.habitData = habitData;
       habitCardController.settingsController.model.isCardCreated = true;

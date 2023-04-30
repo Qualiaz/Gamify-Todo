@@ -3,7 +3,7 @@ import { auth } from "../firebase/config";
 import initUser from "./initUserController";
 import { dashboardMenuController } from "./dashboardController";
 import TasksComponentController from "./TasksComponentController";
-import { tasksMenuController } from "./tasksMenuController";
+import TasksMenuController from "./tasksMenuController";
 import { curTasks, curTasksToday } from "../Model/main/TaskModel";
 import { createTasksFromDb } from "../Controller/TasksComponentController";
 import habitsMenuController from "./Menus/habitsMenuController";
@@ -26,7 +26,7 @@ export default async function Controller() {
 
   initUser();
 
-  await createTasksFromDb();
+  await model.createTasksFromDb();
   await setLocalHabitsFromDb();
   await model.setLocalEnergy();
   await model.setDbEnergy();
@@ -36,6 +36,7 @@ export default async function Controller() {
   model.getDbEnergy().then((energy) => view.renderEnergy(energy));
 
   spinner.stop();
+  console.log(curTasks);
 
   const nav = document.getElementById("nav");
   const menuBtns = nav.querySelectorAll("a");
@@ -50,7 +51,7 @@ export default async function Controller() {
           window.location.href = "/#/dashboard";
           break;
         case "tasks":
-          tasksMenuController.init();
+          new TasksMenuController().init();
           window.location.href = "/#/tasks";
           break;
         case "projects":

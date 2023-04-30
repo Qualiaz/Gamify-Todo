@@ -463,18 +463,9 @@ export class TasksComponentModel extends Model {
   }
 
   setOrderTasks(option) {
-    if (option === "difficulty") {
-      this.state.order.name = "energy";
-      this.init(parentEl);
-    }
-    if (option === "energy") {
-      this.state.order.name = "difficulty";
-      this.init(parentEl);
-    }
-    if (option === "timeCreated") {
-      this.state.order.name = "timeCreated";
-      this.init(parentEl);
-    }
+    if (option === "difficulty") this.state.order.name = "difficulty";
+    if (option === "energy") this.state.order.name = "energy";
+    if (option === "timeCreated") this.state.order.name = "timeCreated";
   }
 
   orderTasks(
@@ -486,15 +477,35 @@ export class TasksComponentModel extends Model {
 
     if (orderType === "difficulty") {
       const orderedTasks = tasksOrderInst.difficulty(orderDirection);
-      return orderedTasks;
+      this.state.tasks = orderedTasks;
+      // return orderedTasks;
     }
     if (orderType === "energy") {
       const orderedTasks = tasksOrderInst.energy(orderDirection);
-      return orderedTasks;
+      this.state.tasks = orderedTasks;
+      // return orderedTasks;
     }
     if (orderType === "timeCreated") {
       const orderedTasks = tasksOrderInst.timeCreated(orderDirection);
-      return orderedTasks;
+      this.state.tasks = orderedTasks;
+      // return orderedTasks;
+    }
+  }
+
+  resetState() {
+    if (this.state.menu === "tasks") {
+      this.state.filter = "all";
+      this.state.name = "timeCreated";
+      this.state.order.direction = "descending";
+      this.state.order.name = "timeCreated";
+      this.state.tasks = curTasks;
+    }
+    if (this.state.menu === "dashboard") {
+      this.state.filter = "today";
+      this.state.name = "timeCreated";
+      this.state.order.direction = "descending";
+      this.state.order.name = "timeCreated";
+      this.state.tasks = curTasksToday;
     }
   }
 }

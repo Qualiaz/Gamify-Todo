@@ -24,7 +24,8 @@ export default class TasksComponentController {
     });
     this.model.arrangeTasksInArrays();
     this.model.setFilterState(this.model.state.filter);
-    console.log(curTasks);
+    this.model.orderTasks();
+    // console.log(curTasks);
   }
 
   update() {
@@ -35,7 +36,7 @@ export default class TasksComponentController {
     console.log(this.model.state.tasks);
     if (this.model.state.menu === "dashboard") {
       console.log("do i init dashboard?");
-      this.init(document.getElementById("dashboadMenu"));
+      this.init(document.getElementById("dashboardTasks"));
     }
     if (this.model.state.menu === "tasks") {
       console.log("do i init tasks?");
@@ -80,41 +81,28 @@ export default class TasksComponentController {
     });
 
     orderSelections.addEventListener("change", (e) => {
-      const backgroundEl = document.querySelector(".background-modal");
       const option = e.target.options[e.target.selectedIndex].value;
       this.model.setOrderTasks(option);
       this.model.orderTasks();
-      // backgroundEl.remove();
+      this.init(parentEl);
     });
 
     optionOrderDirectionAscending.addEventListener("click", () => {
       this.model.state.order.direction = "ascending";
+      this.model.orderTasks();
       this.init(parentEl);
     });
 
     optionOrderDirectionDescending.addEventListener("click", () => {
       this.model.state.order.direction = "descending";
+      this.model.orderTasks();
       this.init(parentEl);
     });
 
     resetViewBtn.addEventListener("click", () => {
-      if (this.model.state.menu === "tasks") {
-        this.model.state.filter = "all";
-        this.model.state.name = "timeCreated";
-        this.model.state.order.direction = "descending";
-        this.model.state.order.name = "timeCreated";
-        this.model.state.tasks = curTasks;
-        this.init(parentEl);
-      }
-      if (this.model.state.menu === "dashboard") {
-        console.log("daashboard reset");
-        this.model.state.filter = "today";
-        this.model.state.name = "timeCreated";
-        this.model.state.order.direction = "descending";
-        this.model.state.order.name = "timeCreated";
-        this.model.state.tasks = curTasksToday;
-        this.init(parentEl);
-      }
+      this.model.resetState();
+      this.model.orderTasks();
+      this.init(parentEl);
     });
 
     addTaskBtn.addEventListener("click", () => {

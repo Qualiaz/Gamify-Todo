@@ -2,7 +2,7 @@ export default class OrderTask {
   constructor(tasksArr) {
     this.tasksArr = tasksArr;
   }
-  
+
   difficulty(direction) {
     const orderedTasks = [];
     const diffValues = this.tasksArr.map((task) => {
@@ -27,13 +27,13 @@ export default class OrderTask {
         return 0;
       }
     });
-    console.log(this.tasksArr)
-    console.log(orderedDiffValue)
+
     orderedDiffValue.forEach((shallowTask) => {
       this.tasksArr.forEach((task) => {
-        console.log(task)
-        console.log(shallowTask)
-        if (task.model.cardState.id === shallowTask.taskId) orderedTasks.push(task);
+        console.log(task);
+        console.log(shallowTask);
+        if (task.model.cardState.id === shallowTask.taskId)
+          orderedTasks.push(task);
       });
     });
     return orderedTasks;

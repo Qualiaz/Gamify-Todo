@@ -297,20 +297,28 @@
     }
   }
 
-  &__delete-button {
-    color: red !important;
-    background: none;
-    font-size: 1.6rem;
-    margin: 1rem 0;
-    text-decoration: underline;
-    border: none;
-    align-self: center;
-    padding: 0.2rem 0.2rem;
-    display: inline-block;
+  &__delete-button__wrapper {
+    display: flex;
+    flex-direction: row !important;
+    // outline: 1px solid blue;
+    justify-content: space-between;
+    padding: 1rem 0;
 
-    &:hover {
-      cursor: pointer;
-      color: rgb(218, 20, 20) !important;
+    span {
+      // outline: 1px solid pink;
+      font-weight: bold;
+    }
+
+    button {
+      background: none;
+      color: rgb(235, 14, 14) !important;
+      font-weight: bold;
+      font-size: 1.8rem;
+      border: none;
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
     }
   }
 }

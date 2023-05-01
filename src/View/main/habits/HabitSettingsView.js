@@ -108,7 +108,9 @@ export default class HabitSettingsView {
     `;
   }
 
-  _generateAdditionalExistingHabitMarkup() {
+  _generateAdditionalExistingHabitMarkup(data) {
+    let date = new Date(data.createdTime);
+
     return `
     <div class="habit-settings__streak__container">
     <label
@@ -153,6 +155,9 @@ export default class HabitSettingsView {
     <button id="habitSettingsDeleteBtn" class="habit-settings__delete-button" type="button">
       Delete
     </button>
+    <span>${date.getDate()} / ${
+      date.getMonth() + 1
+    } / ${date.getFullYear()}</span>
   </div>
   </div>
   </form>
@@ -246,7 +251,7 @@ export default class HabitSettingsView {
     const { habitSettingsMain } = this.getElems(habitData.id);
     habitSettingsMain.insertAdjacentHTML(
       "beforeend",
-      this._generateAdditionalExistingHabitMarkup()
+      this._generateAdditionalExistingHabitMarkup(habitData)
     );
   }
 

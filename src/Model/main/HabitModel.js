@@ -77,6 +77,7 @@ export default class HabitModel extends Model {
       streakPositive: Number(streakPositive),
       streakNegative: Number(streakNegative),
       isCardToggle: isCardToggle,
+      createdTime: new Date().getTime(),
     };
     return this.habitData;
   }

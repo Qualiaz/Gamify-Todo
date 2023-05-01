@@ -118,8 +118,8 @@ export default class YipDayModel {
     const moodColorMap = {
       awful: "#181116",
       sad: "#891A29",
-      ok: "#42BFDD",
-      good: "#5B9A63",
+      ok: "#5B9A63",
+      good: "#42BFDD",
       amazing: "#F9B624",
     };
     return moodColorMap[color];

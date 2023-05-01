@@ -198,7 +198,6 @@ export default class HabitCardView extends View {
   }
 
   render(habitComponent, cardState) {
-    console.log(cardState);
     habitComponent.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(cardState)

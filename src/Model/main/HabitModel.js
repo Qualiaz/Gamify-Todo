@@ -14,6 +14,7 @@ import { state } from "./Model";
 import Model from "./Model";
 
 export const allHabits = [];
+
 export default class HabitModel extends Model {
   habitData;
   isCardCreated;

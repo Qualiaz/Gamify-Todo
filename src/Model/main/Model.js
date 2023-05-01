@@ -61,7 +61,6 @@ export default class Model {
   }
 
   filterTask(taskCard) {
-    console.log(taskCard.model.cardState);
     if (taskCard.model.cardState.startDate) {
       if (taskCard.model.cardState.repeat.type === "every-other-day") {
         const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
@@ -79,6 +78,34 @@ export default class Model {
       // no selected date
       curTasksWhenever.push(taskCard);
     }
+  }
+
+  async getUser() {
+    const user = localStorage.getItem("user");
+    let docUserRef = doc(db, "users", user);
+    if (!docUserRef) {
+      docUserRef = doc(db, "users", auth.currentUser.uid);
+    }
+    const docSnap = await getDoc(docUserRef);
+    const userData = docSnap.data();
+    const stats = userData.stats;
+    const profile = userData.profile;
+
+    return { profile, stats };
+  }
+
+  changeProfilePicture() {
+    const input = document.getElementById("profileCardChangePicInput");
+    const img = document.getElementById("profileImg");
+
+    input.addEventListener("change", function () {
+      if (this.files && this.files[0]) {
+        img.onload = () => {
+          URL.revokeObjectURL(img.src);
+        };
+        img.src = URL.createObjectURL(this.files[0]);
+      }
+    });
   }
 
   async getEnergyTasks() {
@@ -146,9 +173,9 @@ export default class Model {
   }
 
   async initEnergy() {
+    await this.getEnergyTasks();
     await this.getEnergyHabits();
     await this.setLocalEnergy();
-    await this.getEnergyTasks();
     this.setDbEnergy();
   }
 

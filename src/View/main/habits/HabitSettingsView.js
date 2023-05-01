@@ -155,9 +155,8 @@ export default class HabitSettingsView {
     <button id="habitSettingsDeleteBtn" class="habit-settings__delete-button" type="button">
       Delete
     </button>
-    <span>${date.getDate()} / ${
-      date.getMonth() + 1
-    } / ${date.getFullYear()}</span>
+    <span>${date.getDate()} / ${date.getMonth() + 1} / ${date.getFullYear()}
+    </span>
   </div>
   </div>
   </form>

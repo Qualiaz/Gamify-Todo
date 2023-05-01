@@ -26,6 +26,7 @@ export default async function Controller() {
 
   initUser();
 
+  await model.getUser();
   await model.createTasksFromDb();
   await setLocalHabitsFromDb();
   await model.setLocalEnergy();
@@ -33,7 +34,15 @@ export default async function Controller() {
   await model.getAllYipDays();
   await model.addYipToday();
 
-  model.getDbEnergy().then((energy) => view.renderEnergy(energy));
+  await model.getDbEnergy().then((energy) => view.renderEnergy(energy));
+  let userStats;
+  let profile;
+  await model.getUser().then(({ profile, stats }) => {
+    userStats = stats;
+    profile = profile;
+    // view.renderName(profile.displayName);
+    // view.renderStats(stats);
+  });
 
   spinner.stop();
   console.log(curTasks);
@@ -69,6 +78,20 @@ export default async function Controller() {
           break;
       }
     });
+  });
+
+  //Profile modal
+  document.addEventListener("click", (e) => {
+    if (e.target.id === "profileCardCloseBtn") {
+      const profileModal = document.getElementById("profileModal");
+      profileModal.remove();
+    }
+
+    if (e.target.id === "profileImg") {
+      // console.log(userStats);
+      view.renderStats(userStats);
+      model.changeProfilePicture();
+    }
   });
 
   // SIGN OUT

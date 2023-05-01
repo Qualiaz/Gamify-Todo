@@ -67,6 +67,14 @@
   }
 
   &__img {
+    &-btn {
+      background: none;
+      border: none;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
     width: 12rem;
     height: 12rem;
     border: 1px solid $secondary;

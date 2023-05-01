@@ -18,6 +18,8 @@ class DashboardMenuController {
       "dashboard",
       "today"
     );
+
+    // console.log(dashboardTasks)
     tasksComponentController.init(dashboardTasks);
     tasksComponentController.model.state.menu = "dashboard";
   }

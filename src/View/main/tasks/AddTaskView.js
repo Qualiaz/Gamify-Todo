@@ -410,7 +410,6 @@ export default class TaskSettingsView extends View {
     );
 
     const { deleteBtn } = this.getElems();
-    console.log(deleteBtn);
   }
 
   hoverDisplayCpIcons(cpsCont) {
@@ -606,6 +605,7 @@ export default class TaskSettingsView extends View {
     root.style.filter = "none";
     sidebar.style.filter = "none";
     sidebar.style.pointerEvents = "auto";
+    root.prepend(sidebar);
     document.body.style.overflow = "visible";
   }
 
@@ -640,6 +640,8 @@ export default class TaskSettingsView extends View {
       "afterbegin",
       this._generateMarkup(state ? state : {})
     );
+
+    this.blurRoot("5px");
 
     if (state) {
       this.setSelectedRepeatOption(state.repeat);

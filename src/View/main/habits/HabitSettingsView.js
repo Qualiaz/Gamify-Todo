@@ -1,3 +1,5 @@
+import iconEnergy from "./assets/energy-icon.svg";
+
 export default class HabitSettingsView {
   _generateMarkup({ id }) {
     return `
@@ -79,14 +81,17 @@ export default class HabitSettingsView {
            
           </select>
         </div>
-        <div class="habit-settings__energy">
-          <label
+        <div class="habit-settings__energy-container">
+          <div class="habit-settings__energy-container-top">
+            <label
             class="habit-settings__energy-label"
-            for="habitSettingsEnergy"
-            >
+            for="habitSettingsEnergy">
             Energy  
             <span id="habitSettingsEnergyDispay">1</span>
-          </label>  
+            <img src="${iconEnergy}" alt="energy icon" />
+           </label> 
+          </div>
+         
           <input
             id="habitSettingsEnergy"
             class="habit-settings__energy-input"
@@ -220,6 +225,20 @@ export default class HabitSettingsView {
   renderChangesInEnergyDisplay(value) {
     const { habitSettingsEnergyDispay } = this.getElems();
     habitSettingsEnergyDispay.textContent = value;
+  }
+
+  blurBackground() {
+    document.getElementById("main").style.filter = "blur(5px)";
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.filter = "blur(5px)";
+    sidebar.style.pointerEvents = "none";
+  }
+
+  unblurBackground() {
+    document.getElementById("main").style.filter = "none";
+    const sidebar = document.getElementById("sidebar");
+    sidebar.style.filter = "none";
+    sidebar.style.pointerEvents = "auto";
   }
 
   renderExistingHabit(habitData = null) {

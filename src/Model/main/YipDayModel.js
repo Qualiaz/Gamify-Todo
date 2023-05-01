@@ -74,7 +74,6 @@ export default class YipDayModel {
     add: async () => {
       try {
         const docRef = await addDoc(this.db.getColYipRef(), this.state);
-        console.log(docRef.id);
         this.state.dbId = docRef.id;
       } catch (e) {
         console.error("error adding doc:", e);

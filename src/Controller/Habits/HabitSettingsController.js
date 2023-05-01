@@ -34,6 +34,7 @@ export default class HabitSettingsController {
           else {
             this.view.renderFormError();
           }
+          this.view.unblurBackground();
         }
       });
     };
@@ -73,11 +74,13 @@ export default class HabitSettingsController {
           else {
             this.view.renderFormError();
           }
+          this.view.unblurBackground();
         }
         if (clickedId === `habitSettingsDeleteBtn`) {
           this.model.initDeleteHabit();
           habitCardEl.remove();
           habitSettingsContainer.remove();
+          this.view.unblurBackground();
         }
       });
 
@@ -99,16 +102,15 @@ export default class HabitSettingsController {
       const clickedId = e.target.id;
       if (clickedId === "habitSettingsCancelBtn") {
         habitSettingsContainer.remove();
+        this.view.unblurBackground();
       }
     });
 
-    habitSettingsDifficulty.querySelectorAll("option").forEach((el) => {
-      el.addEventListener("click", (e) => {
-        const minValueDifficulty = this.model.changeEnergyValues(
-          e.target.value
-        );
-        this.view.renderChangesInEnergyDisplay(minValueDifficulty);
-      });
+    habitSettingsDifficulty.addEventListener("change", (e) => {
+      const minEnergyValueDifficulty = this.model.changeEnergyValues(
+        e.target.value
+      );
+      this.view.renderChangesInEnergyDisplay(minEnergyValueDifficulty);
     });
 
     habitSettingsEnergy.addEventListener("input", (e) => {
@@ -124,11 +126,13 @@ export default class HabitSettingsController {
     this.model.setElems(this.view.getElems(data.id || this.model.habitData.id));
     this.model.setValuesForm();
     this.eventListeners();
+    this.view.blurBackground();
   }
 
   initAddHabit() {
     this.view.render();
     this.model.setElems(this.view.getElems());
     this.eventListeners();
+    this.view.blurBackground();
   }
 }

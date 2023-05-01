@@ -170,7 +170,8 @@ export default class Model {
     const yipDayController = new YipDayController();
 
     if (!state.yipDays[day]) {
-      await yipDayController.model.db.initDoc();
+      const x = await yipDayController.model.db.initDoc();
+      console.log(x);
       yipDayController.model.state.dbId = doc.id;
       state.yipDays[day] = yipDayController;
       state.initYipDayController = state.yipDays[day];

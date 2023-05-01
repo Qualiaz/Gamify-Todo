@@ -65,7 +65,6 @@ export default class HabitModel extends Model {
     difficulty,
     energy,
     notes,
-    id,
     streakNegative,
     streakPositive,
     isCardToggle,
@@ -75,10 +74,9 @@ export default class HabitModel extends Model {
       difficulty: difficulty,
       energy: Number(energy),
       notes: notes,
-      streakPositive: streakPositive,
-      streakNegative: streakNegative,
+      streakPositive: Number(streakPositive),
+      streakNegative: Number(streakNegative),
       isCardToggle: isCardToggle,
-      id: id,
     };
     return this.habitData;
   }
@@ -91,13 +89,14 @@ export default class HabitModel extends Model {
     habitCard.model = this;
 
     this.isCardCreated = true;
-    allHabits.push(habitCard);
+
     return habitCard;
   }
 
-  addHabitDb(habitModel) {
+  addHabitDb(data) {
     const colHabitsRef = this.#getColHabitsRef();
-    const habitData = Object.assign({}, habitModel);
+    const habitData = Object.assign({}, data);
+    console.log(habitData);
     const id = addDoc(colHabitsRef, habitData).then((doc) => {
       return doc.id;
     });
@@ -108,6 +107,7 @@ export default class HabitModel extends Model {
     const habitCard = this.addHabitLocal();
     const docId = await this.addHabitDb(habitCard.model.habitData);
     habitCard.model.habitData.id = docId;
+    allHabits.push(habitCard);
     return habitCard;
   }
 
@@ -138,8 +138,8 @@ export default class HabitModel extends Model {
     this.habitData.notes = notes;
     this.habitData.difficulty = difficulty;
     this.habitData.energy = energy;
-    this.habitData.streakPositive = streakPositive;
-    this.habitData.streakNegative = streakNegative;
+    this.habitData.streakPositive = Number(streakPositive);
+    this.habitData.streakNegative = Number(streakNegative);
 
     return this.habitData;
   }
@@ -172,6 +172,9 @@ export default class HabitModel extends Model {
         difficulty: habitSettingsDifficulty.value,
         projectAssociated: habitSettingsProjectAssociated.value,
         energy: habitSettingsEnergy.value,
+        streakPositive: 0,
+        streakNegative: 0,
+        isCardToggle: true,
       };
   }
 

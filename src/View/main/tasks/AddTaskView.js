@@ -86,9 +86,9 @@ export default class TaskSettingsView extends View {
            repeat && repeat.type === "weekly" ? null : "hidden"
          }" id="taskSettingsRepeatWeekContainer">
             <input
-               class="task-settings__repeat-weekly-el ${
+               class="task-settings__repeat-weekly-el  task-settings__day-selected ${
                  repeat?.daysOfWeek?.Mon === "true"
-                   ? "task-settings__day-selected"
+                   ? "task-settings__day"
                    : null
                }"
                type="button"
@@ -97,9 +97,9 @@ export default class TaskSettingsView extends View {
                id="taskSettingsBtnRepeatWeekMon"
                />
             <input
-               class="task-settings__repeat-weekly-el ${
+               class="task-settings__repeat-weekly-el  task-settings__day-selected ${
                  repeat?.daysOfWeek?.Tue === "true"
-                   ? "task-settings__day-selected"
+                   ? "task-settings__day"
                    : null
                }"
                value="Tue"
@@ -108,9 +108,9 @@ export default class TaskSettingsView extends View {
                id="taskSettingsBtnRepeatWeekTue"
                />
             <input
-               class="task-settings__repeat-weekly-el ${
+               class="task-settings__repeat-weekly-el  task-settings__day-selected ${
                  repeat?.daysOfWeek?.Wed === "true"
-                   ? "task-settings__day-selected"
+                   ? "task-settings__day"
                    : null
                }"
                value="Wed"
@@ -119,9 +119,9 @@ export default class TaskSettingsView extends View {
                id="taskSettingsBtnRepeatWeekWed"
                />
             <input
-               class="task-settings__repeat-weekly-el ${
+               class="task-settings__repeat-weekly-el  task-settings__day-selected ${
                  repeat?.daysOfWeek?.Thu === "true"
-                   ? "task-settings__day-selected"
+                   ? "task-settings__day"
                    : null
                }"
                value="Thu"
@@ -130,9 +130,9 @@ export default class TaskSettingsView extends View {
                id="taskSettingsBtnRepeatWeekThu"
                />
             <input
-               class="task-settings__repeat-weekly-el ${
+               class="task-settings__repeat-weekly-el task-settings__day-selected ${
                  repeat?.daysOfWeek?.Fri === "true"
-                   ? "task-settings__day-selected"
+                   ? "task-settings__day"
                    : null
                }"
                value="Fri"
@@ -141,9 +141,9 @@ export default class TaskSettingsView extends View {
                id="taskSettingsBtnRepeatWeekFri"
                />
             <input
-               class="task-settings__repeat-weekly-el ${
+               class="task-settings__repeat-weekly-el  task-settings__day-selected  ${
                  repeat?.daysOfWeek?.Sat === "true"
-                   ? "task-settings__day-selected"
+                   ? "task-settings__day"
                    : null
                }"
                value="Sat"
@@ -152,9 +152,9 @@ export default class TaskSettingsView extends View {
                id="taskSettingsBtnRepeatWeekSat"
                />
             <input
-               class="task-settings__repeat-weekly-el ${
+               class="task-settings__repeat-weekly-el task-settings__day-selected ${
                  repeat?.daysOfWeek?.Sun === "true"
-                   ? "task-settings__day-selected"
+                   ? "task-settings__day"
                    : null
                }"
                value="Sun"
@@ -468,13 +468,13 @@ export default class TaskSettingsView extends View {
       repeatTextError,
       repeatInputEveryOtherDay,
     } = this.getElems();
-    console.log(repeatWeekContainer);
+
     repeatWeekContainer.classList.remove("hidden");
 
     // resets
     repeatEveryOtherDayWrapper.classList.add("hidden");
     repeatTextError.classList.add("hidden");
-    repeatInputEveryOtherDay.value = "";
+    repeatInputEveryOtherDay.value = 1;
   }
 
   renderNewCheckpoint(id, name) {
@@ -511,17 +511,9 @@ export default class TaskSettingsView extends View {
     if (curRepeat.type === "weekly") {
       repeatOptionEveryWeek.setAttribute("selected", "selected");
       repeatWeekContainer.classList.remove("hidden");
-      console.log(curRepeat);
-      Array.from(repeatWeekContainer.children).forEach((day) => {
-        day.classList.remove("day__selected");
-      });
 
-      // curRepeat.daysOfWeek.forEach((day) => {
-      //   const dayUpperCase = day.slice(0, 1).toUpperCase() + day.slice(1);
-      //   const dayEl = document.getElementById(
-      //     `taskSettingsRepeatWeek${dayUpperCase}`
-      //   );
-      //   dayEl.classList.add("day__selected");
+      // Array.from(repeatWeekContainer.children).forEach((day) => {
+      //   day.classList.remove("day__selected");
       // });
 
       for (const [day, value] of Object.entries(curRepeat.daysOfWeek)) {
@@ -530,11 +522,11 @@ export default class TaskSettingsView extends View {
         const dayEl = document.getElementById(
           `taskSettingsBtnRepeatWeek${day}`
         );
-        console.log(dayEl);
+
         if (value === "true") {
-          dayEl.classList.add("day__selected");
+          dayEl.classList.add("task-settings__day-selected");
         } else {
-          dayEl.classList.remove("day__selected");
+          dayEl.classList.remove("task-settings__day-selected");
         }
       }
     }
@@ -596,20 +588,25 @@ export default class TaskSettingsView extends View {
     name.focus();
   }
 
-  toggleDayOfWeek(weekEl) {
-    if (weekEl.dataset.selected === "true") {
-      weekEl.dataset.selected = "false";
+  toggleDayOfWeek(dayEl) {
+    if (dayEl.dataset.selected === "true") {
+      dayEl.dataset.selected = "false";
     } else {
-      weekEl.dataset.selected = "true";
+      dayEl.dataset.selected = "true";
     }
-    weekEl.classList.toggle("task-settings__day-selected");
+    dayEl.classList.toggle("task-settings__day-selected");
+    return dayEl.dataset.selected;
   }
 
   closeSettings() {
     const body = document.querySelector("body");
     const root = document.getElementById("root");
+    const sidebar = document.getElementById("sidebar");
     body.removeChild(body.children[0]);
     root.style.filter = "none";
+    sidebar.style.filter = "none";
+    sidebar.style.pointerEvents = "auto";
+    document.body.style.overflow = "visible";
   }
 
   isOnlyOneCp(cpsCont) {
@@ -623,7 +620,12 @@ export default class TaskSettingsView extends View {
 
   blurRoot(blur) {
     const root = document.querySelector("#root");
+    const sidebar = document.getElementById("sidebar");
+    document.body.append(sidebar);
     root.style.filter = `blur(${blur})`;
+    sidebar.style.filter = `blur(${blur})`;
+    sidebar.style.pointerEvents = "none";
+    document.body.style.overflow = "hidden";
   }
 
   deleteCp(deleteIconBtn) {

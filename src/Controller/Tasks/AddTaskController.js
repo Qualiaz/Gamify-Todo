@@ -28,6 +28,7 @@ export default class TaskSettingsController {
     } = this.view.getElems();
 
     doneBtn.addEventListener("click", (e) => {
+      console.log(inputValues());
       if (this.curTaskCard) {
         const cardState = this.curTaskCard.model.setCardState(inputValues());
         this.model.state = cardState;
@@ -71,10 +72,14 @@ export default class TaskSettingsController {
     ///////////////////////////////////
     repeatSelect.addEventListener("change", (e) => {
       if (e.target.value === "no-repeat") this.view.renderNoRepeat();
-      if (e.target.value === "every-other-day")
-        this.view.renderRepeatEveryOtherDay();
 
-      if (e.target.value === "weekly") this.view.renderRepeatEveryWeek();
+      if (e.target.value === "every-other-day") {
+        this.view.renderRepeatEveryOtherDay();
+      }
+
+      if (e.target.value === "weekly") {
+        this.view.renderRepeatEveryWeek();
+      }
     });
 
     repeatWeekContainer.addEventListener("click", (e) => {

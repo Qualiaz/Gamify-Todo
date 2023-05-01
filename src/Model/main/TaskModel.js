@@ -458,8 +458,6 @@ export class TasksComponentModel extends Model {
     curTasks.forEach((task) => {
       this.filterTask(task);
     });
-
-    console.log(curTasks);
   }
 
   setOrderTasks(option) {

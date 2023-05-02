@@ -219,9 +219,7 @@ export default class TasksComponentView {
   }
 
   render(parentEl, state, id) {
-    // if (parentEl === 'dashboardMenu'){
-
-    // }
+    if (parentEl === null) return;
     parentEl.innerHTML = "";
     parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(state, id));
     const { tmComponent } = this.getElems(id);

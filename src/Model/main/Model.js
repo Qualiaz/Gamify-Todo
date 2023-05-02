@@ -56,6 +56,7 @@ export default class Model {
       this.filterTask(taskCard);
     });
   }
+
   async getUser() {
     const user = localStorage.getItem("user");
     let docUserRef = doc(db, "users", user);

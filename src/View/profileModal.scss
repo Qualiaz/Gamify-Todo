@@ -4,7 +4,6 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background-color: hsla(0, 33%, 72%, 0.527);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,10 +16,12 @@
 
 .profile-card {
   width: 45rem;
-  //   height: 50rem;
   background-color: rgb(58, 58, 59);
   border-radius: 1rem;
   overflow: hidden;
+  animation-name: moveIn;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
 
   hr {
     width: 90%;
@@ -38,12 +39,13 @@
   &__main {
     display: flex;
     flex-direction: column;
-    margin: 0 3rem;
+    margin: 2rem 3rem;
     gap: 1.6rem;
   }
   &__footer {
     display: flex;
-    margin: 0 3rem;
+    align-items: center;
+    margin: 2rem 3rem;
     justify-content: space-between;
     height: 5rem;
   }
@@ -63,7 +65,7 @@
 .profile-card__close-btn {
   position: absolute;
   right: 2rem;
-  top: 4.5rem;
+  top: 2rem;
   z-index: 10;
   color: rgb(65, 37, 6);
   font-weight: bold;
@@ -87,9 +89,10 @@
     position: relative;
     z-index: 20;
     top: 3.8rem;
+    overflow: hidden;
+    outline: 8px solid #3a3a3b;
     // top: -2rem;
   }
-  position: absolute;
   object-fit: cover;
   width: 100%;
   height: 100%;
@@ -101,9 +104,13 @@
   //   z-index: 10;
 }
 
+.profile-card__energy-img {
+  transform: translateY(5px);
+}
+
 .profile-card__change-img-input {
   display: none;
-  //   position: absolute;
+  // position: absolute;
   //   outline: 2px solid red;
   //   top: 0;
   //   left: 0;
@@ -180,5 +187,19 @@
   &:hover {
     text-decoration: underline;
     cursor: pointer;
+  }
+}
+
+@keyframes moveIn {
+  0% {
+    transform: translateY(-5%);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
   }
 }

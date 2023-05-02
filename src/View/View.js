@@ -1,3 +1,5 @@
+import iconEnergy from "./main/tasks/assets/energy-icon.svg";
+
 export default class View {
   _generateSidebarMarkup() {
     return `
@@ -87,7 +89,13 @@ export default class View {
     energyNav.innerText = energy;
   }
 
-  renderName(name) {
+  renderProfileCardEnergy() {
+    const energyNav = document.getElementById("energyNav");
+    const profileCardEnergy = document.getElementById("profileCardEnergy");
+    profileCardEnergy.innerText = energyNav.innerText;
+  }
+
+  renderNameSidebar(name) {
     const profileNameNav = document.getElementById("profileNameNav");
     profileNameNav.innerText = name;
   }
@@ -97,8 +105,8 @@ export default class View {
     <div id="profileModal" class="profile-modal">
     <div class="profile-card">
       <div class="profile-card__header">
-        <div class="profile-card__change-img-input-wrapper">       
-           <input class="profile-card__change-img-input" id="profileCardChangePicInput" type="file" accept="image/*" />
+        <div class="hidden profile-card__change-img-input-wrapper">       
+           <input class="hidden profile-card__change-img-input" id="profileCardChangePicInput" type="file" accept="image/*" />
         </div>
         <div class="profile-card__background"></div>               
         <div class="profile-card__close-btn-wrapper">
@@ -118,9 +126,10 @@ export default class View {
           <span class="profile-card__name">${profile.displayName}</span>
         </div>
         <div class="profile-card__energy">
-          <span>Energy</span>
-          <span>${stats.energyPoints || 0}</span>
-          <img src="" alt="" />
+          <img class="profile-card__energy-img" src="${iconEnergy}" alt="" />
+          <span id="profileCardEnergy" class="profile-card__energy">${
+            stats.energyPoints || 0
+          }</span>
         </div>
       </div>
       <hr />
@@ -203,7 +212,7 @@ export default class View {
           >
         </div>
         <div class="profile-card__sign-out-wrapper">
-          <button class="profile-card__sign-out-btn">Sign out</button>
+          <button id="profileCardSignOutBtn" class="profile-card__sign-out-btn">Sign out</button>
         </div>
       </div>
     </div>
@@ -213,11 +222,20 @@ export default class View {
 
   renderStats(state) {
     const body = document.querySelector("body");
-    console.log(state);
+    const root = document.getElementById("root");
     body.insertAdjacentHTML(
       "afterbegin",
       this._generateProfileModalMarkup(state.userStats, state.userProfile)
     );
+    this.renderProfileCardEnergy();
+    root.style.filter = "blur(5px)";
+  }
+
+  removeProfileModal() {
+    const profileModal = document.getElementById("profileModal");
+    const root = document.getElementById("root");
+    profileModal.remove();
+    root.style.filter = "";
   }
 
   render() {
@@ -228,7 +246,6 @@ export default class View {
     root.append(main);
     root.id = "root";
     main.id = "main";
-    // root.style.display = "none";
     root.insertAdjacentHTML("afterbegin", this._generateSidebarMarkup());
   }
 }

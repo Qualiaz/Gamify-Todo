@@ -43,7 +43,7 @@ export default class Controller {
     await this.model
       .getDbEnergy()
       .then((energy) => this.view.renderEnergy(energy));
-    this.view.renderName(state.userProfile.displayName);
+    this.view.renderNameSidebar(state.userProfile.displayName);
 
     spinner.stop();
 
@@ -79,28 +79,26 @@ export default class Controller {
 
     //Profile modal
     document.addEventListener("click", (e) => {
-      if (e.target.id === "profileCardCloseBtn") {
-        const profileModal = document.getElementById("profileModal");
-        profileModal.remove();
-      }
-
       if (e.target.id === "profileImg") {
         this.view.renderStats(state);
+      }
+
+      if (e.target.id === "profileCardCloseBtn") {
+        this.view.removeProfileModal();
       }
 
       if (e.target.id === "profileCardImg") {
         this.model.changeProfilePicture();
       }
+
+      if (e.target.id === "profileCardSignOutBtn") {
+        signOut(auth).then((_) => {
+          window.location.href = "/auth.html";
+        });
+      }
     });
 
     // SIGN OUT
     const signoutBtn = document.getElementById("signoutBtn");
-    signoutBtn.addEventListener("click", (e) => {
-      signOut(auth).then((_) => {
-        window.location.href = "/auth.html";
-      });
-    });
   }
 }
-
-// needs moving after refactor

@@ -1,8 +1,8 @@
 import YipDayController from "../../Controller/YipDayController";
-import { state } from "./Model";
+import Model, { state } from "./Model";
 import { formatYipCalendarId } from "../../helpers/formatYipCalendarId";
 
-export default class YipCalendarModel {
+export default class YipCalendarModel extends Model {
   getDaysMoodColors() {
     //
     let daysColors = {};

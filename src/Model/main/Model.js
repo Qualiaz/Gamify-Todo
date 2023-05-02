@@ -11,22 +11,17 @@ import { auth, db } from "../../firebase/config";
 import { getCurrentDay } from "../../helpers/date";
 import YipDayController from "../../Controller/YipDayController";
 import TaskCardController from "../../Controller/TaskCardController";
-import HabitCardController from "../../Controller/Habits/HabitCardController";
-import {
-  curTasks,
-  curTasksThisWeek,
-  curTasksToday,
-  curTasksTomorrow,
-  curTasksWhenever,
-} from "./TaskModel";
+import { curTasks, curTasksWhenever } from "./TaskModel";
+
 import {
   addTasksNoRepeatFilter,
   addTasksOtherDayFilter,
   addTasksWeekDaysFilter,
 } from "../../helpers/filters";
-import { allHabits } from "./HabitModel";
 
 export const state = {
+  userStats: null,
+  userProfile: null,
   totalEnergy: 0,
   yipDays: {},
   selectedDay: null,
@@ -37,21 +32,6 @@ export default class Model {
   constructor() {
     this.observers = [];
   }
-
-  // async setLocalHabitsFromDb() {
-  //   const docUserRef = doc(db, "users", auth.currentUser.uid);
-  //   const colHabitsRef = collection(docUserRef, "habits");
-  //   await getDocs(colHabitsRef).then((snapshot) => {
-  //     snapshot.docs.forEach((doc) => {
-  //       const habitCardController = new HabitCardController();
-  //       const habitData = habitCardController.model.createHabitData(doc.data());
-  //       habitCardController.model.habitData.id = doc.id;
-  //       habitCardController.settingsController.model.habitData = habitData;
-  //       habitCardController.settingsController.model.isCardCreated = true;
-  //       allHabits.push(habitCardController);
-  //     });
-  //   });
-  // }
 
   async createTasksFromDb() {
     const docUserRef = doc(db, "users", localStorage.getItem("user"));
@@ -76,33 +56,13 @@ export default class Model {
       this.filterTask(taskCard);
     });
   }
-
-  filterTask(taskCard) {
-    if (taskCard.model.cardState.startDate) {
-      if (taskCard.model.cardState.repeat.type === "every-other-day") {
-        const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
-        console.log(everyOtherDay);
-        addTasksOtherDayFilter(everyOtherDay, taskCard);
-        return;
-      }
-      if (taskCard.model.cardState.repeat.type === "weekly") {
-        const days = taskCard.model.cardState.repeat.daysOfWeek;
-        addTasksWeekDaysFilter(days, taskCard);
-        return;
-      }
-      addTasksNoRepeatFilter(taskCard);
-    } else {
-      // no selected date
-      curTasksWhenever.push(taskCard);
-    }
-  }
-
   async getUser() {
     const user = localStorage.getItem("user");
     let docUserRef = doc(db, "users", user);
-    if (!docUserRef) {
+    if (!user) {
       docUserRef = doc(db, "users", auth.currentUser.uid);
     }
+
     const docSnap = await getDoc(docUserRef);
     const userData = docSnap.data();
     const stats = userData.stats;
@@ -131,6 +91,7 @@ export default class Model {
     });
   }
 
+  // tasks
   async getEnergyTasks() {
     let totalEnergyFromTasks;
     const energyArr = [];
@@ -149,6 +110,20 @@ export default class Model {
     totalEnergyFromTasks = energyArr.reduce((a, b) => a + b, 0);
     return totalEnergyFromTasks;
   }
+
+  async updateUserTasksStats(type) {
+    const colRef = collection(db, "users");
+    const docRef = doc(colRef, auth.currentUser.uid);
+
+    if (type === "positive") state.userStats.finishedTasks++;
+    if (type === "negative") state.userStats.finishedTasks--;
+
+    await updateDoc(docRef, {
+      "stats.finishedTasks": state.userStats.finishedTasks,
+    });
+  }
+
+  // habits
 
   async getEnergyHabits() {
     let totalEnergyFromHabits;
@@ -171,6 +146,19 @@ export default class Model {
     return totalEnergyFromHabits;
   }
 
+  async setHabitsToUserStatsFromDb() {
+    const docUserRef = doc(db, "users", auth.currentUser.uid);
+    const colHabitsRef = collection(docUserRef, "habits");
+    await getDocs(colHabitsRef).then((snapshot) => {
+      snapshot.forEach((doc) => {
+        console.log(state);
+        state.userStats.habitsNegative += Number(doc.data().streakNegative);
+        state.userStats.habitsPositive += Number(doc.data().streakPositive);
+      });
+    });
+  }
+
+  // energy
   async setLocalEnergy() {
     const totalTasksEnergyGained = await this.getEnergyHabits().then(
       (energy) => energy
@@ -280,5 +268,26 @@ export default class Model {
     await updateDoc(docRef, {
       "stats.yearInPixels": moodStats,
     });
+  }
+
+  //util
+  filterTask(taskCard) {
+    if (taskCard.model.cardState.startDate) {
+      if (taskCard.model.cardState.repeat.type === "every-other-day") {
+        const everyOtherDay = taskCard.model.cardState.repeat.everyOtherDay;
+        console.log(everyOtherDay);
+        addTasksOtherDayFilter(everyOtherDay, taskCard);
+        return;
+      }
+      if (taskCard.model.cardState.repeat.type === "weekly") {
+        const days = taskCard.model.cardState.repeat.daysOfWeek;
+        addTasksWeekDaysFilter(days, taskCard);
+        return;
+      }
+      addTasksNoRepeatFilter(taskCard);
+    } else {
+      // no selected date
+      curTasksWhenever.push(taskCard);
+    }
   }
 }

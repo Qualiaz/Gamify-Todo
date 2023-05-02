@@ -5,7 +5,7 @@ import TaskModel, { curTasks } from "../Model/main/TaskModel";
 import TaskCardView from "../View/main/tasks/TaskCardView";
 import Timer from "easytimer.js";
 import { openTaskSettings } from "./Tasks/AddTaskController";
-
+import { state } from "../Model/main/Model";
 export default class TaskCardController {
   constructor() {
     this.view = new TaskCardView();
@@ -18,20 +18,22 @@ export default class TaskCardController {
     const taskCardContainer = document.getElementById(`taskCard-${id}`);
     taskCardContainer.addEventListener("click", (e) => {
       const clickedId = e.target.id;
-      if (clickedId === `taskCard-${id}`) {
-        console.log("hi");
-      }
+      // if (clickedId === `taskCard-${id}`) {
+      //   console.log("hi");
+      // }
       if (clickedId === `taskCardTop-${id}`) {
         this.model.openTaskSettings();
       }
       if (clickedId === `taskCheckboxUnfinished-${id}`) {
         this.model.checkTask(true);
         this.view.renderToggleCheckTask(id);
+        ///
         this.model.initEnergy().then(() => {
           this.model
             .getDbEnergy()
             .then((energy) => this.view.renderEnergy(energy));
         });
+        this.model.updateUserTasksStats("positive");
         this.view.initEnergyPopup(Number(this.model.cardState.energy));
       }
       if (clickedId === `taskCheckboxFinished-${id}`) {
@@ -42,6 +44,7 @@ export default class TaskCardController {
             .getDbEnergy()
             .then((energy) => this.view.renderEnergy(energy));
         });
+        this.model.updateUserTasksStats("negative");
         this.view.initEnergyPopup(
           Number(this.model.cardState.energy),
           "negative"

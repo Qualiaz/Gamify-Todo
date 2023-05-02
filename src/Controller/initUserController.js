@@ -4,7 +4,7 @@ import { auth } from "../firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
 import InitUserData from "../Model/InitUserData";
 
-export default function initUser() {
+export default async function initUser() {
   async function createUserDoc(uid, email, displayName) {
     const userDocRef = doc(db, "users", uid);
     const userInst = new InitUserData(email, displayName);

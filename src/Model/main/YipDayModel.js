@@ -2,7 +2,6 @@ import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { getCurrentDay } from "../../helpers/date";
 import { state } from "./Model";
-// import Model from "./Model";
 
 export default class YipDayModel {
   state = {};
@@ -110,9 +109,45 @@ export default class YipDayModel {
     this.updateGlobalState();
   }
 
-  updateGlobalState() {
+  async updateGlobalState() {
     const globalYipDayController = state.yipDays[this.state.id];
     globalYipDayController.model.state = this.state;
+    this.updateGlobalStateUserYipStats();
+  }
+
+  getMoodColorsStats() {
+    let colorsStats = {};
+    let moodsStats = {};
+
+    const getColorsStats = () => {
+      for (let key in state.yipDays) {
+        let color = state.yipDays[key].model.state.moodColor;
+        if (colorsStats[color]) colorsStats[color]++;
+        else colorsStats[color] = 1;
+      }
+    };
+
+    const changeColorsKeyToMoods = () => {
+      for (let key in colorsStats) {
+        let newKey;
+        if (key === "#181116") newKey = "awful";
+        if (key === "#891A29") newKey = "bad";
+        if (key === "#5B9A63") newKey = "ok";
+        if (key === "#42BFDD") newKey = "good";
+        if (key === "#F9B624") newKey = "amazing";
+
+        moodsStats[newKey] = colorsStats[key];
+      }
+    };
+
+    getColorsStats();
+    changeColorsKeyToMoods();
+    return moodsStats;
+  }
+
+  updateGlobalStateUserYipStats() {
+    const moodsStats = this.getMoodColorsStats();
+    state.userStats.yearInPixels = moodsStats;
   }
 
   getMoodColor(color) {

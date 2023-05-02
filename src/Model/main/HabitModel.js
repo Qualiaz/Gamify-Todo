@@ -1,4 +1,4 @@
-// import Model from "./Model";
+import Model from "./Model";
 import { state } from "./Model";
 import {
   addDoc,
@@ -10,14 +10,14 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import HabitCardController from "../../Controller/Habits/HabitCardController";
-import HabitSettingsController from "../../Controller/Habits/HabitSettingsController";
 
 export const allHabits = [];
 
-export default class HabitModel {
+export default class HabitModel extends Model {
   habitData;
   isCardCreated;
   localStorageObj;
+
   setLocalStorage() {
     localStorage.setItem(
       `habitCard-${this.habitData.id}`,
@@ -209,6 +209,12 @@ export default class HabitModel {
       return changeInputValues("22", "30");
     }
   }
+
+  async updateUserHabitsStats(type) {
+    if (type === "positive") state.userStats.habitsPositive++;
+    if (type === "negative") state.userStats.habitsNegative++;
+  }
+
   #getColHabitsRef() {
     const docUserRef = doc(db, "users", auth.currentUser.uid);
     const colHabitsRef = collection(docUserRef, "habits");

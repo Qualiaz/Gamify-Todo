@@ -1,7 +1,5 @@
 import YipDayView from "../View/main/yip/YipDayView";
 import YipDayModel from "../Model/main/YipDayModel";
-import { state } from "../Model/main/Model";
-// import Controller from "./Controller";
 
 export default class YipDayController {
   constructor() {

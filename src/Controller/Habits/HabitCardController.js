@@ -1,6 +1,9 @@
+import { collection, doc, getDocs } from "firebase/firestore";
 import HabitModel from "../../Model/main/HabitModel";
 import HabitCardView from "../../View/main/habits/HabitCardView";
 import HabitSettingsController from "./HabitSettingsController";
+import { auth, db } from "../../firebase/config";
+import { allHabits } from "../../Model/main/HabitModel";
 
 export default class HabitCardController {
   constructor() {
@@ -33,18 +36,20 @@ export default class HabitCardController {
       habitCardPositiveStreak.innerText = `+ ${++this.model.habitData
         .streakPositive}`;
       this.model.updateHabitDb();
-      // this.model.initEnergy().then(() => {
-      //   this.model.getDbEnergy().then((energy) => {
-      //     this.view.initEnergyPopup(this.model.habitData.energy);
-      //     energyNav.innerText = energy;
-      //   });
-      // });
+      this.model.initEnergy().then(() => {
+        this.model.getDbEnergy().then((energy) => {
+          this.view.initEnergyPopup(this.model.habitData.energy);
+          energyNav.innerText = energy;
+        });
+      });
+      this.model.updateUserHabitsStats("positive");
     });
 
     habitCardNegativeBtn.addEventListener("click", (e) => {
       habitCardNegativeStreak.innerText = `- ${++this.model.habitData
         .streakNegative}`;
       this.model.updateHabitDb();
+      this.model.updateUserHabitsStats("negative");
     });
 
     habitCardEl.addEventListener("click", (e) => {
@@ -65,12 +70,6 @@ export default class HabitCardController {
 
   render() {
     const container = document.querySelector(".habits-component__container");
-    // const cardState = this.model.getLocalStorage();
-    // console.log(this.model.habitData);
-    // if (!!cardState) {
-    //   this.view.render(container, cardState);
-    // } else {
-    // }
     this.view.render(container, this.model.habitData);
   }
 
@@ -78,4 +77,20 @@ export default class HabitCardController {
     this.render();
     this.eventListeners();
   }
+}
+
+// needs moving after refactor
+export async function setLocalHabitsFromDb() {
+  const docUserRef = doc(db, "users", auth.currentUser.uid);
+  const colHabitsRef = collection(docUserRef, "habits");
+  await getDocs(colHabitsRef).then((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      const habitCardController = new HabitCardController();
+      const habitData = habitCardController.model.createHabitData(doc.data());
+      habitCardController.model.habitData.id = doc.id;
+      habitCardController.settingsController.model.habitData = habitData;
+      habitCardController.settingsController.model.isCardCreated = true;
+      allHabits.push(habitCardController);
+    });
+  });
 }

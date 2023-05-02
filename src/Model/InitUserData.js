@@ -11,7 +11,11 @@ export default class InitUserData {
     totalTimeTracked: 0,
     habitsPositive: 0,
     habitsNegative: 0,
-    createdAccount: 0,
+    createdAccount: new Date().toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }),
     yearInPixels: {
       amazing: 0,
       good: 0,

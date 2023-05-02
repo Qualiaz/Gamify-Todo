@@ -92,7 +92,7 @@ export default class View {
     profileNameNav.innerText = name;
   }
 
-  _generateProfileModalMarkup(stats) {
+  _generateProfileModalMarkup(stats, profile) {
     return `
     <div id="profileModal" class="profile-modal">
     <div class="profile-card">
@@ -115,11 +115,11 @@ export default class View {
           </button>
         </div>
         <div class="profile-card__name">
-          <span class="profile-card__name">Robert Apostoiu</span>
+          <span class="profile-card__name">${profile.displayName}</span>
         </div>
         <div class="profile-card__energy">
           <span>Energy</span>
-          <span>${stats.energyPoints}</span>
+          <span>${stats.energyPoints || 0}</span>
           <img src="" alt="" />
         </div>
       </div>
@@ -131,7 +131,9 @@ export default class View {
           <span class="profile-card__tasks-finished-name"
             >Tasks Finished</span
           >
-          <span class="profile-card__tasks-finished-count">${stats.finishedTasks}</span>
+          <span class="profile-card__tasks-finished-count">${
+            stats.finishedTasks || 0
+          }</span>
         </div>
         <div
           class="profile-card__stat-container profile-card__habits-positive-container"
@@ -139,7 +141,9 @@ export default class View {
           <span class="profile-card__habits-positive-name"
             >Habits Positive</span
           >
-          <span class="profile-card__habits-positive-count">${stats.habitsPositive}</span>
+          <span class="profile-card__habits-positive-count">${
+            stats.habitsPositive || 0
+          }</span>
         </div>
         <div
           class="profile-card__stat-container profile-card__habits-negative-container"
@@ -147,31 +151,45 @@ export default class View {
           <span class="profile-card__habits-negative-name"
             >Habits Negative</span
           >
-          <span class="profile-card__habits-negative-count">${stats.habitsNegative}</span>
+          <span class="profile-card__habits-negative-count">${
+            stats.habitsNegative || 0
+          }</span>
         </div>
         <div
-          class="profile-card__stat-container profile-card__time-tracked-container"
+          class="hidden profile-card__stat-container profile-card__time-tracked-container"
         >
           <span class="profile-card__time-tracked-name">Time Tracked</span>
-          <span class="profile-card__time-tracker-count">${stats.totalTimeTracked}</span>
+          <span class="profile-card__time-tracker-count">${
+            stats.totalTimeTracked || 0
+          }</span>
         </div>
         <div class="profile-card__yip-container">
           <span class="profile-card__yip-name">Year in pixels</span>
           <div class="profile-card__yip-stats">
             <div class="profile-card__yip-box profile-card__yip-awful">
-              <span class="profile-card__yip-awful-count">${stats.yearInPixels.awful}</span>
+              <span class="profile-card__yip-awful-count">${
+                stats.yearInPixels.awful || 0
+              }</span>
             </div>
             <div class="profile-card__yip-box profile-card__yip-bad">
-              <span class="profile-card__yip-bad-count">${stats.yearInPixels.bad}</span>
+              <span class="profile-card__yip-bad-count">${
+                stats.yearInPixels.bad || 0
+              }</span>
             </div>
             <div class="profile-card__yip-box profile-card__yip-ok">
-              <span class="profile-card__yip-ok-count">${stats.yearInPixels.ok}</span>
+              <span class="profile-card__yip-ok-count">${
+                stats.yearInPixels.ok || 0
+              }</span>
             </div>
             <div class="profile-card__yip-box profile-card__yip-good">
-              <span class="profile-card__yip-good-count">${stats.yearInPixels.good}</span>
+              <span class="profile-card__yip-good-count">${
+                stats.yearInPixels.good || 0
+              }</span>
             </div>
             <div class="profile-card__yip-box profile-card__yip-amazing">
-              <span class="profile-card__yip-amazing-count">${stats.yearInPixels.amazing}</span>
+              <span class="profile-card__yip-amazing-count">${
+                stats.yearInPixels.amazing || 0
+              }</span>
             </div>
           </div>
         </div>
@@ -193,13 +211,12 @@ export default class View {
     `;
   }
 
-  renderStats(stats) {
-    console.log(stats);
-
+  renderStats(state) {
     const body = document.querySelector("body");
+    console.log(state);
     body.insertAdjacentHTML(
       "afterbegin",
-      this._generateProfileModalMarkup(stats)
+      this._generateProfileModalMarkup(state.userStats, state.userProfile)
     );
   }
 

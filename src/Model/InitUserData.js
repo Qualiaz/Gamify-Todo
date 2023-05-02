@@ -16,7 +16,7 @@ export default class InitUserData {
       amazing: 0,
       good: 0,
       ok: 0,
-      sad: 0,
+      bad: 0,
       awful: 0,
     },
   };

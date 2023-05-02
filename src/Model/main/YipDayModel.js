@@ -2,6 +2,7 @@ import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { getCurrentDay } from "../../helpers/date";
 import { state } from "./Model";
+// import Model from "./Model";
 
 export default class YipDayModel {
   state = {};
@@ -13,7 +14,7 @@ export default class YipDayModel {
     this.state.viewMode = "edit";
     this.state.logTitle = "";
     this.state.log = "";
-    this.state.moodColor = "#42BFDD";
+    this.state.moodColor = "#5B9A63";
     this.state.id = getCurrentDay();
     this.observers = [];
   }
@@ -99,7 +100,7 @@ export default class YipDayModel {
   };
 
   nextMoodColor() {
-    const moodColors = ["awful", "sad", "good", "ok", "amazing"];
+    const moodColors = ["awful", "bad", "good", "ok", "amazing"];
     this.#privateState.curMoodColorIndex =
       (this.#privateState.curMoodColorIndex + 1) % moodColors.length;
 
@@ -117,7 +118,7 @@ export default class YipDayModel {
   getMoodColor(color) {
     const moodColorMap = {
       awful: "#181116",
-      sad: "#891A29",
+      bad: "#891A29",
       ok: "#5B9A63",
       good: "#42BFDD",
       amazing: "#F9B624",

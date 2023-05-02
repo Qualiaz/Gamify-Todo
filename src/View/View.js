@@ -97,17 +97,22 @@ export default class View {
     <div id="profileModal" class="profile-modal">
     <div class="profile-card">
       <div class="profile-card__header">
-        <div class="profile-card__background"></div>
+        <div class="profile-card__change-img-input-wrapper">       
+           <input class="profile-card__change-img-input" id="profileCardChangePicInput" type="file" accept="image/*" />
+        </div>
+        <div class="profile-card__background"></div>               
         <div class="profile-card__close-btn-wrapper">
           <button id="profileCardCloseBtn" class="profile-card__close-btn">Close</button>
-        </div>
- 
+        </div>      
         <div class="profile-card__image-wrapper">
-          <img
-            class="profile-card__image"
-            src="./mylove.png"
-            alt="profile image"
-          />
+          <button class="profile-card__image-btn" id="profileCardImgBtn"> 
+            <img
+              class="profile-card__image"
+              src="./mylove.png"
+              alt="profile image"
+              id="profileCardImg"
+            />
+          </button>
         </div>
         <div class="profile-card__name">
           <span class="profile-card__name">Robert Apostoiu</span>
@@ -157,7 +162,7 @@ export default class View {
               <span class="profile-card__yip-awful-count">${stats.yearInPixels.awful}</span>
             </div>
             <div class="profile-card__yip-box profile-card__yip-bad">
-              <span class="profile-card__yip-bad-count">${stats.yearInPixels.sad}</span>
+              <span class="profile-card__yip-bad-count">${stats.yearInPixels.bad}</span>
             </div>
             <div class="profile-card__yip-box profile-card__yip-ok">
               <span class="profile-card__yip-ok-count">${stats.yearInPixels.ok}</span>

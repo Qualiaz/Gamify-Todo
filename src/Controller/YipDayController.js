@@ -1,6 +1,7 @@
 import YipDayView from "../View/main/yip/YipDayView";
 import YipDayModel from "../Model/main/YipDayModel";
 import { state } from "../Model/main/Model";
+// import Controller from "./Controller";
 
 export default class YipDayController {
   constructor() {
@@ -19,7 +20,7 @@ export default class YipDayController {
     const viewBtn = document.getElementById(`yipViewBtn-${id}`);
     const editBtn = document.getElementById(`yipEditBtn-${id}`);
     const moodColorBtn = document.getElementById(`yipMoodColorBtn-${id}`);
-    console.log(this.model.state);
+
     if (this.model.state.viewMode === "edit") {
       textarea.addEventListener("keydown", (e) =>
         this.model.handler.tabIndent(e)

@@ -8,9 +8,10 @@ import {
   where,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
-import YipDayController from "../../Controller/YipDayController";
 import { getCurrentDay } from "../../helpers/date";
+import YipDayController from "../../Controller/YipDayController";
 import TaskCardController from "../../Controller/TaskCardController";
+import HabitCardController from "../../Controller/Habits/HabitCardController";
 import {
   curTasks,
   curTasksThisWeek,
@@ -23,6 +24,7 @@ import {
   addTasksOtherDayFilter,
   addTasksWeekDaysFilter,
 } from "../../helpers/filters";
+import { allHabits } from "./HabitModel";
 
 export const state = {
   totalEnergy: 0,
@@ -35,6 +37,21 @@ export default class Model {
   constructor() {
     this.observers = [];
   }
+
+  // async setLocalHabitsFromDb() {
+  //   const docUserRef = doc(db, "users", auth.currentUser.uid);
+  //   const colHabitsRef = collection(docUserRef, "habits");
+  //   await getDocs(colHabitsRef).then((snapshot) => {
+  //     snapshot.docs.forEach((doc) => {
+  //       const habitCardController = new HabitCardController();
+  //       const habitData = habitCardController.model.createHabitData(doc.data());
+  //       habitCardController.model.habitData.id = doc.id;
+  //       habitCardController.settingsController.model.habitData = habitData;
+  //       habitCardController.settingsController.model.isCardCreated = true;
+  //       allHabits.push(habitCardController);
+  //     });
+  //   });
+  // }
 
   async createTasksFromDb() {
     const docUserRef = doc(db, "users", localStorage.getItem("user"));
@@ -96,15 +113,21 @@ export default class Model {
 
   changeProfilePicture() {
     const input = document.getElementById("profileCardChangePicInput");
-    const img = document.getElementById("profileImg");
+    const profileCardImg = document.getElementById("profileCardImg");
+    const profileImg = document.getElementById("profileImg");
 
     input.addEventListener("change", function () {
       if (this.files && this.files[0]) {
-        img.onload = () => {
-          URL.revokeObjectURL(img.src);
+        profileCardImg.onload = () => {
+          URL.revokeObjectURL(profileCardImg.src);
         };
-        img.src = URL.createObjectURL(this.files[0]);
+        profileCardImg.src = URL.createObjectURL(this.files[0]);
+        profileImg.src = URL.createObjectURL(this.files[0]);
       }
+    });
+
+    profileCardImg.addEventListener("click", function () {
+      input.click();
     });
   }
 
@@ -179,6 +202,7 @@ export default class Model {
     this.setDbEnergy();
   }
 
+  //yip
   async getAllYipDays() {
     const colRef = collection(db, "users", auth.currentUser.uid, "yip");
     const querySnapshot = await getDocs(colRef);
@@ -216,5 +240,45 @@ export default class Model {
       state.initYipDayController = yipDayController;
       state.selectedDay = state.initYipDayController;
     }
+  }
+
+  getMoodColorsStats() {
+    let colorsStats = {};
+    let moodsStats = {};
+
+    const getColorsStats = () => {
+      for (let key in state.yipDays) {
+        let color = state.yipDays[key].model.state.moodColor;
+        if (colorsStats[color]) colorsStats[color]++;
+        else colorsStats[color] = 1;
+      }
+    };
+
+    const changeColorsKeyToMoods = () => {
+      for (let key in colorsStats) {
+        let newKey;
+        if (key === "#181116") newKey = "awful";
+        if (key === "#891A29") newKey = "bad";
+        if (key === "#5B9A63") newKey = "ok";
+        if (key === "#42BFDD") newKey = "good";
+        if (key === "#F9B624") newKey = "amazing";
+
+        moodsStats[newKey] = colorsStats[key];
+      }
+    };
+
+    getColorsStats();
+    changeColorsKeyToMoods();
+    return moodsStats;
+  }
+
+  async setYipMoodsToUserStatsDb() {
+    const moodStats = this.getMoodColorsStats();
+    const colRef = collection(db, "users");
+    const docRef = doc(colRef, auth.currentUser.uid);
+
+    await updateDoc(docRef, {
+      "stats.yearInPixels": moodStats,
+    });
   }
 }

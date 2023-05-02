@@ -1,11 +1,9 @@
 import initAuthPageScript from "../Auth/script/auth";
 import App from "../App";
-import { dashboardMenuController } from "../Controller/dashboardController";
-import { tasksMenuController } from "../Controller/tasksMenuController";
-import habitsMenuController from "../Controller/Menus/habitsMenuController";
-import { yipMenuController } from "../Controller/Menus/YipMenuController";
-import { curTasks } from "../Model/main/TaskModel";
+import DashboardMenuController from "../Controller/dashboardController";
+import YipMenuController from "../Controller/Menus/YipMenuController";
 import TasksMenuController from "../Controller/tasksMenuController";
+import HabitsMenuController from "../Controller/Menus/habitsMenuController";
 
 document.addEventListener("DOMContentLoaded", () => {
   const rootEl = document.getElementById("root");
@@ -18,15 +16,13 @@ window.onload = async () => {
   switch (window.location.pathname) {
     case "/":
       await App.init();
-      console.log(curTasks);
       switch (window.location.hash) {
         case "#/dashboard":
-          dashboardMenuController.init();
+          new DashboardMenuController().init();
           break;
 
         case "#/tasks":
           new TasksMenuController().init();
-          // tasksMenuController.init();
           break;
 
         case "#/projects":
@@ -34,15 +30,15 @@ window.onload = async () => {
           break;
 
         case "#/habits":
-          habitsMenuController();
+          new HabitsMenuController().init();
           break;
 
         case "#/yearinpixels":
-          yipMenuController.init();
+          new YipMenuController().init();
           break;
 
         default:
-          dashboardMenuController.init();
+          new DashboardMenuController().init();
       }
       break;
 

@@ -1,3 +1,5 @@
+// import Model from "./Model";
+import { state } from "./Model";
 import {
   addDoc,
   collection,
@@ -6,43 +8,35 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import { auth, db } from "../../firebase/config";
 import HabitCardController from "../../Controller/Habits/HabitCardController";
 import HabitSettingsController from "../../Controller/Habits/HabitSettingsController";
-import { auth, db } from "../../firebase/config";
-import { state } from "./Model";
-
-import Model from "./Model";
 
 export const allHabits = [];
 
-export default class HabitModel extends Model {
+export default class HabitModel {
   habitData;
   isCardCreated;
   localStorageObj;
-
   setLocalStorage() {
     localStorage.setItem(
       `habitCard-${this.habitData.id}`,
       JSON.stringify(this.habitData)
     );
   }
-
   getLocalStorage() {
     const lsItem = localStorage.getItem(
       `habitCard-${this.habitData.id}`,
       this.habitData
     );
-
     console.log(JSON.parse(lsItem));
     return JSON.parse(lsItem);
   }
-
   deleteHabitDb() {
     const colHabitsRef = this.#getColHabitsRef();
     const docHabitRef = doc(colHabitsRef, this.habitData.id);
     deleteDoc(docHabitRef);
   }
-
   deleteHabitLocal() {
     allHabits.forEach((habitController, i) => {
       if (habitController.model.habitData.id === this.habitData.id) {
@@ -51,16 +45,13 @@ export default class HabitModel extends Model {
       return allHabits;
     });
   }
-
   initDeleteHabit() {
     this.deleteHabitLocal();
     this.deleteHabitDb();
   }
-
   setElems(elems) {
     return (this.elems = elems);
   }
-
   createHabitData({
     name,
     difficulty,
@@ -82,19 +73,15 @@ export default class HabitModel extends Model {
     };
     return this.habitData;
   }
-
   addHabitLocal() {
     const habitData = this.getValuesForm();
     if (!this.isFormChecks()) return;
     this.createHabitData(habitData);
     const habitCard = new HabitCardController();
     habitCard.model = this;
-
     this.isCardCreated = true;
-
     return habitCard;
   }
-
   addHabitDb(data) {
     const colHabitsRef = this.#getColHabitsRef();
     const habitData = Object.assign({}, data);
@@ -104,7 +91,6 @@ export default class HabitModel extends Model {
     });
     return id;
   }
-
   async initHabit() {
     const habitCard = this.addHabitLocal();
     const docId = await this.addHabitDb(habitCard.model.habitData);
@@ -112,11 +98,9 @@ export default class HabitModel extends Model {
     allHabits.push(habitCard);
     return habitCard;
   }
-
   updateHabitDb(habitData = this.habitData) {
     const colHabitsRef = this.#getColHabitsRef();
     const docHabitRef = doc(colHabitsRef, habitData.id);
-
     updateDoc(docHabitRef, {
       name: habitData.name,
       difficulty: habitData.difficulty,
@@ -127,7 +111,6 @@ export default class HabitModel extends Model {
       isCardToggle: habitData.isCardToggle,
     });
   }
-
   changeHabit({
     name,
     notes,
@@ -142,10 +125,8 @@ export default class HabitModel extends Model {
     this.habitData.energy = energy;
     this.habitData.streakPositive = Number(streakPositive);
     this.habitData.streakNegative = Number(streakNegative);
-
     return this.habitData;
   }
-
   getValuesForm() {
     const {
       habitSettingsName,
@@ -156,7 +137,6 @@ export default class HabitModel extends Model {
       habitSettingsStreakPositiveInput,
       habitSettingsStreakNegativeInput,
     } = this.elems;
-
     if (this.isCardCreated) {
       return {
         name: habitSettingsName.value,
@@ -179,7 +159,6 @@ export default class HabitModel extends Model {
         isCardToggle: true,
       };
   }
-
   setValuesForm() {
     const {
       habitSettingsName,
@@ -189,7 +168,6 @@ export default class HabitModel extends Model {
       habitSettingsStreakPositiveInput,
       habitSettingsStreakNegativeInput,
     } = this.elems;
-
     habitSettingsName.value = this.habitData.name;
     habitSettingsNotes.textContent = this.habitData.notes;
     habitSettingsDifficulty.value = this.habitData.difficulty;
@@ -198,7 +176,6 @@ export default class HabitModel extends Model {
     habitSettingsStreakNegativeInput.value = this.habitData.streakNegative;
     this.changeEnergyValues(this.habitData.difficulty, this.habitData.energy);
   }
-
   isFormChecks() {
     let ok = true;
     const { habitSettingsName } = this.elems;
@@ -207,10 +184,8 @@ export default class HabitModel extends Model {
     }
     return ok;
   }
-
   changeEnergyValues(difficulty, value = null) {
     const { habitSettingsEnergy } = this.elems;
-
     const changeInputValues = (min, max) => {
       habitSettingsEnergy.setAttribute("min", min);
       habitSettingsEnergy.setAttribute("max", max);
@@ -218,7 +193,6 @@ export default class HabitModel extends Model {
       habitSettingsEnergy.value = value || min;
       return min;
     };
-
     if (difficulty === "trivial") {
       return changeInputValues("1", "3");
     }
@@ -235,25 +209,9 @@ export default class HabitModel extends Model {
       return changeInputValues("22", "30");
     }
   }
-
   #getColHabitsRef() {
     const docUserRef = doc(db, "users", auth.currentUser.uid);
     const colHabitsRef = collection(docUserRef, "habits");
     return colHabitsRef;
   }
-}
-
-export async function setLocalHabitsFromDb() {
-  const docUserRef = doc(db, "users", auth.currentUser.uid);
-  const colHabitsRef = collection(docUserRef, "habits");
-  await getDocs(colHabitsRef).then((snapshot) => {
-    snapshot.docs.forEach((doc) => {
-      const habitCardController = new HabitCardController();
-      const habitData = habitCardController.model.createHabitData(doc.data());
-      habitCardController.model.habitData.id = doc.id;
-      habitCardController.settingsController.model.habitData = habitData;
-      habitCardController.settingsController.model.isCardCreated = true;
-      allHabits.push(habitCardController);
-    });
-  });
 }

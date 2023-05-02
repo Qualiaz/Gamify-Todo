@@ -1,11 +1,17 @@
 import HabitsComponentController from "../Habits/HabitsComponentController";
-import { habitsMenuView } from "../../View/menus/HabitsMenuView";
+import HabitsMenuView from "../../View/menus/HabitsMenuView";
 
-export default function habitsMenuController() {
-  habitsMenuView.render();
+export default class HabitsMenuController {
+  constructor() {
+    if (HabitsMenuController.instance) return HabitsMenuController.instance;
+    this.view = new HabitsMenuView();
 
-  const habitsMenuEl = document.getElementById("habitsMenu");
-  const habitsComponentController = new HabitsComponentController();
+    HabitsMenuController.instance = this;
+  }
 
-  habitsComponentController.init(habitsMenuEl);
+  init() {
+    this.view.render();
+    const habitsMenuEl = document.getElementById("habitsMenu");
+    new HabitsComponentController().init(habitsMenuEl);
+  }
 }

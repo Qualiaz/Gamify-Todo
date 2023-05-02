@@ -88,7 +88,7 @@ export default class HabitsComponentView {
   }
 
   render(parentEl, view) {
-    parentEl.innetHTML = "";
+    parentEl.innerHTML = "";
     parentEl.insertAdjacentHTML("beforeend", this._generateMarkup(view));
   }
 }

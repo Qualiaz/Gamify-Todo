@@ -1,4 +1,4 @@
-class HabitsMenuView {
+export default class HabitsMenuView {
   _generateMarkup() {
     return `<section id="habitsMenu">
   
@@ -10,5 +10,3 @@ class HabitsMenuView {
     main.insertAdjacentHTML("beforeend", this._generateMarkup());
   }
 }
-
-export const habitsMenuView = new HabitsMenuView();

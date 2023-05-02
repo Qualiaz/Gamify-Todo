@@ -5,9 +5,14 @@ import HabitsComponentController from "./Habits/HabitsComponentController";
 import YipDayController from "./YipDayController";
 import { state } from "../Model/main/Model";
 
-class DashboardMenuController {
+export default class DashboardMenuController {
   constructor() {
+    if (DashboardMenuController.instance)
+      return DashboardMenuController.instance;
+
     this.view = new DashboardMenuView();
+
+    DashboardMenuController.instance = this;
   }
 
   initTasks() {
@@ -18,8 +23,6 @@ class DashboardMenuController {
       "dashboard",
       "today"
     );
-
-    // console.log(dashboardTasks)
     tasksComponentController.init(dashboardTasks);
     tasksComponentController.model.state.menu = "dashboard";
   }
@@ -43,4 +46,4 @@ class DashboardMenuController {
   }
 }
 
-export const dashboardMenuController = new DashboardMenuController();
+// export const dashboardMenuController = new DashboardMenuController();

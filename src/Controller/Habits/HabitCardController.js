@@ -33,12 +33,12 @@ export default class HabitCardController {
       habitCardPositiveStreak.innerText = `+ ${++this.model.habitData
         .streakPositive}`;
       this.model.updateHabitDb();
-      this.model.initEnergy().then(() => {
-        this.model.getDbEnergy().then((energy) => {
-          this.view.initEnergyPopup(this.model.habitData.energy);
-          energyNav.innerText = energy;
-        });
-      });
+      // this.model.initEnergy().then(() => {
+      //   this.model.getDbEnergy().then((energy) => {
+      //     this.view.initEnergyPopup(this.model.habitData.energy);
+      //     energyNav.innerText = energy;
+      //   });
+      // });
     });
 
     habitCardNegativeBtn.addEventListener("click", (e) => {
@@ -50,7 +50,6 @@ export default class HabitCardController {
     habitCardEl.addEventListener("click", (e) => {
       if (e.target.id === `habitCardMainTop-${id}`) {
         // open card task settings
-        console.log(this.model.habitData);
         this.settingsController.initChangeHabit(this.model.habitData);
         this.settingsController.habitCard = this;
       }
@@ -76,7 +75,6 @@ export default class HabitCardController {
   }
 
   init() {
-    console.log(this.model.habitData);
     this.render();
     this.eventListeners();
   }

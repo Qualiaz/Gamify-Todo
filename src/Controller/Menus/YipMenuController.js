@@ -2,10 +2,14 @@ import YipMenuView from "../../View/menus/YipMenuView";
 import YipCalendarController from "../YipCalendarController";
 import { state } from "../../Model/main/Model";
 
-class YipMenuController {
+export default class YipMenuController {
   constructor() {
+    if (YipMenuController.instance) return YipMenuController.instance;
+
     this.view = new YipMenuView();
     this.yipCalendarController = new YipCalendarController();
+
+    YipMenuController.instance = this;
   }
 
   eventListeners() {
@@ -31,5 +35,3 @@ class YipMenuController {
     state.selectedDay.init(yipMenu);
   }
 }
-
-export const yipMenuController = new YipMenuController();

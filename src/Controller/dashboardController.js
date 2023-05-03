@@ -2,7 +2,6 @@ import { curTasksToday } from "../Model/main/TaskModel";
 import DashboardMenuView from "../View/menus/DashboardView";
 import TasksComponentController from "./TasksComponentController";
 import HabitsComponentController from "./Habits/HabitsComponentController";
-import YipDayController from "./YipDayController";
 import { state } from "../Model/main/Model";
 
 export default class DashboardMenuController {
@@ -18,13 +17,16 @@ export default class DashboardMenuController {
   initTasks() {
     const { dashboardTasks } = this.view.getElems();
 
-    const tasksComponentController = new TasksComponentController(
-      curTasksToday,
-      "dashboard",
-      "today"
-    );
-    tasksComponentController.init(dashboardTasks);
-    tasksComponentController.model.state.menu = "dashboard";
+    if (!this.tasksComponentController) {
+      this.tasksComponentController = new TasksComponentController(
+        curTasksToday,
+        "dashboard",
+        "today"
+      );
+    }
+
+    this.tasksComponentController.init(dashboardTasks);
+    this.tasksComponentController.model.state.menu = "dashboard";
   }
 
   initHabits() {

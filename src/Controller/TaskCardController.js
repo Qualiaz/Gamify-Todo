@@ -1,4 +1,3 @@
-import { onAuthStateChanged } from "firebase/auth";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
 import TaskModel, { curTasks } from "../Model/main/TaskModel";

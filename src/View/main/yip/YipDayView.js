@@ -109,8 +109,6 @@ export default class YipDayView {
     );
   }
 
-  getElems(id) {}
-
   remove() {
     const section = document.getElementById("yipMenu").querySelector("section");
     if (section) {
@@ -127,7 +125,6 @@ export default class YipDayView {
     if (arguments[0].id === "yipMenu") {
       this.remove();
     }
-    console.log(arguments[0]);
     parentEl.insertAdjacentHTML(
       "beforeend",
       this._generateMarkup(state ? state : {})
@@ -136,7 +133,5 @@ export default class YipDayView {
       this.renderView(state.log, state.logTitle, state.id);
     }
     this.setMoodColor(state.moodColor, state.id);
-    // if (state) {
-    // }
   }
 }

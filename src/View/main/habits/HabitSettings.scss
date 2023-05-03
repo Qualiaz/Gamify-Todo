@@ -5,7 +5,7 @@
   width: 2rem;
   border: none;
   border-radius: 0.2rem;
-  background-color: orange;
+  background-color: rgb(255, 139, 6);
 }
 
 @keyframes moveIn {
@@ -32,32 +32,16 @@
     display: flex;
     justify-content: center;
     align-items: start;
-    // width: 100%;
-    // height: 100%;
-  }
-
-  &__background {
-    // position: fixed;
-    // top: 0;
-    // left: 0;
-    // width: 100%;
-    // height: 100%;
-    // z-index: 10;
-    // padding: 1rem;
   }
 
   &__form {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
-    // position: absolute;
     margin-top: 15rem;
-
-    // left: 40%;
-    // width: 20%;
+    padding-bottom: 2rem;
     max-width: 36rem;
     min-width: 36rem;
-    // margin-top: 3rem;
     border-radius: 0.6rem;
     background-color: rgb(49, 49, 49);
     overflow: hidden;
@@ -71,7 +55,7 @@
     display: flex;
     align-items: center;
     padding: 2rem 1rem;
-    background-color: orange;
+    background-color: rgb(255, 139, 6);
 
     &__name {
       &__wrapper {
@@ -141,7 +125,7 @@
         padding: 0.5rem 0.2rem;
 
         &:focus {
-          outline: 2px solid orange;
+          outline: 2px solid rgb(255, 139, 6);
         }
       }
 
@@ -153,7 +137,7 @@
         padding: 0.5rem 0.2rem;
         font-size: 1.4rem;
         &:focus {
-          outline: 2px solid orange;
+          outline: 2px solid rgb(255, 139, 6);
         }
       }
       select {
@@ -164,7 +148,7 @@
         border-radius: 0.2rem;
         font-size: 1.4rem;
         &:focus {
-          outline: 2px solid orange;
+          outline: 2px solid rgb(255, 139, 6);
         }
       }
 
@@ -175,33 +159,6 @@
   }
 
   &__energy-container {
-    // &-input {
-    //   -webkit-appearance: none;
-    //   appearance: none;
-    //   background: transparent !important;
-    //   &:focus {
-    //     outline: none !important;
-    //   }
-
-    //   &::-webkit-slider-runnable-trackm,
-    //   &::-moz-range-track {
-    //     background-color: orange;
-    //     background-color: rgb(66, 65, 65);
-    //     height: 2rem;
-    //   }
-
-    //   &::-moz-range-thumb,
-    //   &::-webkit-slider-thumb {
-    //     -webkit-appearance: none;
-    //     appearance: none;
-    //     height: 2.4rem;
-    //     width: 2rem;
-    //     border: none;
-    //     border-radius: 0.2rem;
-
-    //     background-color: orange;
-    //   }
-    // }
     &-top {
       display: flex;
       gap: 1rem;
@@ -278,7 +235,7 @@
         border: none;
         border-radius: 0.2rem;
         padding: 0.1rem 0.4rem;
-        background-color: orange;
+        background-color: rgb(255, 139, 6);
         box-shadow: 2px 2px 2px 0.2;
         height: 2.2rem;
         width: 2.5rem;

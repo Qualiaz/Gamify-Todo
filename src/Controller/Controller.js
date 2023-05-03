@@ -1,4 +1,4 @@
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { auth } from "../firebase/config";
 import initUser from "./initUserController";
 import Model from "../Model/main/Model";
@@ -20,17 +20,17 @@ export default class Controller {
   }
 
   async init() {
+    await initUser();
     this.view.render();
     const main = document.getElementById("main");
     const spinner = new Spinner(spinnerOpts).spin(main);
 
-    await initUser();
+    // await initUser();
     // will change after refactor
     await this.model.getUser().then(({ profile, stats }) => {
       state.userStats = stats;
       state.userProfile = profile;
     });
-    // await this.model.getUser()
     await this.model.createTasksFromDb();
     await setLocalHabitsFromDb();
     await this.model.setLocalEnergy();
@@ -93,12 +93,9 @@ export default class Controller {
 
       if (e.target.id === "profileCardSignOutBtn") {
         signOut(auth).then((_) => {
-          window.location.href = "/auth.html";
+          window.location.href = "/home.html";
         });
       }
     });
-
-    // SIGN OUT
-    const signoutBtn = document.getElementById("signoutBtn");
   }
 }

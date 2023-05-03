@@ -11,14 +11,10 @@ import "./assets/images/mylove.png";
 
 import "./index.scss";
 
+import "./static/home";
 //router
 import "./Router/router";
 
 //auth
 import "./firebase/config";
 import "./Auth/script/auth";
-
-// App
-import App from "./App";
-
-// App.init();

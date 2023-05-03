@@ -30,7 +30,6 @@ export default class YipDayController {
 
       textarea.addEventListener("input", () => {
         this.model.changeLog(textarea.value);
-        console.log("asd");
       });
 
       titleInput.addEventListener("input", () => {
@@ -66,6 +65,5 @@ export default class YipDayController {
   init(parentEl) {
     this.view.render(parentEl, this.model.state);
     this.eventListeners(parentEl);
-    console.log(parentEl);
   }
 }

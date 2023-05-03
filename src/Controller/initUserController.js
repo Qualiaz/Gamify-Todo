@@ -19,11 +19,12 @@ export default async function initUser() {
         const doc = await getDoc(userDocRef);
         // if user is new
         if (!doc.exists()) {
-          createUserDoc(user.uid, user.email, user.displayName);
+          await createUserDoc(user.uid, user.email, user.displayName);
+          window.location.pathname = "/";
         }
       })();
     } else {
-      window.location.href = "/auth.html";
+      // window.location.href = "/home.html";
     }
   });
 }

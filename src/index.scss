@@ -1,6 +1,7 @@
 @import "./style/abstract/variables";
 @import "./style/base/fonts";
 @import "./style/base/reset";
+@import "./style/pages/home";
 @import "./style//util/spinner";
 @import "./static/home";
 @import "./Auth/style/auth";
@@ -14,7 +15,6 @@
 @import "./View/menus/TasksMenu";
 @import "./View/main/tasks/TaskCard";
 @import "./View/main/tasks/taskSettings";
-@import "./style/pages/home";
 
 // habits
 @import "./View/menus/HabitsMenu";

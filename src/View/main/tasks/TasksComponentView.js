@@ -19,7 +19,7 @@ export default class TasksComponentView {
           <div class="TM__component__header__filterBtn-wrapper">
             <button class="TM__component__filterBtn" id="tmComponentViewSettingsBtn-${id}"><img class="TM__component__filterImgBtn" id="tmComponentViewSettingsImgBtn-${id}" src=${viewSettingsImgBtn} alt="view filter settings" /></button>  
             
-            <div id="viewSettingsContainer-${id}" class="view-settings__container">
+            <div id="taskSettingsContainer-${id}" class="view-settings__container">
 
             <div  class="view-settings__filter__container ${
               view.menu === "dashboard" ? "hidden" : ""
@@ -85,16 +85,16 @@ export default class TasksComponentView {
 
   renderViewSettings(id, isOpen) {
     const viewSettingsContainer = document.getElementById(
-      `viewSettingsContainer-${id}`
+      `taskSettingsContainer-${id}`
     );
 
-    if (isOpen) {
+    if (isOpen && viewSettingsContainer) {
       viewSettingsContainer.style.display = "flex";
     } else {
       viewSettingsContainer.style.display = "none";
     }
 
-    return viewSettingsContainer;
+    // return viewSettingsContainer;
   }
 
   renderViewMenu(view) {

@@ -4,18 +4,25 @@ import DashboardMenuController from "../Controller/dashboardController";
 import YipMenuController from "../Controller/Menus/YipMenuController";
 import TasksMenuController from "../Controller/tasksMenuController";
 import HabitsMenuController from "../Controller/Menus/habitsMenuController";
+import { initHomePage } from "../static/home";
+import initUser from "../Controller/initUserController";
 
 document.addEventListener("DOMContentLoaded", () => {
   const rootEl = document.getElementById("root");
   const authPageEl = document.getElementById("authPage");
-  if (rootEl) rootEl.style.display = "flex";
-  if (authPageEl) authPageEl.style.display = "flex";
+  const home = document.getElementById("home");
+  if (!!rootEl) rootEl.style.display = "flex";
+  if (!!authPageEl) authPageEl.style.display = "flex";
+  if (!!home) home.style.display = "block";
 });
 
 window.onload = async () => {
+  // const isInitUser =
+
   switch (window.location.pathname) {
     case "/":
       await App.init();
+
       switch (window.location.hash) {
         case "#/dashboard":
           new DashboardMenuController().init();
@@ -44,6 +51,10 @@ window.onload = async () => {
 
     case "/auth.html":
       initAuthPageScript();
+      break;
+
+    case "/home.html":
+      initHomePage();
       break;
   }
 };

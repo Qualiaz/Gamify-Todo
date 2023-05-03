@@ -5,20 +5,27 @@ import TasksComponentController from "./TasksComponentController";
 export default class TasksMenuController {
   constructor() {
     if (TasksMenuController.instance) return TasksMenuController.instance;
-
     this.view = new TasksMenuView();
-    this.tasksComponentController = new TasksComponentController(
-      curTasks,
-      "tasks",
-      "all"
-    );
+
     TasksMenuController.instance = this;
+  }
+
+  initTasksComponentController() {
+    const tasksMenu = document.getElementById("tasksMenu");
+    if (!this.tasksComponentController) {
+      this.tasksComponentController = new TasksComponentController(
+        curTasks,
+        "tasks",
+        "all"
+      );
+    }
+
+    this.tasksComponentController.model.state.menu = "tasks";
+    this.tasksComponentController.init(tasksMenu);
   }
 
   init() {
     this.view.render();
-    const tasksMenu = document.getElementById("tasksMenu");
-    this.tasksComponentController.init(tasksMenu);
-    this.tasksComponentController.model.state.menu = "tasks";
+    this.initTasksComponentController();
   }
 }

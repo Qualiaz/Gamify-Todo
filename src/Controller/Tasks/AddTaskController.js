@@ -28,13 +28,12 @@ export default class TaskSettingsController {
     } = this.view.getElems();
 
     doneBtn.addEventListener("click", (e) => {
-      console.log(inputValues());
       if (this.curTaskCard) {
         const cardState = this.curTaskCard.model.setCardState(inputValues());
         this.model.state = cardState;
         this.model.updateTaskDb(cardState);
 
-        this.curTaskCard.model.obs.notify();
+        // this.curTaskCard.model.obs.notify();
         this.view.closeSettings();
       }
       // if task is new

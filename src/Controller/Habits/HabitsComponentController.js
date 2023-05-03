@@ -12,7 +12,7 @@ export default class HabitsComponentController {
     const habitsComponentEl = document.querySelector(
       ".habits-component__container"
     );
-    console.log("HEY");
+
     habitsComponentEl.addEventListener("click", (e) => {
       const clickedId = e.target.id;
       if (clickedId === "addHabitBtn" || clickedId === "addHabitBtnImg") {

@@ -152,7 +152,6 @@ export default class Model {
     const colHabitsRef = collection(docUserRef, "habits");
     await getDocs(colHabitsRef).then((snapshot) => {
       snapshot.forEach((doc) => {
-        console.log(state);
         state.userStats.habitsNegative += Number(doc.data().streakNegative);
         state.userStats.habitsPositive += Number(doc.data().streakPositive);
       });

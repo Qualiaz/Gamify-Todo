@@ -1,13 +1,11 @@
-import { collection, doc, getDocs } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
 import TasksComponentView from "../View/main/tasks/TasksComponentView";
-import TaskCardController from "./TaskCardController";
-//prettier-ignore
-import {curTasks,curTasksTomorrow,curTasksToday,curTasksThisWeek, curTasksWhenever, TasksComponentModel} from "../Model/main/TaskModel";
-//prettier-ignore
-import {addTasksWeekDaysFilter,addTasksOtherDayFilter,addTasksNoRepeatFilter} from "../helpers/filters";
-import { removeDuplicateTasks } from "../helpers/removeDuplicate";
-import OrderTask from "../helpers/orderTask";
+
+import {
+  curTasks,
+  curTasksToday,
+  curTasksTomorrow,
+  TasksComponentModel,
+} from "../Model/main/TaskModel";
 import TaskSettingsController from "./Tasks/AddTaskController";
 
 export let userId;
@@ -19,9 +17,7 @@ export default class TasksComponentController {
     this.view = new TasksComponentView();
     this.model = new TasksComponentModel(tasks, menu, filter);
 
-    curTasks.forEach((taskCard) => {
-      taskCard.model.obs.sub(this);
-    });
+    this.model.observeTaskCards(curTasks, this);
     this.model.arrangeTasksInArrays();
     this.model.setFilterState(this.model.state.filter);
     this.model.orderTasks();
@@ -30,14 +26,24 @@ export default class TasksComponentController {
   update() {
     this.model.arrangeTasksInArrays();
     this.model.setFilterState(this.model.state.filter);
-    console.log("IM UPDATED");
-    if (this.model.state.menu === "dashboard") {
-      console.log("do i init dashboard?");
+
+    console.log(this.model.state);
+    console.log(this.model.state.menu);
+    console.log(window.location.hash);
+    if (
+      this.model.state.menu === "dashboard" &&
+      window.location.hash === "#/dashboard"
+    ) {
+      console.log("update dashboard");
       this.init(document.getElementById("dashboardTasks"));
     }
-    if (this.model.state.menu === "tasks") {
-      console.log("do i init tasks?");
+
+    if (
+      this.model.state.menu === "tasks" &&
+      window.location.hash === "#/tasks"
+    ) {
       this.init(document.getElementById("tasksMenu"));
+      console.log("update tasks");
     }
   }
 
@@ -74,8 +80,6 @@ export default class TasksComponentController {
       const optionEl = e.target.options[e.target.selectedIndex].value;
       this.model.setFilterState(optionEl);
       this.model.arrangeTasksInArrays();
-      console.log(this.model.state.tasks);
-      console.log(curTasksTomorrow);
 
       this.init(parentEl);
     });
@@ -114,6 +118,9 @@ export default class TasksComponentController {
   }
 
   init(parentEl) {
+    console.log(curTasksToday);
+    console.log("RENDERING");
+    this.model.orderTasks();
     this.render(parentEl);
 
     this.view.renderViewSettings(
@@ -125,7 +132,6 @@ export default class TasksComponentController {
   }
 
   render(parentEl, state = this.model.state, id = this.model.state.id) {
-    console.log("RENDERING");
     this.view.render(parentEl, state, id);
   }
 }

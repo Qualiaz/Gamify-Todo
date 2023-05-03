@@ -28,7 +28,6 @@ export class TaskSettingsModel extends Model {
   state = {};
   constructor(tasksComponentController) {
     super();
-    // this.state = state;
     this.tasksComponentController = tasksComponentController;
   }
 
@@ -65,16 +64,19 @@ export class TaskSettingsModel extends Model {
 
     // when you open tasks you set state to the card controller model
     this.state = taskCardController.model.cardState
-
+    console.log('NOOOB')
     const taskData = Object.assign({}, taskCardController.model.cardState)
     const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
     
     taskDataDb.then((data) => {
       taskCardController.model.cardState.id = data.id
 
-      curTasks.push(taskCardController)      
-      taskCardController.model.obs.notify(taskCardController.model.cardState)
+
+      // taskCardController.model.obs.notify(taskCardController.model.cardState)
     })
+
+    curTasks.push(taskCardController)      
+    taskCardController.model.obs.notify()
 
     this.state.curCpId = 1
   
@@ -142,8 +144,6 @@ export class TaskSettingsModel extends Model {
     };
 
     if (name) {
-      console.log(nameCheckFail);
-      console.log(repeatDaily);
       check.name = true;
       nameCheckFail.classList.add("hidden");
     } else {
@@ -195,8 +195,8 @@ export default class TaskCardModel extends Model {
     },
     notify: (data) => {
       this.observers.forEach((obs) => {
-        console.log(this.observers);
         obs.update(data);
+        console.log(this.observers);
       });
     },
   };
@@ -226,8 +226,6 @@ export default class TaskCardModel extends Model {
     });
     this.cardState.createdTime = new Date().getTime();
 
-    this.obs.notify(this.cardState);
-
     return this.cardState;
   }
 
@@ -244,6 +242,7 @@ export default class TaskCardModel extends Model {
       this.addCpDataCardState(cpName);
     });
     this.addRepeatDataCardState(data);
+
     this.obs.notify();
 
     return this.cardState;
@@ -418,6 +417,14 @@ export class TasksComponentModel extends Model {
       direction: "descending",
     };
     this.state.isTaskViewOpen;
+  }
+
+  //sub
+  observeTaskCards(taskCards, controller) {
+    taskCards.forEach((taskCard) => {
+      taskCard.model.obs.sub(controller);
+    });
+    console.log(taskCards[0].model.observers);
   }
 
   //// VIEW CHANGE ////

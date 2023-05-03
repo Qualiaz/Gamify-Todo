@@ -18,11 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.onload = async () => {
   // const isInitUser =
-
   switch (window.location.pathname) {
     case "/":
-      await App.init();
+      // if user access
+      if (!localStorage.getItem("user")) {
+        window.location.replace("/home.html");
+        return initHomePage();
+      }
 
+      await App.init();
       switch (window.location.hash) {
         case "#/dashboard":
           new DashboardMenuController().init();

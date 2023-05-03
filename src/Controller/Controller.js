@@ -93,6 +93,8 @@ export default class Controller {
 
       if (e.target.id === "profileCardSignOutBtn") {
         signOut(auth).then((_) => {
+          // const localStorageUser = localStorage.getItem("user");
+          localStorage.removeItem("user");
           window.location.href = "/home.html";
         });
       }

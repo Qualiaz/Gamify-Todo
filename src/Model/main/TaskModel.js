@@ -70,9 +70,6 @@ export class TaskSettingsModel extends Model {
     
     taskDataDb.then((data) => {
       taskCardController.model.cardState.id = data.id
-
-
-      // taskCardController.model.obs.notify(taskCardController.model.cardState)
     })
 
     curTasks.push(taskCardController)      

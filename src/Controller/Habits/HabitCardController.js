@@ -43,6 +43,7 @@ export default class HabitCardController {
         });
       });
       this.model.updateUserHabitsStats("positive");
+      this.model.playEnergyGainSound();
     });
 
     habitCardNegativeBtn.addEventListener("click", (e) => {
@@ -57,6 +58,7 @@ export default class HabitCardController {
         });
       });
       this.model.updateUserHabitsStats("negative");
+      this.model.playEnergyLoseSound();
     });
 
     habitCardEl.addEventListener("click", (e) => {

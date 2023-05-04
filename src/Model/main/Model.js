@@ -12,6 +12,8 @@ import { getCurrentDay } from "../../helpers/date";
 import YipDayController from "../../Controller/YipDayController";
 import TaskCardController from "../../Controller/TaskCardController";
 import { curTasks, curTasksWhenever } from "./TaskModel";
+import soundEnergyGain from "../../assets/sounds/energy-gain.wav";
+import soundEnergyLost from "../../assets/sounds/energy-lost.wav";
 
 import {
   addTasksNoRepeatFilter,
@@ -263,6 +265,16 @@ export default class Model {
     await updateDoc(docRef, {
       "stats.yearInPixels": moodStats,
     });
+  }
+
+  playEnergyGainSound() {
+    let audio = new Audio(soundEnergyGain);
+    console.log("ei");
+    audio.play();
+  }
+  playEnergyLoseSound() {
+    let audio = new Audio(soundEnergyLost);
+    audio.play();
   }
 
   //util

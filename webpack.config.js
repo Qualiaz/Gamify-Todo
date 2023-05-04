@@ -27,6 +27,7 @@ module.exports = {
     rules: [
       { test: /\.scss$/, use: ["style-loader", "css-loader", "sass-loader"] },
       { test: /\.(svg|ico|png|webp|jpg|jpeg|gif)$/i, type: "asset/resource" },
+      { test: /\.(wav|mp3)$/, type: "asset/resource" },
     ],
   },
 

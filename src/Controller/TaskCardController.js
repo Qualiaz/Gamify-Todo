@@ -34,6 +34,7 @@ export default class TaskCardController {
         });
         this.model.updateUserTasksStats("positive");
         this.view.initEnergyPopup(Number(this.model.cardState.energy));
+        this.model.playEnergyGainSound();
       }
       if (clickedId === `taskCheckboxFinished-${id}`) {
         this.model.checkTask(false);
@@ -48,6 +49,7 @@ export default class TaskCardController {
           Number(this.model.cardState.energy),
           "negative"
         );
+        this.model.playEnergyLoseSound();
       }
       if (clickedId === `cardToggleIcon-${id}`) {
         this.model.toggleInfo();

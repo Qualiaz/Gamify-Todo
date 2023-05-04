@@ -20,12 +20,17 @@ export default class Controller {
   }
 
   async init() {
-    await initUser();
-    await this.model.getUser().then(({ profile, stats }) => {
-      state.userStats = stats;
-      state.userProfile = profile;
-    });
-    await this.model.setLocalStateUserPictureUrl();
+    const isUserAlreadyExists = await initUser();
+
+    if (isUserAlreadyExists) {
+      await this.model.getUser().then(({ profile, stats }) => {
+        state.userStats = stats;
+        state.userProfile = profile;
+      });
+
+      await this.model.setLocalStateUserPictureUrl();
+    }
+
     this.view.render(state);
     const main = document.getElementById("main");
     const spinner = new Spinner(spinnerOpts).spin(main);
@@ -48,7 +53,7 @@ export default class Controller {
     this.view.renderNameSidebar(state.userProfile.displayName);
 
     spinner.stop();
-
+    console.log(state);
     const nav = document.getElementById("nav");
     const menuBtns = nav.querySelectorAll("a");
     menuBtns.forEach((btn) => {

@@ -7,8 +7,6 @@ import "./assets/images/difficulty-medium.png";
 import "./assets/images/difficulty-hard.png";
 import "./assets/images/difficulty-challenge.png";
 
-import "./assets/images/mylove.png";
-
 import "./index.scss";
 
 import "./static/home";

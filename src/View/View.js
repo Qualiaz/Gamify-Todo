@@ -1,5 +1,5 @@
 import iconEnergy from "./main/tasks/assets/energy-icon.svg";
-import initialUserPicture from "../assets/images/initialUserProfile.svg";
+import initialUserPicture from "../assets/images/initialUserProfile.jpg";
 
 export default class View {
   _generateSidebarMarkup(state) {
@@ -248,6 +248,7 @@ export default class View {
   }
 
   render(state) {
+    console.log(state);
     const root = document.createElement("div");
     const main = document.createElement("div");
     const body = document.querySelector("body");

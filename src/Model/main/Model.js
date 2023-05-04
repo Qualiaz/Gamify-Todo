@@ -29,9 +29,28 @@ import {
 } from "@firebase/storage";
 
 export const state = {
-  userPicture: "",
-  userStats: null,
-  userProfile: null,
+  userStats: {
+    createdAccount: 0,
+    energyPoints: 0,
+    finishedTasks: 0,
+    habitsNegative: 0,
+    habitsPositive: 0,
+    totalTimeTracked: 0,
+    yearInPixels: {
+      amazing: 0,
+      good: 0,
+      ok: 0,
+      bad: 0,
+      awful: 0,
+    },
+  },
+
+  userProfile: {
+    email: null,
+    displayName: null,
+    picture: null,
+  },
+
   totalEnergy: 0,
   yipDays: {},
   selectedDay: null,
@@ -76,8 +95,11 @@ export default class Model {
 
     const docSnap = await getDoc(docUserRef);
     const userData = docSnap.data();
+    // const stats = userData?.stats ? userData.stats : state.userStats;
+    // const profile = userData?.profile ? state.profile : state.userProfile;
     const stats = userData.stats;
     const profile = userData.profile;
+    console.log(profile);
 
     return { profile, stats };
   }
@@ -112,13 +134,17 @@ export default class Model {
   async getStorageUserPicture() {
     const storage = getStorage();
 
-    return await getDownloadURL(
-      ref(storage, `images/${auth.currentUser.uid}`)
-    ).then((url) => url);
+    return await getDownloadURL(ref(storage, `images/${auth.currentUser.uid}`))
+      .then((url) => url)
+      .catch((err) => {
+        console.error("No storage image found");
+        return null;
+      });
   }
 
   async setLocalStateUserPictureUrl() {
-    state.userProfile.picture = await this.getStorageUserPicture();
+    const storageUserPicture = await this.getStorageUserPicture();
+    state.userProfile.picture = storageUserPicture;
     return state.userProfile.picture;
   }
 
@@ -137,7 +163,6 @@ export default class Model {
         const energy = Number(doc.data().energy);
         const isChecked = doc.data().checked;
         if (isChecked) {
-          // TODO - ONCE ADDED RESET ON TIME ADD STREAK COUNTER
           energyArr.push(energy);
         }
       });

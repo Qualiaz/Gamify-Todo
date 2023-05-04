@@ -421,7 +421,6 @@ export class TasksComponentModel extends Model {
     taskCards.forEach((taskCard) => {
       taskCard.model.obs.sub(controller);
     });
-    console.log(taskCards[0].model.observers);
   }
 
   //// VIEW CHANGE ////

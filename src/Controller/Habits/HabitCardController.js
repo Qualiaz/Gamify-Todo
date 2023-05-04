@@ -46,9 +46,16 @@ export default class HabitCardController {
     });
 
     habitCardNegativeBtn.addEventListener("click", (e) => {
+      const energyNav = document.getElementById("energyNav");
       habitCardNegativeStreak.innerText = `- ${++this.model.habitData
         .streakNegative}`;
       this.model.updateHabitDb();
+      this.model.initEnergy().then(() => {
+        this.model.getDbEnergy().then((energy) => {
+          this.view.initEnergyPopup(this.model.habitData.energy, "negative");
+          energyNav.innerText = energy;
+        });
+      });
       this.model.updateUserHabitsStats("negative");
     });
 

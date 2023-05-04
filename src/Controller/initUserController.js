@@ -20,7 +20,6 @@ export default async function initUser() {
         // if user is new
         if (!doc.exists()) {
           await createUserDoc(user.uid, user.email, user.displayName);
-          window.location.pathname = "/";
         }
       })();
     } else {

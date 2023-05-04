@@ -31,8 +31,15 @@
   border-radius: 0.5rem;
   border: 2px solid $secondary;
   padding: 0.5rem;
+  font-weight: bold;
+  background-color: #ff8b06;
+  // background-color: white;
+  color: white;
+  transition: 0.3s;
   &:hover {
     cursor: pointer;
+    background-color: white;
+    color: #ff8b06;
   }
 }
 

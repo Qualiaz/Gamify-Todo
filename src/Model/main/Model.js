@@ -127,22 +127,17 @@ export default class Model {
   // habits
 
   async getEnergyHabits() {
-    let totalEnergyFromHabits;
-    const energyArr = [];
+    let totalEnergyFromHabits = 0;
     const docUserRef = doc(db, "users", auth.currentUser.uid);
     const colHabitsRef = collection(docUserRef, "habits");
     await getDocs(colHabitsRef).then((snapshot) => {
       snapshot.forEach((doc) => {
         const energy = Number(doc.data().energy);
-        const streak = Number(doc.data().streakPositive);
-        if (streak === 0) {
-          energyArr.push(energy);
-        } else {
-          const habitTotalEnergyGained = streak * energy;
-          energyArr.push(habitTotalEnergyGained);
-        }
+        const streakPositive = Number(doc.data().streakPositive);
+        const streakNegative = Number(doc.data().streakNegative);
+        const netStreak = streakPositive - streakNegative;
+        totalEnergyFromHabits += netStreak * energy;
       });
-      totalEnergyFromHabits = energyArr.reduce((a, b) => a + b, 0);
     });
     return totalEnergyFromHabits;
   }

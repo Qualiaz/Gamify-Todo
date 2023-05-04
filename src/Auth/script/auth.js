@@ -30,12 +30,23 @@ import {
 } from "firebase/auth";
 import { userId } from "../../Controller/TasksComponentController";
 /////////////////
+import authLogo from "./assets/logo.svg";
+import authBackground from "./assets/auth-background.png";
 
 export default function initAuthPageScript() {
+  const authPage = document.getElementById("authPage");
+  const authLogoEl = document.getElementById("authLogo");
+  authPage.style.backgroundImage = `url(${authBackground})`;
+
+  authLogoEl.src = authLogo;
+  // used to remove flickering text as fonts are being imported from url
+  setTimeout(() => {
+    authPage.style.display = "flex";
+  }, 300);
+
   // SIGN UP //
   formSignup.addEventListener("submit", (e) => {
     e.preventDefault();
-    console.log("auth script signup");
     if (!signupCheck().ok) return;
 
     createUserWithEmailAndPassword(
@@ -100,8 +111,6 @@ export default function initAuthPageScript() {
   // CHECK AUTH STATE //
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // new UserModel(user);
-      // userId = user.uid;
       console.log(localStorage.setItem("user", user.uid));
       window.location.pathname = "/";
     } else {

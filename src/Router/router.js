@@ -12,20 +12,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const authPageEl = document.getElementById("authPage");
   const home = document.getElementById("home");
   if (!!rootEl) rootEl.style.display = "flex";
-  if (!!authPageEl) authPageEl.style.display = "flex";
-  if (!!home) home.style.display = "block";
+  // if (!!authPageEl) authPageEl.style.display = "flex";
+  // if (!!home) home.style.display = "block";
 });
 
 window.onload = async () => {
-  // const isInitUser =
   switch (window.location.pathname) {
     case "/":
-      // if user access
+      // if user is on main page but he is not logged in, redirect to the static homepage
       if (!localStorage.getItem("user")) {
         window.location.replace("/home.html");
         return initHomePage();
       }
-
       await App.init();
       switch (window.location.hash) {
         case "#/dashboard":

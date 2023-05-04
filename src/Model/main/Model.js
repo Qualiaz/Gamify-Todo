@@ -21,7 +21,15 @@ import {
   addTasksWeekDaysFilter,
 } from "../../helpers/filters";
 
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "@firebase/storage";
+
 export const state = {
+  userPicture: "",
   userStats: null,
   userProfile: null,
   totalEnergy: 0,
@@ -74,26 +82,50 @@ export default class Model {
     return { profile, stats };
   }
 
-  changeProfilePicture() {
-    const input = document.getElementById("profileCardChangePicInput");
+  async uploadStorageUserPicture() {
+    const storage = getStorage();
+    const storageRef = ref(storage, `images/${auth.currentUser.uid}`);
     const profileCardImg = document.getElementById("profileCardImg");
-    const profileImg = document.getElementById("profileImg");
+    const fileInput = document.getElementById("profileCardChangePicInput");
 
-    input.addEventListener("change", function () {
-      if (this.files && this.files[0]) {
-        profileCardImg.onload = () => {
-          URL.revokeObjectURL(profileCardImg.src);
-        };
-        profileCardImg.src = URL.createObjectURL(this.files[0]);
-        profileImg.src = URL.createObjectURL(this.files[0]);
-      }
+    fileInput.style.display = "none";
+
+    profileCardImg.addEventListener("click", () => {
+      fileInput.click();
     });
 
-    profileCardImg.addEventListener("click", function () {
-      input.click();
+    return new Promise((resolve, reject) => {
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        uploadBytes(storageRef, file)
+          .then((snapshot) => {
+            console.log("Uploaded a blob or file!");
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
     });
   }
 
+  async getStorageUserPicture() {
+    const storage = getStorage();
+
+    return await getDownloadURL(
+      ref(storage, `images/${auth.currentUser.uid}`)
+    ).then((url) => url);
+  }
+
+  async setLocalStateUserPictureUrl() {
+    state.userProfile.picture = await this.getStorageUserPicture();
+    return state.userProfile.picture;
+  }
+
+  async initChangeUserPicture() {
+    await this.uploadStorageUserPicture();
+    state.userProfile.picture = await this.getStorageUserPicture();
+  }
   // tasks
   async getEnergyTasks() {
     let totalEnergyFromTasks;

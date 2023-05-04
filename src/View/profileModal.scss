@@ -81,26 +81,28 @@
 
 .profile-card__image {
   &-wrapper {
-    // transform: translateX(13rem);
     width: 12rem;
     height: 12rem;
     border-radius: 50rem;
-    overflow: hidden;
     position: relative;
     z-index: 20;
     top: 3.8rem;
     overflow: hidden;
     outline: 8px solid #3a3a3b;
-    // top: -2rem;
   }
   object-fit: cover;
   width: 100%;
+  transform: scaleY(30px);
   height: 100%;
 
   &:hover {
     cursor: pointer;
   }
 
+  &-btn {
+    background: none;
+    border: none;
+  }
   //   z-index: 10;
 }
 
@@ -110,8 +112,11 @@
 
 .profile-card__change-img-input {
   display: none;
+  visibility: hidden;
+  border: none;
+  background: none;
   // position: absolute;
-  //   outline: 2px solid red;
+  // outline: 2px solid red;
   //   top: 0;
   //   left: 0;
 }

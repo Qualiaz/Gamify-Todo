@@ -21,16 +21,18 @@ export default class Controller {
 
   async init() {
     await initUser();
-    this.view.render();
+    await this.model.getUser().then(({ profile, stats }) => {
+      state.userStats = stats;
+      state.userProfile = profile;
+    });
+    await this.model.setLocalStateUserPictureUrl();
+    this.view.render(state);
     const main = document.getElementById("main");
     const spinner = new Spinner(spinnerOpts).spin(main);
 
     // await initUser();
     // will change after refactor
-    await this.model.getUser().then(({ profile, stats }) => {
-      state.userStats = stats;
-      state.userProfile = profile;
-    });
+
     await this.model.createTasksFromDb();
     await setLocalHabitsFromDb();
     await this.model.setLocalEnergy();
@@ -80,7 +82,8 @@ export default class Controller {
     //Profile modal
     document.addEventListener("click", (e) => {
       if (e.target.id === "profileImg") {
-        this.view.renderStats(state);
+        this.view.renderProfileCard(state);
+        this.model.getStorageUserPicture();
       }
 
       if (e.target.id === "profileCardCloseBtn") {
@@ -88,7 +91,10 @@ export default class Controller {
       }
 
       if (e.target.id === "profileCardImg") {
-        this.model.changeProfilePicture();
+        this.model.initChangeUserPicture().then(() => {
+          console.log("nob");
+          this.view.changeUserPicture(state.userProfile.picture);
+        });
       }
 
       if (e.target.id === "profileCardSignOutBtn") {

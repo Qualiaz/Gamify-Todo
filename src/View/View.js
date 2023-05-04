@@ -1,17 +1,22 @@
 import iconEnergy from "./main/tasks/assets/energy-icon.svg";
+import initialUserPicture from "../assets/images/initialUserProfile.svg";
 
 export default class View {
-  _generateSidebarMarkup() {
+  _generateSidebarMarkup(state) {
     return `
        <sidebar id="sidebar" class="profile fixed">
         <div class="profile__img">
-          <button id="profileImgBtn" class="profile__img-btn"><img id="profileImg" src="./mylove.png" alt="profile image" /></button>
+          <button id="profileImgBtn" class="profile__img-btn"><img id="profileImg" src=${
+            state.userProfile.picture
+              ? state.userProfile.picture
+              : initialUserPicture
+          } alt="profile image" /></button>
         </div>
         <div class="profile__name">
-          <span id="profileNameNav">Who am I?</span>
+          <span id="profileNameNav">${state.userProfile.displayName}</span>
         </div>
         <div class="profile__energy">
-          <img src="./energy-icon.svg" alt="e" />
+          <img src="${iconEnergy}" alt="e" />
           <span id="energyNav">0</span>
         </div>
         <hr class="sidebar__hr" />
@@ -27,11 +32,6 @@ export default class View {
           </ul>
         </nav>
         <hr class="sidebar__hr" />
-        <div class="profile__sign-out-container">
-          <button class="profile__sign-out-button" id="signoutBtn">
-            sign out
-          </button>
-        </div>
       </sidebar>`;
   }
 
@@ -100,13 +100,13 @@ export default class View {
     profileNameNav.innerText = name;
   }
 
-  _generateProfileModalMarkup(stats, profile) {
+  _generateProfileModalMarkup({ userStats: stats, userProfile: profile }) {
     return `
     <div id="profileModal" class="profile-modal">
     <div class="profile-card">
       <div class="profile-card__header">
-        <div class="hidden profile-card__change-img-input-wrapper">       
-           <input class="hidden profile-card__change-img-input" id="profileCardChangePicInput" type="file" accept="image/*" />
+        <div class="profile-card__change-img-input-wrapper">       
+           <input class="profile-card__change-img-input" id="profileCardChangePicInput" type="file" accept="image/*" />
         </div>
         <div class="profile-card__background"></div>               
         <div class="profile-card__close-btn-wrapper">
@@ -116,7 +116,7 @@ export default class View {
           <button class="profile-card__image-btn" id="profileCardImgBtn"> 
             <img
               class="profile-card__image"
-              src="./mylove.png"
+              src="${profile.picture ? profile.picture : initialUserPicture}"
               alt="profile image"
               id="profileCardImg"
             />
@@ -220,12 +220,13 @@ export default class View {
     `;
   }
 
-  renderStats(state) {
+  renderProfileCard(state) {
+    console.log(state);
     const body = document.querySelector("body");
     const root = document.getElementById("root");
     body.insertAdjacentHTML(
       "afterbegin",
-      this._generateProfileModalMarkup(state.userStats, state.userProfile)
+      this._generateProfileModalMarkup(state)
     );
     this.renderProfileCardEnergy();
     root.style.filter = "blur(5px)";
@@ -238,7 +239,15 @@ export default class View {
     root.style.filter = "";
   }
 
-  render() {
+  changeUserPicture(url) {
+    const profileImg = document.getElementById("profileImg");
+    const profileCardImg = document.getElementById("profileCardImg");
+
+    profileImg.src = url;
+    profileCardImg.src = url;
+  }
+
+  render(state) {
     const root = document.createElement("div");
     const main = document.createElement("div");
     const body = document.querySelector("body");
@@ -246,6 +255,6 @@ export default class View {
     root.append(main);
     root.id = "root";
     main.id = "main";
-    root.insertAdjacentHTML("afterbegin", this._generateSidebarMarkup());
+    root.insertAdjacentHTML("afterbegin", this._generateSidebarMarkup(state));
   }
 }

@@ -5,6 +5,7 @@ import TaskCardView from "../View/main/tasks/TaskCardView";
 import Timer from "easytimer.js";
 import { openTaskSettings } from "./Tasks/AddTaskController";
 import { state } from "../Model/main/Model";
+
 export default class TaskCardController {
   constructor() {
     this.view = new TaskCardView();
@@ -17,9 +18,6 @@ export default class TaskCardController {
     const taskCardContainer = document.getElementById(`taskCard-${id}`);
     taskCardContainer.addEventListener("click", (e) => {
       const clickedId = e.target.id;
-      // if (clickedId === `taskCard-${id}`) {
-      //   console.log("hi");
-      // }
       if (clickedId === `taskCardTop-${id}`) {
         this.model.openTaskSettings();
       }

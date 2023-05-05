@@ -22,12 +22,12 @@ export default class View {
         <hr class="sidebar__hr" />
         <nav id="nav">
           <ul>
-            <li><a href="/#/" id="dashboard">Dashboard</a></li>
-            <li><a href="/#/projects" id="projects">Projects</a></li>
-            <li id="navTasksBtn"><a href="/#/tasks" id="tasks">Tasks</a></li>
-            <li><a href="/#/habits" id="habits">Habits</a></li>
-            <li>
+            <li class="nav-menu-list--selected"><button id="menuBtnDashboard" class="menu-btn menu-btn--selected"><a href="/#/" id="dashboard">Dashboard</a></button></li>
+            <li class="nav-menu-list" id="navTasksBtn"><button id="menuBtnTasks" class="menu-btn"><a href="/#/tasks" id="tasks">Tasks</a></button></li>
+            <li class="nav-menu-list"><button id="menuBtnHabits" class="menu-btn"><a href="/#/habits" id="habits">Habits</a></button></li>
+            <li class="nav-menu-list"><button id="menuBtnYip" class="menu-btn">
               <a href="/#/yearinpixels" id="yearInPixels">Year in Pixels</a>
+              </button>
             </li>
           </ul>
         </nav>
@@ -245,6 +245,39 @@ export default class View {
 
     profileImg.src = url;
     profileCardImg.src = url;
+  }
+
+  setSelectedBtnStyle(menu) {
+    const nav = document.getElementById("nav");
+    nav.querySelectorAll("button").forEach((button) => {
+      button.removeAttribute("class", ".menu-btn--selected");
+    });
+
+    console.log(window.location.hash);
+
+    if (window.location.hash === "#/dashboard")
+      document
+        .getElementById("menuBtnDashboard")
+        .setAttribute("class", "menu-btn--selected");
+    else if (window.location.hash === "#/tasks")
+      document
+        .getElementById("menuBtnTasks")
+        .setAttribute("class", "menu-btn--selected");
+    else if (window.location.hash === "#/habits")
+      document
+        .getElementById("menuBtnHabits")
+        .setAttribute("class", "menu-btn--selected");
+    else if (window.location.hash === "#/yearinpixels")
+      document
+        .getElementById("menuBtnYip")
+        .setAttribute("class", "menu-btn--selected");
+    else {
+      document
+        .getElementById("menuBtnDashboard")
+        .setAttribute("class", "menu-btn--selected");
+    }
+
+    document.getElementById(`menuBtn${menu}`);
   }
 
   render(state) {

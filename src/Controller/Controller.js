@@ -32,11 +32,9 @@ export default class Controller {
     }
 
     this.view.render(state);
+    this.view.setSelectedBtnStyle();
     const main = document.getElementById("main");
     const spinner = new Spinner(spinnerOpts).spin(main);
-
-    // await initUser();
-    // will change after refactor
 
     await this.model.createTasksFromDb();
     await setLocalHabitsFromDb();
@@ -53,13 +51,14 @@ export default class Controller {
     this.view.renderNameSidebar(state.userProfile.displayName);
 
     spinner.stop();
-    console.log(state);
+
     const nav = document.getElementById("nav");
     const menuBtns = nav.querySelectorAll("a");
     menuBtns.forEach((btn) => {
       btn.addEventListener("click", (e) => {
         e.preventDefault();
         main.innerHTML = "";
+
         switch (btn.id) {
           case "dashboard":
             new DashboardMenuController().init();
@@ -81,6 +80,7 @@ export default class Controller {
             new YipMenuController().init();
             break;
         }
+        this.view.setSelectedBtnStyle();
       });
     });
 
@@ -92,19 +92,18 @@ export default class Controller {
       }
 
       if (e.target.id === "profileCardCloseBtn") {
+        state.isProfileCardClickListener = false;
         this.view.removeProfileModal();
       }
 
       if (e.target.id === "profileCardImg") {
         this.model.initChangeUserPicture().then(() => {
-          console.log("nob");
           this.view.changeUserPicture(state.userProfile.picture);
         });
       }
 
       if (e.target.id === "profileCardSignOutBtn") {
         signOut(auth).then((_) => {
-          // const localStorageUser = localStorage.getItem("user");
           localStorage.removeItem("user");
           window.location.href = "/home.html";
         });

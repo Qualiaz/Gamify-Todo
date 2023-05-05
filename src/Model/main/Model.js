@@ -55,6 +55,8 @@ export const state = {
   yipDays: {},
   selectedDay: null,
   initYipDayController: null,
+
+  isProfileCardClickListener: false,
 };
 
 export default class Model {
@@ -95,8 +97,6 @@ export default class Model {
 
     const docSnap = await getDoc(docUserRef);
     const userData = docSnap.data();
-    // const stats = userData?.stats ? userData.stats : state.userStats;
-    // const profile = userData?.profile ? state.profile : state.userProfile;
     const stats = userData.stats;
     const profile = userData.profile;
     console.log(profile);
@@ -112,21 +112,32 @@ export default class Model {
 
     fileInput.style.display = "none";
 
-    profileCardImg.addEventListener("click", () => {
-      fileInput.click();
-    });
+    // Add click event listener only if it hasn't been added yet
+    if (!state.isProfileCardClickListener) {
+      profileCardImg.addEventListener("click", () => {
+        fileInput.click();
+      });
+      state.isProfileCardClickListener = true;
+    }
 
     return new Promise((resolve, reject) => {
       fileInput.addEventListener("change", (e) => {
-        const file = e.target.files[0];
-        uploadBytes(storageRef, file)
-          .then((snapshot) => {
-            console.log("Uploaded a blob or file!");
-            resolve();
-          })
-          .catch((error) => {
-            reject(error);
-          });
+        // Check if a file was selected
+        if (e.target.files.length > 0) {
+          const file = e.target.files[0];
+          uploadBytes(storageRef, file)
+            .then((snapshot) => {
+              console.log("Uploaded a blob or file!");
+              resolve();
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        } else {
+          // No file was selected, reset fileInput value
+          e.target.value = "";
+          resolve();
+        }
       });
     });
   }

@@ -16,21 +16,41 @@
     &::-webkit-scrollbar {
       display: none;
     }
+
     li {
       display: flex;
-      align-items: center;
+      align-items: start;
       border-radius: 0.4rem;
-      justify-content: start;
-      padding: 0 0.8rem;
       width: 20rem;
-      background-color: $secondary-dark;
-      border: 2px solid rgb(255, 255, 255);
+      // background-color: white;
+      border: 2px solid white;
+      border: 2px solid rgb(245, 112, 24);
 
-      &:hover {
-        background-color: rgb(255, 255, 255);
-        * {
-          color: $secondary-dark;
+      button {
+        display: flex;
+        justify-content: start;
+        background: none;
+        border: none;
+        width: 100%;
+        border-radius: 0.3rem;
+        height: 100%;
+        transition: 0.3s;
+      }
+
+      .menu-btn--selected {
+        background-color: rgb(245, 112, 24);
+        a {
+          color: black;
         }
+      }
+
+      a {
+        text-indent: 1rem;
+        text-align: left;
+        width: 100%;
+        // color: black;
+        transition: 0.3s;
+        color: white;
       }
     }
   }
@@ -61,6 +81,11 @@
   background-color: $secondary-dark;
   order: -1;
   z-index: 3;
+
+  #profileNameNav {
+    font-weight: bold;
+    margin-bottom: 0.4rem;
+  }
 
   * {
     color: white;
@@ -108,20 +133,10 @@
       margin-right: 0.5rem;
     }
   }
-
-  &__sign-out-button {
-    color: red;
-    background: none;
-    font-size: 1.8rem;
-    border: none;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
 }
 
 .sidebar__hr {
   width: 100%;
+  border: 2px solid rgb(245, 112, 24);
   margin: 2rem 0;
 }

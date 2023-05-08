@@ -22,7 +22,6 @@
   "dependencies": {
     "@firebase/storage": "^0.11.2",
     "@shopify/draggable": "^1.0.0-beta.8",
-    "cropperjs": "^1.5.13",
     "date-fns": "^2.29.3",
     "dompurify": "^2.4.1",
     "dragula": "^3.7.3",

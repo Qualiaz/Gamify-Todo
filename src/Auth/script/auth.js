@@ -29,6 +29,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { userId } from "../../Controller/TasksComponentController";
+
 /////////////////
 import authLogo from "./assets/logo.svg";
 import authBackground from "./assets/auth-background.png";

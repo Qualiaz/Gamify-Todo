@@ -274,9 +274,9 @@ export default class Model {
     const yipDayController = new YipDayController();
 
     if (!state.yipDays[day]) {
-      const x = await yipDayController.model.db.initDoc();
-      console.log(x);
-      yipDayController.model.state.dbId = doc.id;
+      await yipDayController.model.db.initDoc();
+      // yipDayController.model.state.dbId = doc.id;
+      console.log(yipDayController.model.state.dbId);
       state.yipDays[day] = yipDayController;
       state.initYipDayController = state.yipDays[day];
       state.selectedDay = state.initYipDayController;
@@ -290,6 +290,7 @@ export default class Model {
       const doc = querySnapshot.docs[0]; // day state
       yipDayController.model.initState(doc.data());
       yipDayController.model.state.dbId = doc.id;
+      console.log(yipDayController.model.state.dbId);
       state.initYipDayController = yipDayController;
       state.selectedDay = state.initYipDayController;
     }
@@ -310,6 +311,7 @@ export default class Model {
     const changeColorsKeyToMoods = () => {
       for (let key in colorsStats) {
         let newKey;
+        if (key === "#2B2A2A") newKey = "default";
         if (key === "#181116") newKey = "awful";
         if (key === "#891A29") newKey = "bad";
         if (key === "#5B9A63") newKey = "ok";

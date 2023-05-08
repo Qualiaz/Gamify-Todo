@@ -1,6 +1,13 @@
 import yipEditIcon from "../../../assets/images/edit-yip.svg";
 import yipViewIcon from "../../../assets/images/view-yip.svg";
 import { marked } from "marked";
+import yipDefaultMoodIcon from "../../../assets/images/yip-default.svg";
+import yipAwesomeMoodIcon from "../../../assets/images/yip-awesome.svg";
+import yipGoodMoodIcon from "../../../assets/images/yip-good.svg";
+import yipOkMoodIcon from "../../../assets/images/yip-ok.svg";
+import yipBadMoodIcon from "../../../assets/images/yip-bad.svg";
+import yipAwfulMoodIcon from "../../../assets/images/yip-awful.svg";
+
 export default class YipDayView {
   _generateMarkup({ viewMode, logTitle, log, id }) {
     return `
@@ -25,7 +32,9 @@ export default class YipDayView {
           </div>
           <div class="yip-component__footer">
             <div class="yip-footer__color-btn-wrapper">
-              <button id="yipMoodColorBtn-${id}" class="yip-footer_color-btn"></button>
+              <button id="yipMoodColorBtn-${id}" class="yip-footer_color-btn">
+                <img id="yipMoodIcon" src="${yipDefaultMoodIcon}" alt="mood icon"/>
+              </button>
             </div>
           </div>
       </section>
@@ -118,7 +127,20 @@ export default class YipDayView {
 
   setMoodColor(color, id) {
     const moodColorBtn = document.getElementById(`yipMoodColorBtn-${id}`);
+    const moodIcon = document.getElementById("yipMoodIcon");
     moodColorBtn.style.backgroundColor = color;
+
+    // awful: "#181116",
+    // bad: "#891A29",
+    // ok: "#5B9A63",
+    // good: "#42BFDD",
+    // amazing: "#F9B624",
+
+    if (color === "#181116") moodIcon.src = yipAwfulMoodIcon;
+    if (color === "#891A29") moodIcon.src = yipBadMoodIcon;
+    if (color === "#5B9A63") moodIcon.src = yipOkMoodIcon;
+    if (color === "#42BFDD") moodIcon.src = yipGoodMoodIcon;
+    if (color === "#F9B624") moodIcon.src = yipAwesomeMoodIcon;
   }
 
   render(parentEl, state) {

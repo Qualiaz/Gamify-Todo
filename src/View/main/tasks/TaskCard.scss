@@ -82,6 +82,9 @@
       &:hover {
         cursor: pointer;
       }
+      * {
+        font-size: 1.8rem;
+      }
     }
     span {
       &:hover {
@@ -153,7 +156,7 @@
       width: 1.6rem;
       height: 1.6rem;
 
-      border: 2px solid var(--difficultyColor, $primary);
+      border: 1px solid var(--difficultyColor, $primary);
       position: absolute;
       top: 0.3rem;
       border-radius: 0.4rem;
@@ -162,20 +165,23 @@
     &--finished {
       width: 1.6rem;
       height: 1.6rem;
-      border: 2px solid var(--difficultyColor, $primary);
+
+      border: 1px solid var(--difficultyColor, $primary);
       position: absolute;
-      margin: 0 auto;
+
       top: 0.3rem;
       border-radius: 0.4rem;
+      background-color: 2px solid var(--difficultyColor, $primary);
 
       &::before {
         content: "";
-        display: inline-block;
-        width: 80%;
-        height: 80%;
+        display: block;
+        width: 100%;
+        height: 100%;
+        box-shadow: inset 0px 0px 0px 1px rgb(27, 26, 26);
+
         background-color: var(--difficultyColor, $primary);
-        transform: translate(0.1rem, -0.6rem);
-        border-radius: 0.2rem;
+        border-radius: 0.4rem;
       }
     }
   }
@@ -210,9 +216,11 @@
 }
 
 .task-card__line-break {
-  height: 0.2rem;
-  background-color: var(--difficultyColor, $primary);
+  // height: 0.1em;
   border: none;
-  border-radius: 1rem;
+  border: 0;
+  // border: 1px solid var(--difficultyColor, $primary);
+  border-top: 1px solid var(--difficultyColor, $primary);
+  // background-color: var(--difficultyColor, $primary);
   margin: 0.3rem 0;
 }

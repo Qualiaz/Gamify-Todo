@@ -21,6 +21,11 @@
   border: none;
   border-radius: 0.5rem;
   background-color: $secondary;
+  outline: 2px solid white;
+
+  &:focus {
+    outline: 3px solid #ff8b06;
+  }
 }
 
 @mixin auth-btn {

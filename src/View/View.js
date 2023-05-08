@@ -253,8 +253,6 @@ export default class View {
       button.removeAttribute("class", ".menu-btn--selected");
     });
 
-    console.log(window.location.hash);
-
     if (window.location.hash === "#/dashboard")
       document
         .getElementById("menuBtnDashboard")

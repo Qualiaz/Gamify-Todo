@@ -39,7 +39,6 @@ export default class YipDayController {
 
     viewBtn.addEventListener("click", () => {
       this.view.renderView(this.model.state.log, this.model.state.logTitle, id);
-      console.log(this.model.state);
       this.model.changeViewMode("view");
       this.model.db.initDoc();
     });
@@ -47,12 +46,14 @@ export default class YipDayController {
     editBtn.addEventListener("click", () => {
       this.view.renderEdit(this.model.state.log, this.model.state.logTitle, id);
       // init listeners again to reselect elements
+      this.model.state.dbId;
       this.model.changeViewMode("edit");
       this.model.db.initDoc();
       this.eventListeners();
     });
 
     moodColorBtn.addEventListener("click", () => {
+      console.log(this.model.state.moodColor);
       this.model.nextMoodColor();
       this.view.setMoodColor(this.model.state.moodColor, id);
 

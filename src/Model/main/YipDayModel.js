@@ -13,7 +13,7 @@ export default class YipDayModel {
     this.state.viewMode = "edit";
     this.state.logTitle = "";
     this.state.log = "";
-    this.state.moodColor = "#5B9A63";
+    this.state.moodColor = "#2B2A2A";
     this.state.id = getCurrentDay();
     this.observers = [];
   }
@@ -56,7 +56,7 @@ export default class YipDayModel {
     this.state.logTitle = data.logTitle;
     this.state.moodColor = data.moodColor;
     this.state.viewMode = data.viewMode;
-    this.state.dbId = data.id;
+    this.state.dbId = data.dbId;
   }
 
   db = {
@@ -83,6 +83,7 @@ export default class YipDayModel {
     update: async () => {
       try {
         const docRef = doc(this.db.getColYipRef(), this.state.dbId);
+        console.log(this.state.dbId);
         await updateDoc(docRef, this.state);
       } catch (e) {
         console.error("error updating doc:", e);
@@ -91,21 +92,23 @@ export default class YipDayModel {
 
     initDoc: async () => {
       if (this.state.dbId) {
-        await this.db.update();
+        return await this.db.update();
       } else {
-        await this.db.add();
+        return await this.db.add();
       }
     },
   };
 
   nextMoodColor() {
-    const moodColors = ["awful", "bad", "good", "ok", "amazing"];
+    const moodColors = ["awful", "bad", "ok", "good", "amazing"];
+
     this.#privateState.curMoodColorIndex =
       (this.#privateState.curMoodColorIndex + 1) % moodColors.length;
 
     this.state.moodColor = this.getMoodColor(
       moodColors[this.#privateState.curMoodColorIndex]
     );
+
     this.updateGlobalState();
   }
 
@@ -122,6 +125,7 @@ export default class YipDayModel {
     const getColorsStats = () => {
       for (let key in state.yipDays) {
         let color = state.yipDays[key].model.state.moodColor;
+
         if (colorsStats[color]) colorsStats[color]++;
         else colorsStats[color] = 1;
       }
@@ -152,6 +156,7 @@ export default class YipDayModel {
 
   getMoodColor(color) {
     const moodColorMap = {
+      default: "#2B2A2A",
       awful: "#181116",
       bad: "#891A29",
       ok: "#5B9A63",

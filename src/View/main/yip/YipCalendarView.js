@@ -82,9 +82,12 @@ export default class YipCalendarView {
   }
 
   setMoodColors(daysColors) {
+    console.log(daysColors["May5"]);
     for (let key in daysColors) {
-      const x = document.getElementById(`yipCalendar${key}`);
-      x.style.backgroundColor = daysColors[key];
+      if (!(daysColors[key] === "#2B2A2A")) {
+        const x = document.getElementById(`yipCalendar${key}`);
+        x.style.backgroundColor = daysColors[key];
+      }
     }
   }
 

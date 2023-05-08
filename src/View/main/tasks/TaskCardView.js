@@ -289,7 +289,6 @@ export default class TaskCardView extends View {
     lineBreak2.className = "task-card__line-break";
     ///
     notesEl.insertAdjacentHTML("afterbegin", marked.parse(notes));
-    // notesEl.insertAdjacentElement("afterend");
     lineBreak1.insertAdjacentElement("afterend", notesEl);
     notesEl.insertAdjacentElement("afterend", lineBreak2);
   }

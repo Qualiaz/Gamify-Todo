@@ -24,26 +24,17 @@ export default class TasksComponentController {
   }
 
   update() {
-    this.model.arrangeTasksInArrays();
-    this.model.setFilterState(this.model.state.filter);
-
-    console.log(this.model.state);
-    console.log(this.model.state.menu);
-    console.log(window.location.hash);
     if (
       this.model.state.menu === "dashboard" &&
       window.location.hash === "#/dashboard"
     ) {
-      console.log("update dashboard");
       this.init(document.getElementById("dashboardTasks"));
     }
-
     if (
       this.model.state.menu === "tasks" &&
       window.location.hash === "#/tasks"
     ) {
       this.init(document.getElementById("tasksMenu"));
-      console.log("update tasks");
     }
   }
 
@@ -118,10 +109,12 @@ export default class TasksComponentController {
   }
 
   init(parentEl) {
-    console.log(curTasksToday);
-    console.log("RENDERING");
+    this.model.arrangeTasksInArrays();
+    this.model.setFilterState(this.model.state.filter);
     this.model.orderTasks();
     this.render(parentEl);
+
+    console.log(curTasks);
 
     this.view.renderViewSettings(
       this.model.state.id,

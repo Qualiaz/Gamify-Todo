@@ -58,10 +58,9 @@ export default class TaskSettingsController {
       deleteBtn.addEventListener("click", () => {
         this.curTaskCard.model.deleteTask();
         this.model.removeDocDb();
-        const { taskCard: taskCardEl } = this.curTaskCard.view.getElems(
-          this.curTaskCard.model.cardState.id
-        );
-        taskCardEl.remove();
+        // const { taskCard: taskCardEl } = this.curTaskCard.view.getElems(
+        //   this.curTaskCard.model.cardState.id
+        // );
         this.view.closeSettings();
       });
     }

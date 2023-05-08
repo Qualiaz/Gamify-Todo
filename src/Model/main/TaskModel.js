@@ -17,6 +17,7 @@ import { auth, db } from "../../firebase/config";
 import TaskSettingsController from "../../Controller/Tasks/AddTaskController";
 import Model from "./Model";
 import { removeDuplicateTasks } from "../../helpers/removeDuplicate";
+import TasksComponentController from "../../Controller/TasksComponentController";
 
 export const curTasks = [];
 export let curTasksToday = [];
@@ -64,7 +65,6 @@ export class TaskSettingsModel extends Model {
 
     // when you open tasks you set state to the card controller model
     this.state = taskCardController.model.cardState
-    console.log('NOOOB')
     const taskData = Object.assign({}, taskCardController.model.cardState)
     const taskDataDb = this.addDocDb(taskCardController, taskData, colTasksRef)
     
@@ -283,6 +283,7 @@ export default class TaskCardModel extends Model {
   deleteTask() {
     const index = this.findTaskIndexInArr();
     const deletedTask = curTasks.splice(index, 1);
+    this.obs.notify();
     return deletedTask;
   }
 
@@ -375,7 +376,6 @@ export default class TaskCardModel extends Model {
       });
     },
     updateIsTimerToggled(isToggled, id) {
-      console.log("timer toggle");
       const docTaskRef = getTask(id);
       updateDoc(docTaskRef, {
         isTimerToggled: isToggled,
